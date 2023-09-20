@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{F488E81E-ADE7-4A21-9743-F8C0AE4DD5A1}</ProjectGuid>
+    <Keyword>MFCProj</Keyword>
+    <RootNamespace>MDSTestPgm</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>MDS_E-bus_Sample</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>MDSTestPgm</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Includes;$(ProjectDir)\Libraries\OpenCV4.7\include%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>opencv_world470d.lib;comsuppw.lib;uxtheme.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Libraries\OpenCV4.7\lib\Debug;$(ProjectDir)\Libraries;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <PrecompiledHeaderOutputFile />
+      <AdditionalIncludeDirectories>$(ProjectDir)\Includes;$(ProjectDir)\Libraries\OpenCV4.7\include%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Libraries\OpenCV4.7\lib\Release;$(ProjectDir)\Libraries;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world470.lib;comsuppw.lib;uxtheme.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="CameraControl_rev.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="FlirHeader.h" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="Includes\BMPSaver.h" />
+    <ClInclude Include="Includes\EbDriver.h" />
+    <ClInclude Include="Includes\EbDriverNames.h" />
+    <ClInclude Include="Includes\EbInstaller.h" />
+    <ClInclude Include="Includes\EbInstallerLib.h" />
+    <ClInclude Include="Includes\EbNetworkAdapter.h" />
+    <ClInclude Include="Includes\EbVersion.h" />
+    <ClInclude Include="Includes\IActionHandler.h" />
+    <ClInclude Include="Includes\ImagingBuffer.h" />
+    <ClInclude Include="Includes\ImagingBufferAllocator.h" />
+    <ClInclude Include="Includes\ImagingContrastFilter.h" />
+    <ClInclude Include="Includes\ImagingFilter.h" />
+    <ClInclude Include="Includes\ImagingFilterRGB.h" />
+    <ClInclude Include="Includes\IPvDeviceAdapter.h" />
+    <ClInclude Include="Includes\IPvDeviceEventSink.h" />
+    <ClInclude Include="Includes\IPvDSSource.h" />
+    <ClInclude Include="Includes\IPvFilter.h" />
+    <ClInclude Include="Includes\IPvTransmitterGEV.h" />
+    <ClInclude Include="Includes\IPvUserSetNotify.h" />
+    <ClInclude Include="Includes\PtResult.h" />
+    <ClInclude Include="Includes\PtString.h" />
+    <ClInclude Include="Includes\PtTypes.h" />
+    <ClInclude Include="Includes\PtUtilsLib.h" />
+    <ClInclude Include="Includes\PvAcquisitionStateManager.h" />
+    <ClInclude Include="Includes\PvActionCommand.h" />
+    <ClInclude Include="Includes\PvAppUtils.h" />
+    <ClInclude Include="Includes\PvAppUtilsLib.h" />
+    <ClInclude Include="Includes\PvBase.h" />
+    <ClInclude Include="Includes\PvBaseLib.h" />
+    <ClInclude Include="Includes\PvBuffer.h" />
+    <ClInclude Include="Includes\PvBufferConverter.h" />
+    <ClInclude Include="Includes\PvBufferConverterRGBFilter.h" />
+    <ClInclude Include="Includes\PvBufferFormatType.h" />
+    <ClInclude Include="Includes\PvBufferLib.h" />
+    <ClInclude Include="Includes\PvBufferWriter.h" />
+    <ClInclude Include="Includes\PvCameraBridge.h" />
+    <ClInclude Include="Includes\PvCameraBridgeLib.h" />
+    <ClInclude Include="Includes\PvCameraBridgeManagerWnd.h" />
+    <ClInclude Include="Includes\PvChunkData.h" />
+    <ClInclude Include="Includes\PvConfigurationReader.h" />
+    <ClInclude Include="Includes\PvConfigurationWriter.h" />
+    <ClInclude Include="Includes\PvDeInterlacer.h" />
+    <ClInclude Include="Includes\PvDeinterlacingType.h" />
+    <ClInclude Include="Includes\PvDevice.h" />
+    <ClInclude Include="Includes\PvDeviceAdapter.h" />
+    <ClInclude Include="Includes\PvDeviceEnums.h" />
+    <ClInclude Include="Includes\PvDeviceEventSink.h" />
+    <ClInclude Include="Includes\PvDeviceFinderWnd.h" />
+    <ClInclude Include="Includes\PvDeviceGEV.h" />
+    <ClInclude Include="Includes\PvDeviceI2CBus.h" />
+    <ClInclude Include="Includes\PvDeviceInfo.h" />
+    <ClInclude Include="Includes\PvDeviceInfoGEV.h" />
+    <ClInclude Include="Includes\PvDeviceInfoPleoraProtocol.h" />
+    <ClInclude Include="Includes\PvDeviceInfoU3V.h" />
+    <ClInclude Include="Includes\PvDeviceInfoUSB.h" />
+    <ClInclude Include="Includes\PvDeviceLib.h" />
+    <ClInclude Include="Includes\PvDevicePleoraProtocol.h" />
+    <ClInclude Include="Includes\PvDeviceSerialEnums.h" />
+    <ClInclude Include="Includes\PvDeviceSerialPort.h" />
+    <ClInclude Include="Includes\PvDeviceSerialPortEchoSink.h" />
+    <ClInclude Include="Includes\PvDeviceSPIBus.h" />
+    <ClInclude Include="Includes\PvDeviceU3V.h" />
+    <ClInclude Include="Includes\PvDfwPayload.h" />
+    <ClInclude Include="Includes\PvDisplayThread.h" />
+    <ClInclude Include="Includes\PvDisplayWnd.h" />
+    <ClInclude Include="Includes\PvDSSourceUIDs.h" />
+    <ClInclude Include="Includes\PvFPSStabilizer.h" />
+    <ClInclude Include="Includes\PvGenApi.h" />
+    <ClInclude Include="Includes\PvGenBoolean.h" />
+    <ClInclude Include="Includes\PvGenBrowserWnd.h" />
+    <ClInclude Include="Includes\PvGenCategory.h" />
+    <ClInclude Include="Includes\PvGenCommand.h" />
+    <ClInclude Include="Includes\PvGenEnum.h" />
+    <ClInclude Include="Includes\PvGenEnumEntry.h" />
+    <ClInclude Include="Includes\PvGenFile.h" />
+    <ClInclude Include="Includes\PvGenFloat.h" />
+    <ClInclude Include="Includes\PvGenICamLib.h" />
+    <ClInclude Include="Includes\PvGenInteger.h" />
+    <ClInclude Include="Includes\PvGenParameter.h" />
+    <ClInclude Include="Includes\PvGenParameterArray.h" />
+    <ClInclude Include="Includes\PvGenParameterArrayCL.h" />
+    <ClInclude Include="Includes\PvGenParameterList.h" />
+    <ClInclude Include="Includes\PvGenRegister.h" />
+    <ClInclude Include="Includes\PvGenStateStack.h" />
+    <ClInclude Include="Includes\PvGenString.h" />
+    <ClInclude Include="Includes\PvGenTypes.h" />
+    <ClInclude Include="Includes\PvGUILib.h" />
+    <ClInclude Include="Includes\PvH264AccessUnit.h" />
+    <ClInclude Include="Includes\PvH264Decoder.h" />
+    <ClInclude Include="Includes\PvImage.h" />
+    <ClInclude Include="Includes\PvImageAnalysisMono.h" />
+    <ClInclude Include="Includes\PvImageJPEG.h" />
+    <ClInclude Include="Includes\PvInterface.h" />
+    <ClInclude Include="Includes\PvLicenseLib.h" />
+    <ClInclude Include="Includes\PvLinkLib.h" />
+    <ClInclude Include="Includes\PvLogger.h" />
+    <ClInclude Include="Includes\PvMp4Writer.h" />
+    <ClInclude Include="Includes\PvMultiPartContainer.h" />
+    <ClInclude Include="Includes\PvMultiPartSection.h" />
+    <ClInclude Include="Includes\PvNetworkAdapter.h" />
+    <ClInclude Include="Includes\PvPayloadType.h" />
+    <ClInclude Include="Includes\PvPersistenceLib.h" />
+    <ClInclude Include="Includes\PvPipeline.h" />
+    <ClInclude Include="Includes\PvPipelineEventSink.h" />
+    <ClInclude Include="Includes\PvPixelType.h" />
+    <ClInclude Include="Includes\PvProperty.h" />
+    <ClInclude Include="Includes\PvPropertyList.h" />
+    <ClInclude Include="Includes\PvRangeFilter.h" />
+    <ClInclude Include="Includes\PvRawData.h" />
+    <ClInclude Include="Includes\PvResult.h" />
+    <ClInclude Include="Includes\PvSampleTransmitterConfig.h" />
+    <ClInclude Include="Includes\PvSampleUtils.h" />
+    <ClInclude Include="Includes\PvSemaphore.h" />
+    <ClInclude Include="Includes\PvSerialBridge.h" />
+    <ClInclude Include="Includes\PvSerialBridgeManagerWnd.h" />
+    <ClInclude Include="Includes\PvSerialLib.h" />
+    <ClInclude Include="Includes\PvSerialPortConfiguration.h" />
+    <ClInclude Include="Includes\PvSerialTerminalWnd.h" />
+    <ClInclude Include="Includes\PvSessionInfoSDP.h" />
+    <ClInclude Include="Includes\PvSoftDeviceGEV.h" />
+    <ClInclude Include="Includes\PvSoftDeviceGEVInterfaces.h" />
+    <ClInclude Include="Includes\PvStream.h" />
+    <ClInclude Include="Includes\PvStreamEventSink.h" />
+    <ClInclude Include="Includes\PvStreamGEV.h" />
+    <ClInclude Include="Includes\PvStreamInfo.h" />
+    <ClInclude Include="Includes\PvStreamingChannelSourceDefault.h" />
+    <ClInclude Include="Includes\PvStreamingChannelSourceTrigger.h" />
+    <ClInclude Include="Includes\PvStreamLib.h" />
+    <ClInclude Include="Includes\PvStreamRTP.h" />
+    <ClInclude Include="Includes\PvStreamU3V.h" />
+    <ClInclude Include="Includes\PvString.h" />
+    <ClInclude Include="Includes\PvStringList.h" />
+    <ClInclude Include="Includes\PvSystem.h" />
+    <ClInclude Include="Includes\PvSystemEnums.h" />
+    <ClInclude Include="Includes\PvSystemEventSink.h" />
+    <ClInclude Include="Includes\PvSystemLib.h" />
+    <ClInclude Include="Includes\PvTapFilter.h" />
+    <ClInclude Include="Includes\PvTapGeometry.h" />
+    <ClInclude Include="Includes\PvTftpClient.h" />
+    <ClInclude Include="Includes\PvTransmitterGEV.h" />
+    <ClInclude Include="Includes\PvTransmitterLib.h" />
+    <ClInclude Include="Includes\PvTriggerSelector.h" />
+    <ClInclude Include="Includes\PvTruesenseConverter.h" />
+    <ClInclude Include="Includes\PvTypes.h" />
+    <ClInclude Include="Includes\PvUSBHostController.h" />
+    <ClInclude Include="Includes\PvVersion.h" />
+    <ClInclude Include="Includes\PvVirtualDeviceGEV.h" />
+    <ClInclude Include="Includes\PvVirtualDeviceLib.h" />
+    <ClInclude Include="Includes\PvWnd.h" />
+    <ClInclude Include="Includes\SimpleImagingLib.h" />
+    <ClInclude Include="JudgeStatusDlg.h" />
+    <ClInclude Include="MDS_E-bus_Sample.h" />
+    <ClInclude Include="MDS_E-bus_SampleDlg.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="SkinButton.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="CameraControl_rev.cpp" />
+    <ClCompile Include="Common.cpp" />
+    <ClCompile Include="FlirHeader.cpp" />
+    <ClCompile Include="JudgeStatusDlg.cpp" />
+    <ClCompile Include="MDS_E-bus_Sample.cpp" />
+    <ClCompile Include="MDS_E-bus_SampleDlg.cpp" />
+    <ClCompile Include="SkinButton.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MDS_E-bus_Sample.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\MDS_E-bus_Sample.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\Logo.bmp" />
+    <Image Include="res\MDS_E-bus_Sample.ico" />
+    <Image Include="res\MDS_Ebus_Sample.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

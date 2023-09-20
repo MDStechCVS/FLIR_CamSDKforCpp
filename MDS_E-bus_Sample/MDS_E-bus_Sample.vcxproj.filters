@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{5b4d15f1-9d43-4ffc-b669-686038d451cd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MDS_E-bus_Sample.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MDS_E-bus_SampleDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\BMPSaver.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\EbDriver.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\EbDriverNames.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\EbInstaller.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\EbInstallerLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\EbNetworkAdapter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\EbVersion.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\IActionHandler.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\ImagingBuffer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\ImagingBufferAllocator.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\ImagingContrastFilter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\ImagingFilter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\ImagingFilterRGB.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\IPvDeviceAdapter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\IPvDeviceEventSink.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\IPvDSSource.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\IPvFilter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\IPvTransmitterGEV.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\IPvUserSetNotify.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PtResult.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PtString.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PtTypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PtUtilsLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvAcquisitionStateManager.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvActionCommand.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvAppUtils.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvAppUtilsLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvBase.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvBaseLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvBuffer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvBufferConverter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvBufferConverterRGBFilter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvBufferFormatType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvBufferLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvBufferWriter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvCameraBridge.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvCameraBridgeLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvCameraBridgeManagerWnd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvChunkData.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvConfigurationReader.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvConfigurationWriter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeInterlacer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeinterlacingType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDevice.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceAdapter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceEnums.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceEventSink.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceFinderWnd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceGEV.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceI2CBus.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceInfo.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceInfoGEV.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceInfoPleoraProtocol.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceInfoU3V.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceInfoUSB.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDevicePleoraProtocol.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceSerialEnums.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceSerialPort.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceSerialPortEchoSink.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceSPIBus.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDeviceU3V.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDfwPayload.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDisplayThread.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDisplayWnd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvDSSourceUIDs.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvFPSStabilizer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenApi.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenBoolean.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenBrowserWnd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenCategory.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenCommand.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenEnum.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenEnumEntry.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenFile.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenFloat.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenICamLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenInteger.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenParameter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenParameterArray.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenParameterArrayCL.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenParameterList.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenRegister.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenStateStack.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenString.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGenTypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvGUILib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvH264AccessUnit.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvH264Decoder.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvImage.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvImageAnalysisMono.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvImageJPEG.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvInterface.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvLicenseLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvLinkLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvLogger.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvMp4Writer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvMultiPartContainer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvMultiPartSection.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvNetworkAdapter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvPayloadType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvPersistenceLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvPipeline.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvPipelineEventSink.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvPixelType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvProperty.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvPropertyList.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvRangeFilter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvRawData.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvResult.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSampleTransmitterConfig.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSampleUtils.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSemaphore.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSerialBridge.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSerialBridgeManagerWnd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSerialLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSerialPortConfiguration.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSerialTerminalWnd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSessionInfoSDP.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSoftDeviceGEV.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSoftDeviceGEVInterfaces.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStream.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStreamEventSink.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStreamGEV.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStreamInfo.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStreamingChannelSourceDefault.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStreamingChannelSourceTrigger.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStreamLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStreamRTP.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStreamU3V.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvString.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvStringList.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSystemEnums.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSystemEventSink.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvSystemLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvTapFilter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvTapGeometry.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvTftpClient.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvTransmitterGEV.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvTransmitterLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvTriggerSelector.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvTruesenseConverter.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvTypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvUSBHostController.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvVersion.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvVirtualDeviceGEV.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvVirtualDeviceLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PvWnd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\SimpleImagingLib.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinButton.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraControl_rev.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FlirHeader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="JudgeStatusDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MDS_E-bus_Sample.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MDS_E-bus_SampleDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinButton.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraControl_rev.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="FlirHeader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="JudgeStatusDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MDS_E-bus_Sample.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\MDS_E-bus_Sample.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\MDS_E-bus_Sample.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Logo.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\bitmap1.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\MDS_Ebus_Sample.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
