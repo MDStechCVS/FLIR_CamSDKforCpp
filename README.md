@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-![Logo](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/885390da-a1ef-4181-a06a-9b67e0775cbc)
-=======
+
 <img width="320" alt="CI수정_가로형_영문_색상" src="https://github.com/MDStechCVS/FLIR_BosonSDKforPython/assets/142575573/b941d3e6-3dd8-46f7-9336-3f9ed4eaed77">
 
->>>>>>> 6c7617eb0c62f57b1f9055b635a5969c762b0a68
 
 # FLIR_CamSDKforCpp
 
