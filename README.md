@@ -14,17 +14,12 @@ reference : [e-bus_Ver4.1 Starter Manual](https://github.com/MDStechCVS/FLIR_Cam
 
 Development environment:	
 
+Visual Studio 2019<br> 
+Win SDK 10.0.2<br> 
+[Microsoft Visual C++ 2010 x64 Redistributable](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/blob/main/install/vcredist_x64_2010.exe)<br> 
+[Microsoft Visual C++ 2012 x64 Redistributable](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/blob/main/install/vcredist_x64_2012.exe)<br>
 
-Visual Studio 2019
-
-       
-Win SDK 10.0.2
-
-       
-Microsoft Visual C++ 2010, 2012 x64/86 Redistributable
-
-
-e-bus sdk 4.1.6.3809
+e-bus sdk 4.1.6.3809<br> 
 
 
 ## ebus SDK Window
