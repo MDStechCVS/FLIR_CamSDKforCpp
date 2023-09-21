@@ -12,7 +12,7 @@ SDK : ebus_sdk_64-bit.4.1.6.3809
 reference : [e-bus_Ver4.1 Starter Manual](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/blob/main/e-bus_Ver4.1%20Starter%20Manual.pdf)
 
 
-Development environment:	
+## Development environment:</div>
 
 Visual Studio 2019<br> 
 Win SDK 10.0.2<br> 
@@ -25,7 +25,7 @@ e-bus sdk 4.1.6.3809<br>
 
 
 
-## ebus SDK Window
+## ebus SDK Window GUI
 
 ![GUI](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/74717304-1d63-4975-9c42-190f6e16986b)
 
