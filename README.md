@@ -8,7 +8,7 @@
 This program can run on Windows 10 or 11.<br>
 SDK : ebus_sdk_64-bit.4.1.6.3809
 
-## <div align="left">Install</div>
+## <div align="left">Manual</div>
 reference : [e-bus_Ver4.1 Starter Manual](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/blob/main/e-bus_Ver4.1%20Starter%20Manual.pdf)
 
 
