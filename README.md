@@ -12,7 +12,7 @@ This program can run on Windows 10 or 11.<br>
 SDK : ebus_sdk_64-bit.4.1.6.3809
 
 ## <div align="left">Install</div>
-reference : [e-bus_Ver4.1 Starter Manual.pdf]
+reference : [e-bus_Ver4.1 Starter Manual](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/blob/main/e-bus_Ver4.1%20Starter%20Manual.pdf)
 Development environment:	Visual Studio 2019
 							Win SDK 10.0.2
 							Microsoft Visual C++ 2010, 2012 x64/86 Redistributable
