@@ -1241,7 +1241,8 @@ void CameraControl_rev::CreateAndDrawBitmap(CMDS_Ebus_SampleDlg* MainDlg, const 
     const int CAM_IDS[] = { IDC_CAM1, IDC_CAM2, IDC_CAM3, IDC_CAM4 };
     for (int i = 0; i < sizeof(CAM_IDS) / sizeof(CAM_IDS[0]); i++) 
     {
-        if (nIndex == i) {
+        if (nIndex == i)
+        {
             DrawImage(imageMat, CAM_IDS[i], m_BitmapInfo);
             break;
         }
@@ -1269,6 +1270,7 @@ cv::Mat CameraControl_rev::MapColorsToPalette(const cv::Mat& inputImage, cv::Col
 
     // applyColorMap 함수의 세 번째 인자로 colormap 변수를 사용
     cv::applyColorMap(normalizedImage8bit, colorMappedImage, colormap);
+
 
     // colorMappedImage를 다시 16비트 이미지로 변환.
     cv::Mat outputImage(inputImage.size(), CV_16UC1);
@@ -1338,17 +1340,19 @@ int CameraControl_rev::UpdateHeightForA50Camera(int& nHeight, int nWidth)
 }
 
 // =============================================================================
-// 라이브 이미지를 표시하는 함수
+// Main GUI 라이브 이미지출력
 void CameraControl_rev::DisplayLiveImage(CMDS_Ebus_SampleDlg* MainDlg, cv::Mat& processedImageMat, int nIndex)
 {
     if (processedImageMat.empty()) return;
 
     int num_channels = MainDlg->m_chEventsCheckBox.GetCheck() ? 16 : 8;
-    if (MainDlg->m_chEventsCheckBox.GetCheck()) {
+    if (MainDlg->m_chEventsCheckBox.GetCheck())
+    {
         cv::Mat colorMappedImage = MapColorsToPalette(processedImageMat, GetColormapType());
         CreateAndDrawBitmap(MainDlg, colorMappedImage, num_channels, nIndex);
     }
-    else {
+    else
+    {
         CreateAndDrawBitmap(MainDlg, processedImageMat, num_channels, nIndex);
     }
 }
