@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <atlstr.h>
+#include <conio.h>
 
 #include <PvSampleUtils.h>
 #include <PvDevice.h>
@@ -127,10 +128,22 @@ void StreamingImage(bool bFlag, PvPipeline* Pipeline)
             cv::Mat imageMat(lImage->GetHeight(), lImage->GetWidth(), CV_8UC1, ptr, cv::Mat::AUTO_STEP);
             if (lImage->GetHeight() > 1 && lImage->GetWidth() > 1)
             {
-                cv::imshow("Live Buffer", imageMat);
-                ::cvWaitKey(100);
+                try 
+                {
+                    printf("[Height = %d] [Width = %d] [PixelSize = %d]\n", lImage->GetHeight(), lImage->GetWidth(), lImage->GetHeight()* lImage->GetWidth());
+                    cv::imshow("Live Buffer", imageMat);
+                    int key = cv::waitKey(10);
+                    if (key == 27)  // 27은 ESC 키 코드입니다.
+                    {
+                        break;      // ESC 키를 누르면 루프를 종료합니다.
+                    }
+                }
+                catch (cv::Exception& e)
+                {
+                    std::cerr << "Live Error: " << e.what() << std::endl;
+                    // 예외 처리 코드 작성
+                }            
             }
-
         }
     }
 }
@@ -143,7 +156,7 @@ int main()
     bool bFlag = false;
     PvResult result = -1;
     CString strAddress = "";
-
+    
     // 사용자로부터 카메라 IP 입력 받기
     std::wcout << L"IP Address : ";
     std::wstring input;
@@ -155,18 +168,23 @@ int main()
     // 카메라 장치에 연결
     Device = ConnectToDevice(Device, strAddress);
     if (Device != nullptr)
+    {
         printf("Device Connect = [success]\n");
+    }
 
     // 카메라 스트림 오픈
     Stream = OpenStream(Stream, strAddress);
     if (Stream != nullptr)
+    {
         printf("OpenStream = [success]\n");
-
+    }
     // 카메라 스트림 설정
     ConfigureStream(Device, Stream);
 
     if (Stream != nullptr && Device != nullptr)
+    {
         printf("ConfigureStream = [success]\n");
+    }
 
     if (Stream != nullptr && Device != nullptr)
     {
@@ -177,14 +195,12 @@ int main()
             printf("CreatePipeline = [success]\n");
             // 파이프 라인 생성까지 완료된다면, StreamingImage 진입 전 처리 완료
             bFlag = true;
-        }
-            
+        }          
     }
     // 카메라 파라미터 설정
     if (bFlag)
     {
         PvGenParameterArray* lDeviceParams = Device->GetParameters();
-
         // GenICam AcquisitionStart 및 AcquisitionStop 명령 
         PvGenCommand* lStart = dynamic_cast<PvGenCommand*>(lDeviceParams->Get("AcquisitionStart"));
 

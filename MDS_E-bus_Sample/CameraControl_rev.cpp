@@ -1309,7 +1309,7 @@ void CameraControl_rev::SetupImagePixelType(PvImage* lImage)
 }
 
 // =============================================================================
-// A50 카메라의 경우 높이를 업데이트하는 함수 FFF 데이터를 얻기위해서 헤더 영역을 더 얻어와야한다.
+// A50 카메라의 경우 높이를 업데이트하는 함수 FFF 데이터를 얻기위해서 지정된 헤더 영역을 더 얻어와야한다.
 int CameraControl_rev::UpdateHeightForA50Camera(int& nHeight, int nWidth)
 {
     if (nHeight <= 0 || nWidth <= 0)
