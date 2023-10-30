@@ -3,6 +3,7 @@
 #include <iostream>
 #include <atlstr.h>
 #include <conio.h>
+#include <string>
 
 #include <PvSampleUtils.h>
 #include <PvDevice.h>
@@ -20,9 +21,14 @@
 #include <opencv2\core.hpp>
 #include <opencv2/imgproc.hpp>
 
-
-
 #define BUFFER_COUNT			( 16 )
+
+struct CameraInfo 
+{
+    CString strInterfaceID = "";
+    CString strModelName = "";
+    int nIndex = 0;
+};
 
 // =============================================================================
 PvDevice* ConnectToDevice(PvDevice* Device, CString strAddress)
@@ -148,6 +154,70 @@ void StreamingImage(bool bFlag, PvPipeline* Pipeline)
     }
 }
 
+CameraInfo InputSelectedIndex(int maxIndex, const std::vector<CameraInfo>& cameraList)
+{
+    int selectedIdx = -1;
+    int key = 0;
+    while (selectedIdx < 1 || selectedIdx > maxIndex)
+    {
+        std::cout << "Select a camera by entering its index (1-" << maxIndex << "): ";
+        std::cin >> selectedIdx;
+        if (selectedIdx < 1 || selectedIdx > maxIndex)
+        {
+            std::cout << "Invalid index. Please enter a valid index." << std::endl;
+        }
+
+        if (key == 27)  // 27은 ESC 키 코드입니다.
+        {
+            break;      // ESC 키를 누르면 루프를 종료합니다.
+        }
+    }
+    return cameraList[selectedIdx - 1]; // 선택한 인덱스에 해당하는 카메라 정보를 반환
+}
+
+CameraInfo CameraDeviceFind()
+{
+    PvSystem lSystem;
+    lSystem.Find();
+
+    std::vector<CameraInfo> cameraList; // 선택한 카메라 정보를 저장할 벡터
+
+    uint32_t nIntercafeCount = lSystem.GetInterfaceCount();
+    int nIndex = 0;
+    for (uint32_t i = 0; i < nIntercafeCount; i++) 
+    {
+        const PvInterface* lInterface = dynamic_cast<const PvInterface*>(lSystem.GetInterface(i));
+        if (lInterface != NULL) 
+        {
+            uint32_t nLocalCnt = lInterface->GetDeviceCount();
+            for (uint32_t j = 0; j < nLocalCnt; j++)
+            {
+                const PvDeviceInfo* lDI = dynamic_cast<const PvDeviceInfo*>(lInterface->GetDeviceInfo(j));
+                if (lDI != NULL)
+                {
+                    CString strInterfaceID, strModelname;
+                    strInterfaceID.Format(_T("%s"), static_cast<LPCTSTR>(lDI->GetConnectionID()));
+                    strModelname.Format(_T("%s"), static_cast<LPCTSTR>(lDI->GetModelName()));
+
+                    CameraInfo cameraInfo;
+                    cameraInfo.strInterfaceID = strInterfaceID;
+                    cameraInfo.strModelName = strModelname;
+                    cameraInfo.nIndex = cameraList.size();
+                    cameraList.push_back(cameraInfo); // 카메라 정보를 벡터에 저장
+
+                    printf("%d. Model = [%S] Address = [%S]\n", cameraList.size(), strModelname.GetString(), strInterfaceID.GetString());
+                }
+            }
+        }
+    }
+
+    // 사용자로부터 인덱스 입력 받기
+    CameraInfo selectedCamera = InputSelectedIndex(cameraList.size(), cameraList);
+
+    return selectedCamera;
+
+}
+
 int main()
 {
     PvDevice* Device = nullptr;
@@ -156,34 +226,30 @@ int main()
     bool bFlag = false;
     PvResult result = -1;
     CString strAddress = "";
-    
-    // 사용자로부터 카메라 IP 입력 받기
-    std::wcout << L"IP Address : ";
-    std::wstring input;
-    std::getline(std::wcin, input);
+    int nDeviceCnt = 0;
+    CameraInfo CamInfo;
 
-    // CString으로 변환
-    strAddress = input.c_str();
+    CamInfo = CameraDeviceFind();
 
     // 카메라 장치에 연결
-    Device = ConnectToDevice(Device, strAddress);
+    Device = ConnectToDevice(Device, CamInfo.strInterfaceID);
     if (Device != nullptr)
     {
-        printf("Device Connect = [success]\n");
+        printf("%S Device Connect = [success]\n", CamInfo.strModelName);
     }
 
     // 카메라 스트림 오픈
-    Stream = OpenStream(Stream, strAddress);
+    Stream = OpenStream(Stream, CamInfo.strInterfaceID);
     if (Stream != nullptr)
     {
-        printf("OpenStream = [success]\n");
+        printf("%S OpenStream = [success]\n", CamInfo.strModelName);
     }
     // 카메라 스트림 설정
     ConfigureStream(Device, Stream);
 
     if (Stream != nullptr && Device != nullptr)
     {
-        printf("ConfigureStream = [success]\n");
+        printf("%S ConfigureStream = [success]\n", CamInfo.strModelName);
     }
 
     if (Stream != nullptr && Device != nullptr)
@@ -202,6 +268,8 @@ int main()
     {
         PvGenParameterArray* lDeviceParams = Device->GetParameters();
         // GenICam AcquisitionStart 및 AcquisitionStop 명령 
+        result = lDeviceParams->SetEnumValue("PixelFormat", PvPixelMono8); // Default setting
+
         PvGenCommand* lStart = dynamic_cast<PvGenCommand*>(lDeviceParams->Get("AcquisitionStart"));
 
         // 스트리밍 사전 준비
@@ -212,7 +280,7 @@ int main()
         {
             result = Device->StreamEnable();
             result = lStart->Execute();
-
+            
             StreamingImage(bFlag, Pipeline);
         }
 
