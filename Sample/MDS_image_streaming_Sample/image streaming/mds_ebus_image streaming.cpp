@@ -114,42 +114,57 @@ unsigned char* GetImageDataPointer(PvImage* image)
     return image ? image->GetDataPointer() : nullptr;
 }
 
-void StreamingImage(bool bFlag, PvPipeline* Pipeline)
+void StreamingImage(bool bFlag, PvPipeline* Pipeline, PvStream* stream)
 {
     PvBuffer* lBuffer; // PvBuffer 객체
     PvResult lOperationResult = -1; // 작업 결과 변수 초기화
     PvImage* lImage = nullptr;
-
+    PvGenParameterArray* lStreamParams = stream->GetParameters();
+    double lFrameRateVal = 0.0; // 카메라 프레임 레이트 값을 저장하는 변수
+    unsigned char* ptr = nullptr;
+    PvGenFloat* lFrameRate = dynamic_cast<PvGenFloat*>(lStreamParams->Get("AcquisitionRate"));
+    uint32_t nTemp = 1; // 버퍼 유효성 체크
     while(bFlag)
     {
         PvResult lResult = Pipeline->RetrieveNextBuffer(&lBuffer, 1000, &lOperationResult);
 
         if (lResult.IsOK())
         {
-            Pipeline->ReleaseBuffer(lBuffer);           
-            lImage = GetImageFromBuffer(lBuffer);
-
-            unsigned char* ptr = GetImageDataPointer(lImage);
-
-            cv::Mat imageMat(lImage->GetHeight(), lImage->GetWidth(), CV_8UC1, ptr, cv::Mat::AUTO_STEP);
-            if (lImage->GetHeight() > 1 && lImage->GetWidth() > 1)
+            if (lBuffer->GetOperationResult() == (PvResult::Code::CodeEnum::OK))
             {
-                try 
+                Pipeline->ReleaseBuffer(lBuffer);
+                lImage = GetImageFromBuffer(lBuffer);
+                ptr = GetImageDataPointer(lImage);
+
+                cv::Mat imageMat(lImage->GetHeight(), lImage->GetWidth(), CV_8UC1, ptr, cv::Mat::AUTO_STEP);
+                if (lImage->GetHeight() >= nTemp && lImage->GetWidth() >= nTemp && ptr != nullptr)
                 {
-                    printf("[Height = %d] [Width = %d] [PixelSize = %d]\n", lImage->GetHeight(), lImage->GetWidth(), lImage->GetHeight()* lImage->GetWidth());
-                    cv::imshow("Live Buffer", imageMat);
-                    int key = cv::waitKey(10);
-                    if (key == 27)  // 27은 ESC 키 코드입니다.
+                    try
                     {
-                        break;      // ESC 키를 누르면 루프를 종료합니다.
+                        lFrameRate->GetValue(lFrameRateVal);
+
+                        printf("[FPS = %.2f][Height = %d] [Width = %d] [PixelSize = %d], [Code = %d]\n", lFrameRateVal,
+                            lImage->GetHeight(), lImage->GetWidth(), lImage->GetHeight() * lImage->GetWidth(), lResult.GetCode());
+
+                        cv::imshow("Live Buffer", imageMat);
+                        int key = cv::waitKey(10);
+                        if (key == 27)  // 27은 ESC 키 코드입니다.
+                        {
+                            break;      // ESC 키를 누르면 루프를 종료합니다.
+                        }
+                    }
+                    catch (cv::Exception& e)
+                    {
+                        std::cerr << "Live Error: " << e.what() << std::endl;
+                        // 예외 처리 코드 작성
                     }
                 }
-                catch (cv::Exception& e)
-                {
-                    std::cerr << "Live Error: " << e.what() << std::endl;
-                    // 예외 처리 코드 작성
-                }            
-            }
+            }          
+        }
+        else
+        {
+            // 예외 상황 코드 분석
+            printf("Result [Code = %d]\n", lResult.GetCode());
         }
     }
 }
@@ -223,7 +238,7 @@ int main()
     PvDevice* Device = nullptr;
     PvStream* Stream = nullptr;
     PvPipeline* Pipeline = nullptr;
-    bool bFlag = false;
+    bool bCheckFlag = false;
     PvResult result = -1;
     CString strAddress = "";
     int nDeviceCnt = 0;
@@ -260,11 +275,11 @@ int main()
         {
             printf("CreatePipeline = [success]\n");
             // 파이프 라인 생성까지 완료된다면, StreamingImage 진입 전 처리 완료
-            bFlag = true;
+            bCheckFlag = true;
         }          
     }
     // 카메라 파라미터 설정
-    if (bFlag)
+    if (bCheckFlag == true)
     {
         PvGenParameterArray* lDeviceParams = Device->GetParameters();
         // GenICam AcquisitionStart 및 AcquisitionStop 명령 
@@ -281,7 +296,7 @@ int main()
             result = Device->StreamEnable();
             result = lStart->Execute();
             
-            StreamingImage(bFlag, Pipeline);
+            StreamingImage(bCheckFlag, Pipeline, Stream);
         }
 
         delete Pipeline;

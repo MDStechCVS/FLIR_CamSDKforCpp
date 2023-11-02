@@ -723,7 +723,7 @@ UINT CameraControl_rev::ThreadCam(LPVOID _mothod)
                     PvResult lResult = CamClass->m_Pipeline->RetrieveNextBuffer(&lBuffer, 1000, &lOperationResult);
                     if (lResult.IsOK())
                     {
-                        if (lBuffer->GetOperationResult() == 0)
+                        if (lBuffer->GetOperationResult() == (PvResult::Code::CodeEnum::OK))
                         {
                             // 가져온 버퍼의 작업 결과 확인 및 처리
                             // strLog.Format(_T("BlockID : %d "), lBuffer->GetBlockID());
