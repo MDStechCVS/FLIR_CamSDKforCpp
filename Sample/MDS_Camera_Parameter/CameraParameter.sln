@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34114.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraParameter", "CameraParameter\CameraParameter.vcxproj", "{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}.Debug|x64.ActiveCfg = Debug|x64
+		{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}.Debug|x64.Build.0 = Debug|x64
+		{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}.Debug|x86.ActiveCfg = Debug|Win32
+		{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}.Debug|x86.Build.0 = Debug|Win32
+		{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}.Release|x64.ActiveCfg = Release|x64
+		{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}.Release|x64.Build.0 = Release|x64
+		{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}.Release|x86.ActiveCfg = Release|Win32
+		{B3B58D1D-0AFE-41AA-A910-3C8DF68684D9}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AFE9F3AC-1AB1-4887-9BA7-CB9F2132CA2B}
+	EndGlobalSection
+EndGlobal

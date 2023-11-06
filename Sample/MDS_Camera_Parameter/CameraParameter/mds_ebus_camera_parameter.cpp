@@ -15,15 +15,9 @@
 #include <PvDeviceGEV.h>
 #include <PvDeviceInfoGEV.h>
 
-#include <opencv\cv.h>
-#include <opencv\highgui.h>
-#include <opencv2/opencv.hpp>
-#include <opencv2\core.hpp>
-#include <opencv2/imgproc.hpp>
-
 #define BUFFER_COUNT			( 16 )
 
-struct CameraInfo 
+struct CameraInfo
 {
     CString strInterfaceID = "";
     CString strModelName = "";
@@ -98,78 +92,6 @@ PvPipeline* CreatePipeline(PvPipeline* Pipeline, PvDevice* aDevice, PvStream* aS
     return lPipeline; // 생성된 또는 설정된 PvPipeline 포인터 반환
 }
 
-PvImage* GetImageFromBuffer(PvBuffer* aBuffer)
-{
-    PvImage* lImage = aBuffer ? aBuffer->GetImage() : nullptr;
-
-    if (!lImage)
-    {
-
-    }
-    return lImage;
-}
-
-unsigned char* GetImageDataPointer(PvImage* image)
-{
-    return image ? image->GetDataPointer() : nullptr;
-}
-
-int StreamingImage(bool bFlag, PvPipeline* Pipeline, PvStream* stream)
-{
-    PvBuffer* lBuffer; // PvBuffer 객체
-    PvResult lOperationResult = -1; // 작업 결과 변수 초기화
-    PvImage* lImage = nullptr;
-    PvGenParameterArray* lStreamParams = stream->GetParameters();
-    double lFrameRateVal = 0.0; // 카메라 프레임 레이트 값을 저장하는 변수
-    unsigned char* ptr = nullptr;
-    PvGenFloat* lFrameRate = dynamic_cast<PvGenFloat*>(lStreamParams->Get("AcquisitionRate"));
-    uint32_t nTemp = 1; // 버퍼 유효성 체크
-
-    printf("---------- Start Streaming----------\n");
-    while(bFlag)
-    {
-        PvResult lResult = Pipeline->RetrieveNextBuffer(&lBuffer, 1000, &lOperationResult);
-
-        if (lResult.IsOK())
-        {
-            if (lBuffer->GetOperationResult() == (PvResult::Code::CodeEnum::OK))
-            {
-                Pipeline->ReleaseBuffer(lBuffer);
-                lImage = GetImageFromBuffer(lBuffer);
-                ptr = GetImageDataPointer(lImage);
-
-                cv::Mat imageMat(lImage->GetHeight(), lImage->GetWidth(), CV_8UC1, ptr, cv::Mat::AUTO_STEP);
-                if (lImage->GetHeight() >= nTemp && lImage->GetWidth() >= nTemp && ptr != nullptr)
-                {
-                    try
-                    {
-                        lFrameRate->GetValue(lFrameRateVal);
-
-                        printf("[FPS = %.2f][Height = %d] [Width = %d] [PixelSize = %d], [Code = %d]\n", lFrameRateVal,
-                            lImage->GetHeight(), lImage->GetWidth(), lImage->GetHeight() * lImage->GetWidth(), lResult.GetCode());
-                        cv::imshow("Live Buffer", imageMat);
-                        int key = cv::waitKey(10);
-                        if (key == 27)  // 27은 ESC 키 코드입니다.s
-                        {
-                            return -1;
-                        }
-                    }
-                    catch (cv::Exception& e)
-                    {
-                        std::cerr << "Live Error: " << e.what() << std::endl;
-                        // 예외 처리 코드 작성
-                    }
-                }
-            }          
-        }
-        else
-        {
-            // 예외 상황 코드 분석
-            printf("Result [Code = %d]\n", lResult.GetCode());
-        }
-    }
-}
-
 CameraInfo InputSelectedIndex(int maxIndex, const std::vector<CameraInfo>& cameraList)
 {
     int selectedIdx = -1;
@@ -200,10 +122,10 @@ CameraInfo CameraDeviceFind()
 
     uint32_t nIntercafeCount = lSystem.GetInterfaceCount();
     int nIndex = 0;
-    for (uint32_t i = 0; i < nIntercafeCount; i++) 
+    for (uint32_t i = 0; i < nIntercafeCount; i++)
     {
         const PvInterface* lInterface = dynamic_cast<const PvInterface*>(lSystem.GetInterface(i));
-        if (lInterface != NULL) 
+        if (lInterface != NULL)
         {
             uint32_t nLocalCnt = lInterface->GetDeviceCount();
             for (uint32_t j = 0; j < nLocalCnt; j++)
@@ -236,8 +158,8 @@ CameraInfo CameraDeviceFind()
 
 int main()
 {
-    printf("MDS Image Streaming Sample\n");
-    printf("-----------------------------------\n");
+	printf("MDS Camera Parameter Sample\n");
+    printf("-------------------------------------------\n");
 
     PvDevice* Device = nullptr;
     PvStream* Stream = nullptr;
@@ -247,7 +169,6 @@ int main()
     CString strAddress = "";
     int nDeviceCnt = 0;
     CameraInfo CamInfo;
-    int nFlag = 0;
 
     CamInfo = CameraDeviceFind();
 
@@ -281,46 +202,55 @@ int main()
             printf("CreatePipeline = [success]\n");
             // 파이프 라인 생성까지 완료된다면, StreamingImage 진입 전 처리 완료
             bCheckFlag = true;
-        }          
+        }
     }
-    // 카메라 파라미터 설정
+
+    // 카메라 파라미터를 받아오기 위한 전제조건 만족 시 파라미터 값 불러오기, 변경을 수행할수있다.
     if (bCheckFlag == true)
     {
+        int64_t nValue = 0;
+        // 카메라 파라미터 값 불러오기
         PvGenParameterArray* lDeviceParams = Device->GetParameters();
-        // GenICam AcquisitionStart 및 AcquisitionStop 명령 
+        printf("---------- Get Device Parameter ----------\n");
+        // PixelFormat 변경 command 
+        
         result = lDeviceParams->SetEnumValue("PixelFormat", PvPixelMono8); // Default setting
-
-        PvGenCommand* lStart = dynamic_cast<PvGenCommand*>(lDeviceParams->Get("AcquisitionStart"));
-
-        // 스트리밍 사전 준비
-        result = Pipeline->Reset();
-        result = Pipeline->Start();
-
         if (result.IsOK())
         {
-            result = Device->StreamEnable();
-            result = lStart->Execute();
-            
-            nFlag = StreamingImage(bCheckFlag, Pipeline, Stream);
+            printf("Set PixelFormat = [Mono8]\n");
         }
 
-        if (Device != nullptr && nFlag == -1)
+        result = lDeviceParams->GetEnumValue("PixelFormat", nValue);
+        if (PvPixelMono8 == nValue && result.IsOK())
         {
-            result = Device->Disconnect();
-            if (result.IsOK())
-            {
-                printf("Device Disconnect\n");
-
-                delete Pipeline;
-                Pipeline = nullptr;
-            }       
+            printf("Get PixelFormat = [Mono8] [%d]\n", nValue);
         }
+        printf("-------------------------------------------\n");
+
+        printf("---------- Get Stream Parameter ----------\n");
+        PvGenParameterArray* lStreamParams = Stream->GetParameters();
+
+        double dFPSValue = 0.0;
+        result = lStreamParams->GetFloatValue("AcquisitionRate", dFPSValue);
+        if (result.IsOK())
+        {
+            printf("Get FPS = [%.2f]\n", dFPSValue);
+        }
+        printf("-------------------------------------------\n");
+
     }
-    else
+
+    if (Device != nullptr)
     {
-        printf("Camera Connect = [fail]\n");
+        result = Device->Disconnect();
+        if (result.IsOK())
+        {
+            printf("Device Disconnect\n");
+        }
+        
+        printf("-----------------------------------\n");
     }
 
-	return 0;
-
+    delete Pipeline;
+    Pipeline = nullptr;
 }
