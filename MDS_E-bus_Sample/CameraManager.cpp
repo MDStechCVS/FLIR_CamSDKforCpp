@@ -122,8 +122,6 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
     strLog.Format(_T("Contact Device Count [%d]"), lDIVector.size());
     Common::GetInstance()->AddLog(0, strLog);
 
-    Sleep(10);
-
     int nDeviceCnt = (int)lDIVector.size();
 
     
@@ -139,7 +137,6 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
             strValue.Format(_T("%s"), static_cast<LPCTSTR>(lDIVector.at(i)->GetModelName()));
             m_strSetModelName.push_back(strValue);
 
-            Sleep(1);
             strTemp = lDIVector.at(i)->GetConnectionID();
             strValue.Format(_T("%s"), static_cast<LPCTSTR>(lDIVector.at(i)->GetConnectionID()));
             m_strSetIPAddress.push_back(strValue);
@@ -147,7 +144,6 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
             strLog.Format(_T("[Cam_Index_%d] IP Address[%s]"), i + 1, static_cast<LPCTSTR>(m_strSetIPAddress.at(i)));
             Common::GetInstance()->AddLog(0, strLog);
          
-            Sleep(1);
             Common::GetInstance()->AddLog(0, _T("------------------------------------"));
         }
     }

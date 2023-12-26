@@ -5,13 +5,17 @@
 #include "resource.h"
 #include "stdafx.h"
 
+
 #include <iomanip>
 #include <list>
 #include <set>
 #include <memory>
 #include<vector>
 #include <thread>
-
+#include <unordered_map>
+#include <map>
+#include <mutex>
+#include <string>
 #include "Common.h"
 #include "SkinButton.h"
 #include <immintrin.h>
@@ -27,6 +31,8 @@
 #include <PvGenStateStack.h>
 #include <PvDeviceInfoGEV.h>
 #include <PvStreamGEV.h>
+#include <algorithm>
+#include "MDSColorpalette.h"
 
 
 /*----------메모리 누수 검사--------------*/
@@ -90,6 +96,15 @@
 #define	PALETTE_SIZE			256
 #define	BUTTON_MAX_COUNT		100
 
+
+#define MONO8 ( "0x1080001" )
+#define MONO16 ( "0x1100007" )
+#define MONO14 ( "0x1100025" )
+#define YUV422_8_UYVY ( "0x210001F" )
+
+#define FAHRENHEIT 273.15f
+
+
 // 색상을 RGBA 형식으로 표현하기 위한 구조체
 typedef struct RGBA 
 {
@@ -121,16 +136,24 @@ enum ThreadStatus
 
 enum CameraModelList
 {
-	A50				= 0,
-	Ax5				= 1,
-	FT1000			= 2
+	None	 = 0,
+	A50,
+	A70,
+	Ax5,				
+	A400,
+	A500,
+	A600,
+	A700,
+	A615,
+	FT1000,
+	BlackFly
 };
 
 typedef struct CAMERA_PARAMETER
 
 {
 	int index = -1;
-	CString strPixelFormat;
+	CString strPixelFormat = _T("");
 
 	HANDLE param;
 
@@ -145,10 +168,7 @@ enum GUI_STATUS
 	GUI_STEP_ERROR
 };
 
-struct ColormapArray
-{
-	static const TCHAR* colormapStrings[];
-};
+
 
 static BYTE bmiBuf[sizeof(BITMAPINFOHEADER) + 1024];
 static const RGBQUAD GrayPalette[256] =

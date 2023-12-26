@@ -202,6 +202,7 @@
     <ClInclude Include="FlirHeader.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Includes\BMPSaver.h" />
+    <ClInclude Include="Includes\cppturbo.hpp" />
     <ClInclude Include="Includes\EbDriver.h" />
     <ClInclude Include="Includes\EbDriverNames.h" />
     <ClInclude Include="Includes\EbInstaller.h" />
@@ -352,6 +353,7 @@
     <ClInclude Include="Includes\PvWnd.h" />
     <ClInclude Include="Includes\SimpleImagingLib.h" />
     <ClInclude Include="JudgeStatusDlg.h" />
+    <ClInclude Include="MDSColorpalette.h" />
     <ClInclude Include="MDS_E-bus_Sample.h" />
     <ClInclude Include="MDS_E-bus_SampleDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -365,6 +367,7 @@
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="FlirHeader.cpp" />
     <ClCompile Include="JudgeStatusDlg.cpp" />
+    <ClCompile Include="MDSColorpalette.cpp" />
     <ClCompile Include="MDS_E-bus_Sample.cpp" />
     <ClCompile Include="MDS_E-bus_SampleDlg.cpp" />
     <ClCompile Include="SkinButton.cpp" />

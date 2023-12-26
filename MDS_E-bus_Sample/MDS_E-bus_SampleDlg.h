@@ -98,15 +98,24 @@ private:
 	CComboBox m_Cam3_Colormap;
 	CComboBox m_Cam4_Colormap;
 
+	
+
 public:
 	//공용변수
 	CButton m_chGenICam_checkBox;
 	CButton m_chEventsCheckBox;
 	CButton m_chPointerCheckBox;
+	CButton m_chColorMapCheckBox;
+	CButton m_chUYVYCheckBox;
+	CButton m_chMonoCheckBox;
+
 	CButton m_chMarkerCheckBox;
 	CButton m_ch_Cam1_ROI_CheckBox;
 	CProgressCtrl m_progress;
 	CButton m_radio;
+	CEdit m_Color_Scale;
+	CEdit m_Color_Scale2;
+	CEdit m_Color_Scale3;
 private:
 
 	int m_nSelectCamIndex;
@@ -139,8 +148,8 @@ public:
 	int GetSelectCamIndex();
 	HBRUSH SetCameraConnectionStatus(int camIndex, CameraManager* camManager, CDC* pDC, HBRUSH greenBrush, HBRUSH redBrush);
 	void UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFps, CStatic& lbMin, CStatic& lbMax, CStatic& lbROI, CStatic& lbConnectStatus);
-	ColormapTypes GetSelectedColormap(CComboBox& comboControl);
-	void ApplyColorSettings(ColormapTypes selectedMap, int comboIndex);
+	PaletteTypes GetSelectedColormap(CComboBox& comboControl);
+	void ApplyColorSettings(PaletteTypes selectedMap, int comboIndex);
 	void PopulateComboBoxes();
 	void HandleComboChange(int controlId);
 	bool IsMouseEventCheck(UINT message);
@@ -177,4 +186,5 @@ public:
 	afx_msg void OnCbnSelchangeCam4();
 	afx_msg void OnBnClickedBtnCamParam();
 	afx_msg void OnBnClickedBtnCamParamApply();
+	afx_msg void OnBnClickedCheckBox();
 };

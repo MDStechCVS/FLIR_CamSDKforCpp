@@ -2,7 +2,8 @@
 #include "CameraControl_rev.h"
 #include "MDS_E-bus_SampleDlg.h"
 
-
+std::mutex drawmtx;
+std::mutex filemtx;
 CameraControl_rev::CameraControl_rev(int nIndex)
     : m_nCamIndex(nIndex), Manager(NULL), m_Cam_Params(new Camera_Parameter)
 {
@@ -13,6 +14,12 @@ CameraControl_rev::CameraControl_rev(int nIndex)
     // 변수들을 초기화
     Initvariable();
     LoadCaminiFile(nIndex);
+    SetPixelFormatParameter();
+
+    //Rainbow Palette 생성
+    CreateRainbowPalette();
+
+
 
     // 카메라 스레드를 생성하고 시작
     pThread[nIndex] = AfxBeginThread(ThreadCam, m_Cam_Params,
@@ -22,7 +29,7 @@ CameraControl_rev::CameraControl_rev(int nIndex)
     pThread[nIndex]->m_bAutoDelete = FALSE;
     pThread[nIndex]->ResumeThread();
 
-    m_TStatus = (ThreadStatus)THREAD_RUNNING;
+    m_TStatus = ThreadStatus::THREAD_RUNNING;
 }
 
 // =============================================================================
@@ -46,6 +53,8 @@ void CameraControl_rev::Initvariable()
     m_bStart = false;
     m_bRunning = true;
     m_bReStart = false;
+    m_bYUVYFlag = false;
+
     m_Device = nullptr;
     m_Stream = nullptr;
     m_Pipeline = nullptr;
@@ -53,7 +62,26 @@ void CameraControl_rev::Initvariable()
     // 카메라 1의 FPS 초기화
     m_dCam_FPS = 0;
 
-    m_colormapType = (ColormapTypes)COLORMAP_JET; // 컬러맵 변수, 초기값은 JET으로 설정
+    m_nCsvFileCount = 1;
+    m_colormapType = PaletteTypes::PALETTE_IRON; // 컬러맵 변수, 초기값은 JET으로 설정
+
+    m_TempData = cv::Mat();
+
+    bbtnDisconnectFlag = false; // 버튼을 클릭하여 장치 연결 해제된경우
+
+    std::string strPath = CT2A(Common::GetInstance()->Getsetingfilepath());
+    m_strRawdataPath = strPath + "Camera_" + std::to_string(m_nCamIndex + 1) + "\\";
+    SetRawdataPath(m_strRawdataPath);
+    if (CreateDirectoryIfNotExists(GetRawdataPath()))
+    {
+        // 디렉터리가 생성되었거나 이미 존재함
+        // 추가로 수행할 작업을 이곳에 추가
+    }
+    else
+    {
+        // 디렉터리 생성 실패 시 수행할 작업을 이곳에 추가
+    }
+
 }
 
 // =============================================================================
@@ -85,7 +113,7 @@ bool CameraControl_rev::Camera_destroy()
     Common::GetInstance()->AddLog(0, strLog);
 
     Common::GetInstance()->AddLog(0, _T("------------------------------------"));
-
+    
     return true;
 }
 
@@ -105,8 +133,9 @@ void CameraControl_rev::CameraDisconnect()
         m_Device->Disconnect();
         Camera_destroy();
     }
-
-    GetMainDialog()->gui_status = (GUI_STATUS)GUI_STEP_IDLE;
+    bbtnDisconnectFlag = true;
+    GetMainDialog()->gui_status = GUI_STATUS::GUI_STEP_IDLE;
+    
 }
 
 // =============================================================================
@@ -155,7 +184,6 @@ PvDevice* CameraControl_rev::ConnectToDevice(int nIndex)
         // GigE Vision 디바이스에 연결
         strLog.Format(_T("[Cam_Index_%d] Connecting.. to device"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
-
         // 카메라 모델
         CString strModelName = Manager->m_strSetModelName.at(nIndex);
         strLog.Format(_T("[Cam_Index_%d]Model = [%s]"), nIndex + 1, static_cast<LPCTSTR>(strModelName));
@@ -164,7 +192,7 @@ PvDevice* CameraControl_rev::ConnectToDevice(int nIndex)
         PvString ConnectionID = Manager->m_strSetIPAddress.at(nIndex);
         strLog.Format(_T("[Cam_Index_%d] IP Address = [%s]"), nIndex + 1, static_cast<LPCTSTR>(Manager->m_strSetIPAddress.at(nIndex)));
         Common::GetInstance()->AddLog(0, strLog);
-
+        
         device = PvDevice::CreateAndConnect(ConnectionID, &lResult);
     }
     else
@@ -371,6 +399,8 @@ bool CameraControl_rev::AcquireParameter(PvDevice* aDevice, PvStream* aStream, P
     {
         SetThreadFlag(true);
         SetStartFlag(true);
+        bbtnDisconnectFlag = false;
+
         return true;
     }
 
@@ -476,6 +506,25 @@ DWORD CameraControl_rev::ConvertHexValue(const CString& hexString)
     return hexValue;
 }
 
+
+bool CameraControl_rev::CreateDirectoryIfNotExists(const std::string& directoryPath)
+{
+    std::wstring wideString(directoryPath.begin(), directoryPath.end());
+
+    if (!PathIsDirectory(wideString.c_str()))
+    {
+        if (SHCreateDirectoryEx(NULL, wideString.c_str(), NULL) == ERROR_SUCCESS)
+        {
+            std::wcout << L"디렉터리 생성 성공: " << wideString << std::endl;
+            return true;
+        }
+        else {
+            std::wcerr << L"디렉터리 생성 실패: " << wideString << std::endl;
+            return false;
+        }
+    }
+}
+
 // =============================================================================
 /// 카메라 버퍼 데이터를 가져와서 이미지 후가공 
 void CameraControl_rev::ImageProcessing(PvBuffer* aBuffer, int nIndex)
@@ -504,7 +553,7 @@ void CameraControl_rev::ImageProcessing(PvBuffer* aBuffer, int nIndex)
     //a50 카메라 헤더에서 FFF영역 합쳐서 받아오는 방법
     //UpdateHeightForA50Camera(nHeight, nWidth);
 
-    int nArray = nWidth * nHeight;
+    int nArraysize = nWidth * nHeight;
     uint16_t* pixelArray = ConvertToUInt16Pointer(ptr);
     if (!pixelArray)
         return;
@@ -525,169 +574,263 @@ void CameraControl_rev::ImageProcessing(PvBuffer* aBuffer, int nIndex)
         Common::GetInstance()->AddLog(0, strLog);
         */
 
+    
     byte* imageDataPtr = reinterpret_cast<byte*>(lImage->GetDataPointer());
-    if (MainDlg->m_chEventsCheckBox.GetCheck() && ptr != NULL)
-    {
-        //8bit data를 16bit로 컨버트한다
-        Convert8BitTo16Bit(imageDataPtr, pixelArray, nArray);
-    }
 
     // 생성할 이미지의 채널 수 및 데이터 타입 선택
-    int num_channels = (MainDlg->m_chEventsCheckBox.GetCheck()) ? 16 : 8;
-    int dataType = (MainDlg->m_chEventsCheckBox.GetCheck()) ? CV_16UC1 : CV_8UC1;
+    int num_channels = (Get16BitType()) ? 16 : 8;
+    bool isYUVYType = GetYUVYType();
+    int dataType = (Get16BitType() ? CV_16UC1 : (isYUVYType ? CV_8UC2 : CV_8UC1));
 
     // 마지막 ROI 좌표 대입
     cv::Rect roi = m_Select_rect;
-    uint16_t* roiData = nullptr;
 
+    std::unique_ptr<uint16_t[]> fulldata = nullptr;
+    std::unique_ptr<uint16_t[]> roiData = nullptr;
+    fulldata = extractWholeImage(imageDataPtr, nArraysize, nWidth, nHeight);
+    bool bTestFlag = false;
     if (IsRoiValid(roi))
     {
         // ROI 데이터 저장
-        roiData = extractROI(imageDataPtr, nArray, nWidth, roi.x, roi.x + roi.width, roi.y, roi.y + roi.height, roi.width, roi.height);
-
+        roiData = extractROI(imageDataPtr, nWidth, roi.x, roi.x + roi.width, roi.y, roi.y + roi.height, roi.width, roi.height);
         // ROI 이미지 데이터 처리 및 최소/최대값 업데이트
-        ProcessImageData(roiData, roi.width * roi.height);
+        ProcessImageData(std::move(roiData), roi.width * roi.height, nWidth, nHeight, roi);
 
         // ROI 이미지를 cv::Mat으로 변환
-        cv::Mat roiMat(roi.height, roi.width, dataType, roiData);
+              
     }
+    if (roiData)
+    {
+        cv::Mat roiMat(roi.height, roi.width, dataType, roiData.get());
+    }
+    if (fulldata)
+    {
+        cv::Mat fulldataMat(nHeight, nWidth, dataType, fulldata.get());
+        cv::Mat tempCopy = fulldataMat.clone(); // fulldataMat을 복제한 새로운 행렬 생성
+        tempCopy.copyTo(m_TempData);
+    }
+
+    // 주기적으로 mat data 파일을 저장할 함수 호출
+   
 
     // 이미지 노멀라이즈
     cv::Mat processedImageMat = ProcessImageBasedOnSettings(imageDataPtr, nHeight, nWidth, MainDlg);
-   
+    
     //ROI 객체 이미지 사이즈 저장
     SetImageSize(processedImageMat);
 
     //ROI 사각형 영역이 생겼을 경우에만 그린다
-    if (IsRoiValid(roi))
+    if (IsRoiValid(roi) && !processedImageMat.empty())
     {
         // ROI 사각형 그리기
         DrawRoiRectangle(processedImageMat, m_Select_rect, num_channels);
-        //WriteCSV("D:\\Test.csv", processedImageMat);
     }
 
-    int nType = processedImageMat.type();
-    if (processedImageMat.empty())
-        return;
+    putTextOnCamModel(processedImageMat);
 
     // 화면에 라이브 이미지 그리기
-    DisplayLiveImage(MainDlg, processedImageMat, nIndex);
+    processedImageMat = DisplayLiveImage(MainDlg, processedImageMat, nIndex);
+
+    // 일정 간격으로 이미지, 로우데이터 자동 저장 
+    SaveFilePeriodically(GetRawdataPath(), m_TempData, processedImageMat);
 
     //  작업이 완료된 비트맵 정보를 삭제합니다, 동적으로 할당한 메모리를 정리
-    CleanupAfterProcessing(MainDlg, nIndex, roiData);
+    CleanupAfterProcessing(MainDlg, nIndex);
+}
+
+// =============================================================================
+void CameraControl_rev::putTextOnCamModel(cv::Mat& imageMat)
+{
+    if (!imageMat.empty()) 
+    {
+        // CString을 std::string으로 변환합니다.
+        CString cstrText = Manager->m_strSetModelName.at(m_nCamIndex);
+        std::string strText = std::string(CT2CA(cstrText));
+
+        // 텍스트를 이미지에 삽입합니다.
+        cv::putText(imageMat, strText, cv::Point(0, 25), cv::FONT_HERSHEY_PLAIN, 1.5, cv::Scalar(0, 0, 0), 2, cv::LINE_AA);
+    }
+}
+
+// =============================================================================
+std::unique_ptr<uint16_t[]> CameraControl_rev::extractWholeImage(const uint8_t* byteArr, int byteArrLength, int nWidth, int nHeight)
+{
+    // 전체 영역의 크기 계산
+    int imageSize = nWidth * nHeight;
+
+    // imageSize 크기의 uint16_t 배열을 동적으로 할당합니다.
+    std::unique_ptr<uint16_t[]> imageArray = std::make_unique<uint16_t[]>(imageSize);
+    for (int i = 0; i < imageSize; ++i)
+    {
+        uint16_t nRawdata = static_cast<uint16_t>(byteArr[i * 2] | (byteArr[i * 2 + 1] << 8));
+        imageArray[i] = (nRawdata * GetScaleFactor()) - FAHRENHEIT;
+        //// 입력 데이터의 유효성 검사
+        //if (i * 2 + 1 < byteArrLength)
+        //{
+        //    // 데이터를 읽고 예상 형식과 일치하는지 확인
+        //    //uint16_t sample = static_cast<uint16_t>(byteArr[i * 2] | (byteArr[i * 2 + 1] << 8));
+        //    
+        //}
+        //else
+        //{
+        //    // 입력 데이터가 유효하지 않을 때 처리 (예: 로깅, 예외 처리)
+        //    // 오류를 출력하거나 예외를 던지는 등의 작업을 수행
+        //    // 예외 처리 예시:
+        //    // throw std::runtime_error("Invalid input data or index out of bounds");
+        //}
+    }
+    //CString strLog;
+    //OutputDebugString(strLog);
+
+    return imageArray; // std::unique_ptr 반환
 }
 
 // =============================================================================
 // 지정된 영역의 데이터 처리
-uint16_t* CameraControl_rev::extractROI(const uint8_t* byteArr, int byteArrLength, int nWidth, int nStartX, int nEndX, int nStartY, int nEndY, int roiWidth, int roiHeight)
+std::unique_ptr<uint16_t[]> CameraControl_rev::extractROI(const uint8_t* byteArr, int nWidth, int nStartX, int nEndX, int nStartY, int nEndY, int roiWidth, int roiHeight)
 {
-    uint16_t* roiArr = new uint16_t[roiWidth * roiHeight];
+    // roiWidth와 roiHeight 크기의 uint16_t 배열을 동적으로 할당합니다.
+    int nArraySize = roiWidth * roiHeight;
+    std::unique_ptr<uint16_t[]> roiArray = std::make_unique<uint16_t[]>(nArraySize);
+
     int k = 0;
 
-    for (int y = nStartY; y < nEndY; y++) {
+    for (int y = nStartY; y < nEndY; y++)
+    {
         int rowOffset = y * nWidth;
-        for (int x = nStartX; x < nEndX; x++) {
+        for (int x = nStartX; x < nEndX; x++) 
+        {
             int index = rowOffset + x;
 
-            if (index >= 0 && index < nWidth * nEndY && (index * 2 + 1) < byteArrLength) 
-            {
-                uint16_t sample = static_cast<uint16_t>(byteArr[index * 2] | (byteArr[index * 2 + 1] << 8));
-                roiArr[k++] = sample;
-            }
+            // 입력 데이터의 유효성 검사
+
+            // 데이터를 읽고 예상 형식과 일치하는지 확인
+            uint16_t sample = static_cast<uint16_t>(byteArr[index * 2] | (byteArr[index * 2 + 1] << 8));
+            roiArray[k++] = sample;     
         }
     }
+    //CString logMessage;
+  
+    //    
+    //logMessage.Format(_T("roisize = %d"), k);
+    //OutputDebugString(logMessage);
+    
 
-    return roiArr;
+    return roiArray; // std::unique_ptr 반환
 }
 
 // =============================================================================
-// 16비트 데이터 최소,최대값 산출, simd 기법 사용
-void CameraControl_rev::ProcessImageData(const uint16_t* data, int size)
+// 카메라 종류별 스케일값 적용
+bool CameraControl_rev::InitializeTemperatureThresholds()
 {
+    // min, max 변수값 reset
+    m_Max = 0;
+    m_Min = 65535;
+    m_Max_X = 0;
+    m_Max_Y = 0;
+    m_Min_X = 0;
+    m_Min_Y = 0;
+ 
 
-    __m128 min16_simd = _mm_set1_ps(65535.0f); // 초기값 설정
-    __m128 max16_simd = _mm_setzero_ps();      // 초기값 설정
+    return true;
+}
 
-    __m128 scale_vector;
+// =============================================================================
+// 카메라 종류별 스케일값 적용
+double CameraControl_rev::GetScaleFactor()
+{
+    double dScale = 0;
 
-    if (m_Camlist == A50)
+    switch (m_Camlist)
     {
-        scale_vector = _mm_set1_ps(0.01f);
+    case FT1000:
+    case A400:
+    case A500:
+    case A600:
+    case A700:
+    case A615:
+    case A50:
+        dScale = (0.01f);
+        break;
+    case Ax5:
+        dScale = (0.04f);
+        break;
+    default:
+        dScale = (0.01f);
+        break;
     }
-    else if (m_Camlist == Ax5)
+    return dScale;
+}
+
+// =============================================================================
+// ROI 내부의 데이터 연산
+void CameraControl_rev::ROIXYinBox(ushort uTempValue, double dScale, int nCurrentX, int nCurrentY, cv::Rect roi, int nPointIdx)
+{
+    int absoluteX = nCurrentX + roi.x; // ROI 상대 좌표를 절대 좌표로 변환
+    int absoluteY = nCurrentY + roi.y; // ROI 상대 좌표를 절대 좌표로 변환
+
+    // 최대 최소 온도 체크 후 백업
+    if (uTempValue <= m_Min)
     {
-        scale_vector = _mm_set1_ps(0.04f);
+        m_Min = uTempValue;
+        m_Min_X = absoluteX;
+        m_Min_Y = absoluteY;
+
+        m_MinSpot.pointIdx = nPointIdx;
+
+        m_MinSpot.x = m_Min_X;
+        m_MinSpot.y = m_Min_Y;
+        m_MinSpot.tempValue = ((static_cast<float>(m_Min) * dScale) - FAHRENHEIT);
     }
-
-    for (int i = 0; i < size / 4; i++)
+    else if (uTempValue >= m_Max)
     {
-        // 4개의 데이터를 한 번에 처리
-        __m128i sample_simd = _mm_loadu_si128((__m128i*) & data[i * 4]);
+        m_Max = uTempValue;
+        m_Max_X = absoluteX;
+        m_Max_Y = absoluteY;
 
-        // 16비트 정수를 32비트 부동소수점으로 변환
-        __m128 sampleTemp_simd = _mm_cvtepi32_ps(_mm_cvtepu16_epi32(sample_simd));
-
-        // 스케일 벡터를 사용하여 데이터를 변환
-        sampleTemp_simd = _mm_mul_ps(sampleTemp_simd, scale_vector);
-        sampleTemp_simd = _mm_sub_ps(sampleTemp_simd, _mm_set1_ps(273.15f));
-
-        // 최소/최대 값을 업데이트
-        min16_simd = _mm_min_ps(sampleTemp_simd, min16_simd);
-        max16_simd = _mm_max_ps(sampleTemp_simd, max16_simd);
+        m_MaxSpot.x = m_Max_X;
+        m_MaxSpot.y = m_Max_Y;
+        m_MaxSpot.tempValue = ((static_cast<float>(m_Max) * dScale) - FAHRENHEIT);
+        m_MaxSpot.pointIdx = nPointIdx;
     }
+}
 
-    // SIMD 결과값을 추출하여 최소/최대 값 및 인덱스 계산
-    float min16_values[4];
-    float max16_values[4];
-    int min16_indices[4];
-    int max16_indices[4];
+// =============================================================================
+// 16비트 데이터 최소,최대값 산출
+void CameraControl_rev::ProcessImageData(std::unique_ptr<uint16_t[]>&& data, int size, int nImageWidth, int nImageHeight, cv::Rect roi)
+{
+    double dScale = GetScaleFactor();
+    InitializeTemperatureThresholds();
 
-    _mm_store_ps(min16_values, min16_simd);
-    _mm_store_ps(max16_values, max16_simd);
 
-    for (int i = 0; i < 4; i++)
+    int nPointIdx = 0; // 포인트 인덱스 초기화
+
+    for (int y = 0; y < roi.height; y++)
     {
-        min16_indices[i] = (size / 4) * i;
-        max16_indices[i] = (size / 4) * i;
-    }
-
-    // 최종 최소/최대 값 및 인덱스 결정
-    float min16_value = min16_values[0];
-    float max16_value = max16_values[0];
-    int min16_idx = min16_indices[0];
-    int max16_idx = max16_indices[0];
-
-    for (int i = 1; i < 4; i++)
-    {
-        if (min16_values[i] < min16_value)
+        for (int x = 0; x < roi.width; x++) 
         {
-            min16_value = min16_values[i];
-            min16_idx = min16_indices[i];
-        }
-        if (max16_values[i] > max16_value)
-        {
-            max16_value = max16_values[i];
-            max16_idx = max16_indices[i];
+            int dataIndex = y * roi.width + x; // ROI 내에서의 인덱스 계산
+            ushort tempValue = static_cast<ushort>(data[dataIndex]);
+
+            ROIXYinBox(tempValue, dScale, x, y, roi, nPointIdx);
+
+            nPointIdx++; // 포인트 인덱스 증가
         }
     }
-
-    // m_MinSpot 및 m_MaxSpot 업데이트
-    m_MinSpot.pointIdx = min16_idx;
-    m_MinSpot.tempValue = (ushort)min16_value;
-    m_MaxSpot.pointIdx = max16_idx;
-    m_MaxSpot.tempValue = (ushort)max16_value;
-
 }
 
 // =============================================================================
 // mat data *.csv format save
-void CameraControl_rev::WriteCSV(string filename, Mat m)
+bool CameraControl_rev::WriteCSV(string filename, Mat m, int nCnt)
 {
+    
+    string strfilename = filename + "TempData_" + to_string(m_nCamIndex)+ "_" + to_string(nCnt) + ".csv";
     ofstream myfile;
-    myfile.open(filename.c_str());
+    myfile.open(strfilename.c_str());
     myfile << cv::format(m, cv::Formatter::FMT_CSV) << std::endl;
     myfile.close();
 
+    return true;
 }
 
 // =============================================================================
@@ -799,7 +942,7 @@ double CameraControl_rev::GetCameraFPS()
 // =============================================================================
 void CameraControl_rev::SetCameraFPS(double dValue)
 {
-    m_dCam_FPS = dValue;
+m_dCam_FPS = dValue;
 }
 
 // =============================================================================
@@ -825,7 +968,7 @@ bool CameraControl_rev::CameraStop(int nIndex)
 {
     CMDS_Ebus_SampleDlg* MainDlg = GetMainDialog();
     CString strLog = _T("");
-    bool bFlag[3] = {false, };
+    bool bFlag[3] = { false, };
     bool bRtn = false;
 
     if (m_Device != NULL && m_Stream != NULL && m_Pipeline != NULL)
@@ -854,59 +997,84 @@ bool CameraControl_rev::CameraStop(int nIndex)
 }
 
 // =============================================================================
+//화면에 출력한 비트맵 데이터를 생성
+void CameraControl_rev::CreateAndDrawBitmap(CMDS_Ebus_SampleDlg* MainDlg, const cv::Mat& imageMat, int num_channels, int nIndex)
+{
+    // 비트맵 정보 생성
+    m_BitmapInfo = CreateBitmapInfo(imageMat, imageMat.cols, imageMat.rows, num_channels);
+
+    const int CAM_IDS[] = { IDC_CAM1, IDC_CAM2, IDC_CAM3, IDC_CAM4 };
+    for (int i = 0; i < sizeof(CAM_IDS) / sizeof(CAM_IDS[0]); i++)
+    {
+        if (nIndex == i)
+        {
+            DrawImage(imageMat, CAM_IDS[i], m_BitmapInfo);
+            break;
+        }
+    }
+}
+
+// =============================================================================
 // BITMAPINFO, BITMAPINFOHEADER  setting
-BITMAPINFO* CameraControl_rev::CreateBitmapInfo(int w, int h, int bpp, int nIndex)
+BITMAPINFO* CameraControl_rev::CreateBitmapInfo(const cv::Mat& imageMat, int w, int h, int num_channel)
 {
     BITMAPINFO* m_BitmapInfo = nullptr;
-    int imageSize = -1;
+    int imageSize = 0;
+    int bpp = 0;
     int nbiClrUsed = 0;
-
-    // Free previously allocated memory if any
-    if (m_BitmapInfo != nullptr)
-    {
-        delete[] reinterpret_cast<BYTE*>(m_BitmapInfo);
-        m_BitmapInfo = nullptr;
-    }
-
+    int nType = imageMat.type();
+     
     try
     {
-        if (bpp == 8)
+        m_BitmapInfo = new BITMAPINFO;
+        bpp = imageMat.elemSize() * 8;
+
+        if (GetYUVYType() || GetColorPaletteType())
         {
-            m_BitmapInfo = reinterpret_cast<BITMAPINFO*>(new BYTE[sizeof(BITMAPINFO) + 255 * sizeof(RGBQUAD)]);
+            bpp = 24;
+            imageSize = w * h * 3;
+            m_BitmapInfo = reinterpret_cast<BITMAPINFO*>(new BYTE[sizeof(BITMAPINFO)]);
+            // 픽셀당 비트 수 (bpp)
+            nbiClrUsed = 0;
+
+        }
+        else if(GetGrayType())
+        {
+            m_BitmapInfo = (BITMAPINFO*) new BYTE[sizeof(BITMAPINFO) + 255 * sizeof(RGBQUAD)];
             imageSize = w * h;
             nbiClrUsed = 256;
+
+            memcpy(((BITMAPINFO*)m_BitmapInfo)->bmiColors, GrayPalette, 256 * sizeof(RGBQUAD));
         }
-        else if (bpp == 16) // 16 bit
+        else
         {
-            m_BitmapInfo = reinterpret_cast<BITMAPINFO*>(new BYTE[sizeof(BITMAPINFO) + 65535 * sizeof(RGBQUAD)]);
-            imageSize = w * h * 2;
-            nbiClrUsed = 65536;
+            imageSize = w * h;
+            m_BitmapInfo = reinterpret_cast<BITMAPINFO*>(new BYTE[sizeof(BITMAPINFO)]);
+            nbiClrUsed = 0;
+         /*   throw std::runtime_error("Failed to allocate for BITMAPINFO");
+            imageSize = w * h;
+            nbiClrUsed = 0;*/
         }
+
+        BITMAPINFOHEADER& bmiHeader = m_BitmapInfo->bmiHeader;
+
+        bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        bmiHeader.biWidth = w;
+        bmiHeader.biHeight = -h;  // 이미지를 아래에서 위로 표시
+        bmiHeader.biPlanes = 1;
+        bmiHeader.biBitCount = bpp;
+        bmiHeader.biCompression = BI_RGB;
+        bmiHeader.biSizeImage = imageSize; // 이미지 크기 초기화
+        bmiHeader.biClrUsed = nbiClrUsed;   // 색상 팔레트 적용
+
+        return m_BitmapInfo;
     }
     catch (const std::bad_alloc&)
     {
+        delete m_BitmapInfo; // 메모리 해제
+        m_BitmapInfo = nullptr;
         throw std::runtime_error("Failed to allocate memory for BITMAPINFO");
     }
-
-    m_BitmapInfo->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    m_BitmapInfo->bmiHeader.biWidth = w;
-    m_BitmapInfo->bmiHeader.biHeight = -h;
-    m_BitmapInfo->bmiHeader.biPlanes = 1;
-    m_BitmapInfo->bmiHeader.biBitCount = bpp;
-    m_BitmapInfo->bmiHeader.biCompression = BI_RGB;
-    m_BitmapInfo->bmiHeader.biSizeImage = imageSize;
-    m_BitmapInfo->bmiHeader.biClrUsed = nbiClrUsed;
-
-    if (bpp == 8)
-    {
-        std::vector<RGBQUAD> GrayPalette(256);
-        std::copy(GrayPalette.begin(), GrayPalette.end(), m_BitmapInfo->bmiColors);
-    }
-    else
-    {
-    }
-
-    return m_BitmapInfo;
 }
 
 // =============================================================================
@@ -917,7 +1085,7 @@ void CameraControl_rev::DrawImage(Mat mImage, int nID, BITMAPINFO* BitmapInfo)
     CMDS_Ebus_SampleDlg* MainDlg = GetMainDialog();
     CClientDC dc(MainDlg->GetDlgItem(nID));
     CRect rect;
-
+    cv::Mat imageCopy = mImage.clone();
     MainDlg->GetDlgItem(nID)->GetClientRect(&rect);
 
     // 백 버퍼 생성
@@ -929,7 +1097,8 @@ void CameraControl_rev::DrawImage(Mat mImage, int nID, BITMAPINFO* BitmapInfo)
 
     // 백 버퍼에 그림 그리기
     backBufferDC.SetStretchBltMode(COLORONCOLOR);
-    StretchDIBits(backBufferDC.GetSafeHdc(), 0, 0, rect.Width(), rect.Height(), 0, 0, mImage.cols, mImage.rows, mImage.data, BitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+    StretchDIBits(backBufferDC.GetSafeHdc(), 0, 0, rect.Width(), rect.Height(), 0, 0, imageCopy.cols, imageCopy.rows, imageCopy.data, 
+        BitmapInfo, DIB_RGB_COLORS, SRCCOPY);
     
     // 프론트 버퍼로 스왑
     dc.BitBlt(0, 0, rect.Width(), rect.Height(), &backBufferDC, 0, 0, SRCCOPY);
@@ -948,6 +1117,9 @@ void CameraControl_rev::DrawImage(Mat mImage, int nID, BITMAPINFO* BitmapInfo)
 // 카메라 연결 끊김 발생 시 재 연결 시퀀스
 int CameraControl_rev::ReStartSequence(int nIndex)
 {
+    if (bbtnDisconnectFlag)
+        return -1;
+
     bool bRtn = false;
     CString strLog = _T("");
     PvResult lResult = -1;
@@ -976,13 +1148,19 @@ int CameraControl_rev::ReStartSequence(int nIndex)
         bRtn = false;
 
     m_Stream = OpenStream(nIndex);
-    if (m_Stream == NULL) bRtn = false;
+    if (m_Stream == NULL)
+    {
+        bRtn = false;
+    }
+
     ConfigureStream(m_Device, m_Stream, nIndex);
     m_Pipeline = CreatePipeline(m_Device, m_Stream, nIndex);
-    if (m_Pipeline == NULL) bRtn = false;
-           
-    Sleep(1000);
 
+    if (m_Pipeline == NULL)
+    {
+        bRtn = false;
+    }
+           
     bRtn = AcquireParameter(m_Device, m_Stream, m_Pipeline, nIndex);
     strLog.Format(_T("Cam[%d][RC] AcquireImages"), nIndex + 1);
     Common::GetInstance()->AddLog(0, strLog);
@@ -1036,6 +1214,7 @@ bool CameraControl_rev::GetRunningFlag()
     return m_bRunning;
 }
 
+// =============================================================================
 void CameraControl_rev::SetThreadFlag(bool bFlag)
 {
     m_bThreadFlag = bFlag;
@@ -1059,6 +1238,66 @@ void CameraControl_rev::SetStartFlag(bool bFlag)
 bool CameraControl_rev::GetThreadFlag()
 {
     return m_bRunning;
+}
+
+// =============================================================================
+void CameraControl_rev::SetYUVYType(bool bFlag)
+{
+    m_bYUVYFlag = bFlag;
+}
+
+// =============================================================================
+bool CameraControl_rev::GetYUVYType()
+{
+    return m_bYUVYFlag;
+}
+
+// =============================================================================
+bool CameraControl_rev::GetGrayType()
+{
+    return m_bGrayFlag;
+}
+
+// =============================================================================
+void CameraControl_rev::SetGrayType(bool bFlag)
+{
+    m_bGrayFlag = bFlag;
+}
+
+// =============================================================================
+bool CameraControl_rev::Get16BitType()
+{
+    return m_b16BitFlag;
+}
+
+// =============================================================================
+void CameraControl_rev::Set16BitType(bool bFlag)
+{
+    m_b16BitFlag = bFlag;
+}
+
+// =============================================================================
+bool CameraControl_rev::GetColorPaletteType()
+{
+    return m_bColorFlag;
+}
+
+// =============================================================================
+void CameraControl_rev::SetColorPaletteType(bool bFlag)
+{
+    m_bColorFlag = bFlag;
+}
+
+// =============================================================================
+void CameraControl_rev::SetRawdataPath(std::string path)
+{
+    m_strRawdataPath = path;
+}
+
+// =============================================================================
+std::string CameraControl_rev::GetRawdataPath()
+{
+    return m_strRawdataPath;
 }
 
 // =============================================================================
@@ -1104,12 +1343,38 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
     DWORD pixeltypeValue = ConvertHexValue(m_Cam_Params->strPixelFormat);
     m_pixeltype = (PvPixelType)pixeltypeValue;
 
+    CString strPixelFormat = _T("");
+    if (m_Cam_Params->strPixelFormat == MONO8)
+    {
+        strPixelFormat = "Mono8";
+    }
+    else if (m_Cam_Params->strPixelFormat == MONO16)
+    {
+        strPixelFormat = "Mono16";
+    }
+    else if (m_Cam_Params->strPixelFormat == MONO14)
+    {
+        strPixelFormat = "Mono14";
+    }
+    else if (m_Cam_Params->strPixelFormat == YUV422_8_UYVY)
+    {
+        strPixelFormat = "YUV422_8_UYVY";
+    }
+
     switch (m_Camlist)
     {
+    case FT1000:
+    case A400:
+    case A500:
+    case A600:
+    case A700:
+    case A615:
     case A50:
 
-        //a50 
-
+        // 카메라 모델이름 받아오기
+        strLog.Format(_T("[Cam_Index_%d] Cam Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
+        Common::GetInstance()->AddLog(0, strLog);
+        //a50 pixel format 파라미터 설정
         result = lDeviceParams->SetEnumValue("PixelFormat", m_pixeltype);
 
         if (!result.IsOK())
@@ -1119,10 +1384,9 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
         }
         else
         {
-            strLog.Format(_T("[Cam_Index_%d]Set PixelFormat %s"), nIndex + 1, m_Cam_Params->strPixelFormat);
+            strLog.Format(_T("[Cam_Index_%d]Set PixelFormat [%s] %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
             Common::GetInstance()->AddLog(0, strLog);
         }
-
         break;
 
     case Ax5:
@@ -1137,11 +1401,10 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
         }
         else
         {
-            strLog.Format(_T("[Cam_Index_%d] Set PixelFormat %s"), nIndex + 1, m_Cam_Params->strPixelFormat);
+            strLog.Format(_T("[Cam_Index_%d] Set PixelFormat %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
             Common::GetInstance()->AddLog(0, strLog);
         }
-
-       
+   
         //14bit
         result = lDeviceParams->SetEnumValue("DigitalOutput", 3);
 
@@ -1155,13 +1418,12 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
             strLog.Format(_T("[Cam_Index_%d] Set DigitalOutput Success"), nIndex + 1);
             Common::GetInstance()->AddLog(0, strLog);
         }
-
         break;
 
-    case FT1000:
-        break;
+
 
     default:
+        result = lDeviceParams->SetEnumValue("PixelFormat", m_pixeltype);
         break;
     }
 
@@ -1173,7 +1435,7 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
 void CameraControl_rev::LoadCaminiFile(int nIndex)
 {
     bool bFlag = false;
-
+    
     CString filePath = _T(""), strSetfilepath = _T("");
     CString iniSection = _T(""), iniKey = _T(""), iniValue = _T("");
     TCHAR cbuf[MAX_PATH] = { 0, };
@@ -1187,6 +1449,32 @@ void CameraControl_rev::LoadCaminiFile(int nIndex)
     GetPrivateProfileString(iniSection, iniKey, _T("0"), cbuf, MAX_PATH, filePath);
     iniValue.Format(_T("%s"), cbuf);
     m_Cam_Params->strPixelFormat = iniValue;
+
+    // YUVY 경우일경우 체크박스 활성화
+    if(m_Cam_Params->strPixelFormat == YUV422_8_UYVY)
+    {
+        SetYUVYType(TRUE);  
+        Set16BitType(FALSE);
+        SetGrayType(FALSE);
+    }
+    else if (m_Cam_Params->strPixelFormat == MONO8)
+    {
+        SetGrayType(TRUE);
+        SetYUVYType(FALSE);
+        Set16BitType(FALSE);
+    }
+    else if (m_Cam_Params->strPixelFormat == MONO16 || m_Cam_Params->strPixelFormat == MONO14)
+    {
+        Set16BitType(TRUE);
+        SetGrayType(TRUE);
+        SetYUVYType(FALSE);
+    }
+    else
+    {
+        SetGrayType(FALSE);
+        SetYUVYType(FALSE);
+        Set16BitType(FALSE);
+    }
 }
 
 // =============================================================================
@@ -1226,34 +1514,36 @@ cv::Mat CameraControl_rev::NormalizeAndProcessImage(const T* data, int height, i
 // ROI 객체 그리기 함수
 void CameraControl_rev::DrawRoiRectangle(cv::Mat& imageMat, const cv::Rect& roiRect, int num_channels) 
 {
-    cv::Scalar redColor(0, 0, 255);
-    cv::Scalar roiColor = (num_channels == 16) ? redColor : redColor;
-    cv::rectangle(imageMat, roiRect, redColor, 2, 8, 0);
-}
+    std::lock_guard<std::mutex> lock(drawmtx);
+    
+    int markerSize = 30; // 마커의 크기 설정
+    cv::Scalar redColor(0, 0, 0); // 빨간색
+    cv::Scalar blueColor(255, 255, 0); // 파란색
+    cv::Scalar roiColor = (255, 255, 255);
+    cv::rectangle(imageMat, roiRect, blueColor, 2, 8, 0);
 
-// =============================================================================
-//화면에 출력한 비트맵 데이터를 생성
-void CameraControl_rev::CreateAndDrawBitmap(CMDS_Ebus_SampleDlg* MainDlg, const cv::Mat& imageMat, int num_channels, int nIndex) 
-{
-    //int channelBit = num_channels * (imageMat.elemSize() * 8);
-    m_BitmapInfo = CreateBitmapInfo(imageMat.cols, imageMat.rows, num_channels, nIndex);
+    cv::Point mincrossCenter(m_MinSpot.x, m_MinSpot.y);
+    cv::Point maxcrossCenter(m_MaxSpot.x, m_MaxSpot.y);
+    CString cstrValue;
+    std::string strValue;
+    cstrValue.Format(_T("[%d]"), m_MinSpot.tempValue);
+    strValue = std::string(CT2CA(cstrValue));
+    cv::putText(imageMat, strValue, mincrossCenter, cv::FONT_HERSHEY_PLAIN, 1.5, roiColor, 2, cv::LINE_AA);
+    cv::drawMarker(imageMat, mincrossCenter, roiColor, cv::MARKER_TRIANGLE_DOWN, markerSize);
+    
 
-    const int CAM_IDS[] = { IDC_CAM1, IDC_CAM2, IDC_CAM3, IDC_CAM4 };
-    for (int i = 0; i < sizeof(CAM_IDS) / sizeof(CAM_IDS[0]); i++) 
-    {
-        if (nIndex == i)
-        {
-            DrawImage(imageMat, CAM_IDS[i], m_BitmapInfo);
-            break;
-        }
-    }
-}
+    // 텍스트를 이미지에 삽입합니다.
+    cstrValue.Format(_T("[%d]"), m_MaxSpot.tempValue);
+    strValue = std::string(CT2CA(cstrValue));
+    cv::putText(imageMat, strValue, maxcrossCenter, cv::FONT_HERSHEY_PLAIN, 1.5, roiColor, 2, cv::LINE_AA);
+    cv::drawMarker(imageMat, maxcrossCenter, roiColor, cv::MARKER_TRIANGLE_UP, markerSize);
+ }
 
 // =============================================================================
 //이미지 데이터에 따라 파레트 설정
-cv::Mat CameraControl_rev::MapColorsToPalette(const cv::Mat& inputImage, cv::ColormapTypes colormap)
+cv::Mat CameraControl_rev::MapColorsToPalette(const cv::Mat& inputImage, PaletteTypes palette)
 {
-    cv::Mat colorMappedImage;
+    // Input 이미지는 CV_16UC1 이다
     cv::Mat normalizedImage(inputImage.size(), CV_16UC1); // 정규화된 16비트 이미지
 
     // input 이미지 내에서 최소값과 최대값 검색.
@@ -1268,23 +1558,82 @@ cv::Mat CameraControl_rev::MapColorsToPalette(const cv::Mat& inputImage, cv::Col
     cv::Mat normalizedImage8bit;
     normalizedImage.convertTo(normalizedImage8bit, CV_8UC1, 255.0 / 65535.0);
 
-    // applyColorMap 함수의 세 번째 인자로 colormap 변수를 사용
-    cv::applyColorMap(normalizedImage8bit, colorMappedImage, colormap);
+    cv::Mat normalizedImage3channel(inputImage.size(), CV_8UC3);
+    cv::cvtColor(normalizedImage8bit, normalizedImage3channel, cv::COLOR_GRAY2BGR);
+    cv::Mat smoothedImage, claheImage;
 
+    CMDS_Ebus_SampleDlg* MainDlg = GetMainDialog();
+    cv::Mat colorMappedImage;
 
-    // colorMappedImage를 다시 16비트 이미지로 변환.
-    cv::Mat outputImage(inputImage.size(), CV_16UC1);
-    for (int y = 0; y < colorMappedImage.rows; ++y)
+    //CString strValue, strValue2, strValue3;
+    //MainDlg->m_Color_Scale.GetWindowText(strValue);
+    //MainDlg->m_Color_Scale2.GetWindowText(strValue2);
+    //MainDlg->m_Color_Scale3.GetWindowText(strValue3);
+    double dScaleR = 1;
+    double dScaleG = 1;
+    double dScaleB = 1;
+
+    if ((PaletteTypes)palette == PALETTE_IRON ||
+        (PaletteTypes)palette == PALETTE_INFER ||
+        (PaletteTypes)palette == PALETTE_PLASMA ||
+        (PaletteTypes)palette == PALETTE_MAGMA ||
+        (PaletteTypes)palette == PALETTE_SUMMER)
     {
-        for (int x = 0; x < colorMappedImage.cols; ++x)
-        {
-            cv::Vec3b mappedColor = colorMappedImage.at<cv::Vec3b>(y, x);
-            ushort pixelValue = static_cast<ushort>(mappedColor[0]) << 8 | static_cast<ushort>(mappedColor[1]); // 예: 첫 번째와 두 번째 채널을 사용
-            outputImage.at<ushort>(y, x) = pixelValue;
+        dScaleG = 2;
+    }
+
+    // 아이언 1/2/1
+    colorMappedImage = applyIronColorMap(normalizedImage3channel, palette, dScaleR, dScaleG, dScaleB);
+    //cv::applyColorMap(colorMappedImage, colorMappedImage, colormap);
+    //cv::GaussianBlur(colorMappedImage, smoothedImage, cv::Size(5, 5), 0, 0);
+    
+    return colorMappedImage;
+
+}
+// =============================================================================
+
+
+cv::Mat CameraControl_rev::ConvertUYVYToBGR8(const cv::Mat& input)
+{
+    if (input.empty() || input.channels() != 2) {
+        std::cerr << "Input Mat is empty or not a 2-channel image." << std::endl;
+        return cv::Mat();
+    }
+
+    int width = input.cols;
+    int height = input.rows;
+
+    // UYVY 형식을 다시 Mat으로 변환 (CV_8UC2 -> CV_8UC4)
+    cv::Mat uyvyImage(height, width, CV_8UC2, input.data);
+    cv::Mat bgrImage(height, width, CV_8UC3);  // BGR 형식으로 결과 이미지 생성
+
+    // UYVY에서 BGR로 변환
+    cv::cvtColor(uyvyImage, bgrImage, cv::COLOR_YUV2BGR_UYVY);
+
+    return bgrImage;
+}
+
+// =============================================================================
+cv::Mat CameraControl_rev::Convert16UC1ToBGR8(const cv::Mat& input)
+{
+    if (input.empty() || input.type() != CV_16UC1) {
+        std::cerr << "Input Mat is empty or not a 16-bit single-channel image." << std::endl;
+        return cv::Mat();
+    }
+
+    int width = input.cols;
+    int height = input.rows;
+
+    cv::Mat bgrImage(height, width, CV_8UC3);  // BGR 형식으로 결과 이미지 생성
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            ushort pixelValue = input.at<ushort>(y, x);
+            bgrImage.at<cv::Vec3b>(y, x) = cv::Vec3b(pixelValue & 0xFF, (pixelValue >> 8) & 0xFF, (pixelValue >> 8) & 0xFF);
         }
     }
 
-    return outputImage;
+    return bgrImage;
 }
 
 // =============================================================================
@@ -1305,7 +1654,7 @@ void CameraControl_rev::SetupImagePixelType(PvImage* lImage)
 {
     DWORD pixeltypeValue = ConvertHexValue(m_Cam_Params->strPixelFormat);
     m_pixeltype = (PvPixelType)pixeltypeValue;
-    lImage->Alloc(lImage->GetWidth(), lImage->GetHeight(), m_pixeltype);
+    lImage->Alloc(lImage->GetWidth(), lImage->GetHeight(), PV_PIXEL_WIN_RGB32);
 }
 
 // =============================================================================
@@ -1341,32 +1690,81 @@ int CameraControl_rev::UpdateHeightForA50Camera(int& nHeight, int nWidth)
 
 // =============================================================================
 // Main GUI 라이브 이미지출력
-void CameraControl_rev::DisplayLiveImage(CMDS_Ebus_SampleDlg* MainDlg, cv::Mat& processedImageMat, int nIndex)
+cv::Mat CameraControl_rev::DisplayLiveImage(CMDS_Ebus_SampleDlg* MainDlg, cv::Mat& processedImageMat, int nIndex)
 {
-    if (processedImageMat.empty()) return;
+    if (processedImageMat.empty()) 
+        return processedImageMat;
 
+    cv::Mat colorMappedImage;
+    cv::Mat ResultImage;
     int num_channels = MainDlg->m_chEventsCheckBox.GetCheck() ? 16 : 8;
-    if (MainDlg->m_chEventsCheckBox.GetCheck())
+    int nImageType = processedImageMat.type();
+    CString strLog;
+    // 16bit
+    if (Get16BitType())
     {
-        cv::Mat colorMappedImage = MapColorsToPalette(processedImageMat, GetColormapType());
-        CreateAndDrawBitmap(MainDlg, colorMappedImage, num_channels, nIndex);
+        if (GetColorPaletteType())
+        {
+            ResultImage = MapColorsToPalette(processedImageMat, GetPaletteType());
+            if (ResultImage.type() == CV_8UC1)
+            {
+                cv::cvtColor(colorMappedImage, ResultImage, cv::COLOR_GRAY2BGR);
+            }
+        }
+        else if (GetGrayType())
+        {
+            Mat GrayImage;
+            cv::cvtColor(processedImageMat, GrayImage, cv::COLOR_GRAY2BGR);
+            cv::normalize(GrayImage, ResultImage, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+            cv::cvtColor(ResultImage, ResultImage, cv::COLOR_BGR2GRAY);
+        }
+        else
+        {
+            //strLog.Format(_T("[Cam_Index_%d] DisplayLiveImage Fail Image"), m_nCamIndex + 1);
+            //Common::GetInstance()->AddLog(0, strLog);
+            processedImageMat.copyTo(ResultImage);
+        }
     }
+    // 8bit
     else
     {
-        CreateAndDrawBitmap(MainDlg, processedImageMat, num_channels, nIndex);
+        if (GetYUVYType())
+        {
+            ResultImage = ConvertUYVYToBGR8(processedImageMat);
+            //cv::cvtColor(colorMappedImage, ResultImage, cv::COLOR_BGR2RGB);
+        }
+        else if (GetGrayType() == TRUE)
+        {
+            Mat GrayImage;
+            cv::cvtColor(processedImageMat, GrayImage, cv::COLOR_GRAY2BGR);
+            cv::normalize(GrayImage, ResultImage, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+            cv::cvtColor(ResultImage, ResultImage, cv::COLOR_BGR2GRAY);
+        }
+        else
+        {
+            //strLog.Format(_T("[Cam_Index_%d] DisplayLiveImage Fail Image"), m_nCamIndex + 1);
+            //Common::GetInstance()->AddLog(0, strLog);
+            processedImageMat.copyTo(ResultImage);
+        }
     }
+
+    CreateAndDrawBitmap(MainDlg, ResultImage, num_channels, nIndex);
+
+    return ResultImage;
 }
 
 // =============================================================================
 // 이미지 처리 중 동적 생성 객체 메모리 해제
-void CameraControl_rev::CleanupAfterProcessing(CMDS_Ebus_SampleDlg* MainDlg, int nIndex, uint16_t* roiArr)
+void CameraControl_rev::CleanupAfterProcessing(CMDS_Ebus_SampleDlg* MainDlg, int nIndex)
 {
     if (m_BitmapInfo != nullptr)
     {
         delete[] m_BitmapInfo;
         m_BitmapInfo = nullptr;
     }
-    free(roiArr);
+
+
+    //free(roiArr);
     //delete[] roiArr;
 }
 
@@ -1374,15 +1772,25 @@ void CameraControl_rev::CleanupAfterProcessing(CMDS_Ebus_SampleDlg* MainDlg, int
 // 이미지 처리 함수
 cv::Mat CameraControl_rev::ProcessImageBasedOnSettings(byte* imageDataPtr, int nHeight, int nWidth, CMDS_Ebus_SampleDlg* MainDlg)
 {
-    int dataType = MainDlg->m_chEventsCheckBox.GetCheck() ? CV_16UC1 : CV_8UC1;
+    bool isYUVYType = GetYUVYType() == TRUE;
+    int dataType = 0;
     if (MainDlg->m_chEventsCheckBox.GetCheck())
     {
-        return NormalizeAndProcessImage(imageDataPtr, nHeight, nWidth, dataType);
+        dataType = CV_16UC1;
     }
     else
     {
-        return NormalizeAndProcessImage(imageDataPtr, nHeight, nWidth, CV_8UC1);
+        if (isYUVYType)
+        {
+            dataType = CV_8UC2;
+        }
+        else
+        {
+            dataType = CV_8UC1;
+        }
     }
+
+    return NormalizeAndProcessImage(imageDataPtr, nHeight, nWidth, dataType);
 }
 
 // =============================================================================
@@ -1422,15 +1830,23 @@ uint16_t* CameraControl_rev::ConvertToUInt16Pointer(unsigned char* ptr)
 
 // =============================================================================
 // 8비트를 16비트로 변환
-void CameraControl_rev::Convert8BitTo16Bit(uint8_t* src, ushort*& dest, int length)
+std::unique_ptr<uint16_t[]> CameraControl_rev::Convert8BitTo16Bit(uint8_t* src, ushort*& dest, int length)
 {
+
+    // roiWidth와 roiHeight 크기의 uint16_t 배열을 동적으로 할당합니다.
+    std::unique_ptr<uint16_t[]> roiArray = std::make_unique<uint16_t[]>(length);
     for (int i = 0; i < length; i++)
     {
         if (!m_bRunning)
-            return;
+            return nullptr;
 
-        dest[i] = (ushort)(src[i * 2] | (src[i * 2 + 1] << 8));
+        // 데이터를 읽고 예상 형식과 일치하는지 확인
+        uint16_t sample = static_cast<uint16_t>(src[i * 2] | (src[i * 2 + 1] << 8));
+
+        roiArray[i] = sample;
     }
+
+    return roiArray;
 }
 
 // =============================================================================
@@ -1442,13 +1858,399 @@ bool CameraControl_rev::IsRoiValid(const cv::Rect& roi)
 
 // =============================================================================
 // 컬러맵 정보를 맴버변수에 저장
-void CameraControl_rev::SetColormapType(ColormapTypes type)
+void CameraControl_rev::SetPaletteType(PaletteTypes type)
 {
     m_colormapType = type;
 }
 
 // =============================================================================
-ColormapTypes CameraControl_rev::GetColormapType()
+PaletteTypes CameraControl_rev::GetPaletteType()
 {
     return m_colormapType;
+}
+
+// =============================================================================
+void CameraControl_rev::SetPixelFormatParameter()
+{
+    CMDS_Ebus_SampleDlg* MainDlg = GetMainDialog();
+    CString strLog = _T("");
+    
+    // YUVY
+    if(GetYUVYType())
+    {
+        strLog.Format(_T("[Cam_Index_%d] YUV422_8_UYVY Mode"), m_nCamIndex + 1);
+        Common::GetInstance()->AddLog(0, strLog);
+
+        MainDlg->m_chUYVYCheckBox.SetCheck(TRUE);
+
+        MainDlg->m_chEventsCheckBox.SetCheck(FALSE); //8비트 고정
+        MainDlg->m_chEventsCheckBox.EnableWindow(FALSE); //8비트 고정
+
+        MainDlg->m_chColorMapCheckBox.EnableWindow(FALSE);
+        MainDlg->m_chMonoCheckBox.EnableWindow(FALSE);
+
+        strLog.Format(_T("[Cam_Index_%d] UYVY CheckBox Checked"), m_nCamIndex + 1);
+        Common::GetInstance()->AddLog(0, strLog);
+        strLog.Format(_T("[Cam_Index_%d] 16Bit CheckBox Checked, Disable Windows"), m_nCamIndex + 1);
+        Common::GetInstance()->AddLog(0, strLog);
+
+        strLog.Format(_T("[Cam_Index_%d] ColorMap  Disable Windows"), m_nCamIndex + 1);
+        Common::GetInstance()->AddLog(0, strLog);
+
+        strLog.Format(_T("[Cam_Index_%d] Mono  Disable Windows"), m_nCamIndex + 1);
+        Common::GetInstance()->AddLog(0, strLog);
+
+    }
+
+    // mono 8
+    else if (GetGrayType() && Get16BitType() == FALSE)
+    {
+        SetYUVYType(FALSE);
+        MainDlg->m_chMonoCheckBox.SetCheck(TRUE);
+        MainDlg->m_chEventsCheckBox.SetCheck(FALSE);
+
+        MainDlg->m_chColorMapCheckBox.EnableWindow(FALSE);
+        MainDlg->m_chMonoCheckBox.EnableWindow(FALSE);
+
+    }
+    // mono 16
+    else if (GetGrayType() && Get16BitType() == TRUE)
+    {
+        SetYUVYType(FALSE);
+
+        MainDlg->m_chMonoCheckBox.SetCheck(TRUE);
+        MainDlg->m_chEventsCheckBox.SetCheck(TRUE);
+
+        MainDlg->m_chColorMapCheckBox.EnableWindow(TRUE);
+        MainDlg->m_chMonoCheckBox.EnableWindow(TRUE);
+    }
+
+    
+    MainDlg->m_chUYVYCheckBox.EnableWindow(FALSE);
+    MainDlg->m_chEventsCheckBox.EnableWindow(FALSE);
+}
+
+// =============================================================================
+BITMAPINFO* CameraControl_rev::ConvertImageTo32BitWithBitmapInfo(const cv::Mat& imageMat, int w, int h)
+{
+    int imageSize = 0;
+    int nbiClrUsed = 0;
+
+    try
+    {
+        // 이미지 데이터 복사
+        cv::Mat copiedImage;
+        imageMat.copyTo(copiedImage);
+
+        // 이미지를 32비트로 변환 (4채널)
+        cv::Mat convertedImage;
+        copiedImage.convertTo(convertedImage, CV_32FC1, 1.0 / 65535.0); // 16비트에서 32비트로 변환
+
+        // 이미지 크기 계산
+        imageSize = w * h * 4;
+
+        // 새로운 BITMAPINFO 할당
+        BITMAPINFO* m_BitmapInfo = reinterpret_cast<BITMAPINFO*>(new BYTE[sizeof(BITMAPINFO) + 255 * sizeof(RGBQUAD)]);
+        nbiClrUsed = 0; // 색상 팔레트를 사용하지 않음
+
+        // 이미지 데이터 복사 및 변환
+        unsigned char* dstData = (unsigned char*)((BITMAPINFO*)m_BitmapInfo)->bmiColors;
+        for (int i = 0; i < w * h; ++i)
+        {
+            float pixel32 = convertedImage.at<float>(i);
+            unsigned char pixelByte = static_cast<unsigned char>(pixel32 * 255.0f);
+            dstData[i * 4] = pixelByte; // Blue 채널
+            dstData[i * 4 + 1] = pixelByte; // Green 채널
+            dstData[i * 4 + 2] = pixelByte; // Red 채널
+            dstData[i * 4 + 3] = 255; // Alpha 채널 (255: 완전 불투명)
+        }
+
+        return m_BitmapInfo;
+    }
+    catch (const std::bad_alloc&)
+    {
+        throw std::runtime_error("Failed to allocate memory for BITMAPINFO");
+    }
+}
+
+// =============================================================================
+cv::Vec3b CameraControl_rev::hexStringToBGR(const std::string& hexColor)
+{
+    int r, g, b;
+    sscanf(hexColor.c_str(), "#%02x%02x%02x", &r, &g, &b);
+
+    r = std::min(255, std::max(0, r));
+    g = std::min(255, std::max(0, g));
+    b = std::min(255, std::max(0, b));
+
+    return cv::Vec3b(b, g, r);
+}
+
+/**
+ * @brief 주어진 16진수 문자열 색상 팔레트를 BGR (Blue, Green, Red) 형식의 벡터로 변환합니다.
+ *
+ * 이 함수는 16진수 문자열 형태의 색상 팔레트를 받아와 각 색상을 BGR 형식의 벡터로 변환합니다.
+ * 변환된 결과는 캐시를 사용하여 메모리와 연산 비용을 줄이기 위해 저장됩니다.
+ * 이미 변환된 색상 팔레트에 대한 요청은 캐시에서 검색하여 성능을 최적화합니다.
+ *
+ * @param hexPalette 16진수 문자열 형태의 색상 팔레트. 예를 들어, "#FF0000"은 빨간색을 나타냅니다.
+ * @return BGR 형식의 벡터로 변환된 색상 팔레트.
+ *
+ * @note 변환된 팔레트는 캐시를 사용하여 저장되며, 이미 변환된 경우 캐시에서 결과를 반환합니다.
+ *       이를 통해 중복 변환 및 연산 비용을 효율적으로 관리합니다.
+ *
+ * @warning 이 함수는 캐시를 사용하기 때문에 입력 색상 팔레트의 내용이 변경되면
+ *          결과가 예상치 못하게 달라질 수 있으므로 주의해야 합니다.
+ */
+// =============================================================================
+std::vector<cv::Vec3b> CameraControl_rev::convertPaletteToBGR(const std::vector<std::string>& hexPalette)
+{
+    // 이미 변환된 결과를 저장할 캐시
+    static std::map<std::vector<std::string>, std::vector<cv::Vec3b>> cache; // std::map으로 변경
+
+    // 입력 벡터에 대한 캐시 키 생성
+    std::vector<std::string> cacheKey = hexPalette;
+
+    // 캐시에서 이미 변환된 결과를 찾아 반환
+    if (cache.find(cacheKey) != cache.end()) {
+        return cache[cacheKey];
+    }
+
+    // 변환 작업 수행
+    std::vector<cv::Vec3b> bgrPalette;
+    for (const std::string& hexColor : hexPalette) {
+        cv::Vec3b bgrColor = hexStringToBGR(hexColor);
+        bgrPalette.push_back(bgrColor);
+    }
+
+    // 변환 결과를 캐시에 저장
+    cache[cacheKey] = bgrPalette;
+
+    // 캐시에 저장된 복사본을 반환
+    return cache[cacheKey];
+}
+
+// =============================================================================
+cv::Vec3b CameraControl_rev::findBrightestColor(const std::vector<cv::Vec3b>& colors)
+{
+    // 가장 밝은 색상을 저장할 변수 및 초기화
+    cv::Vec3b brightestColor = colors[0];
+
+    // 가장 밝은 색상의 밝기 값 계산 (B + G + R)
+    int maxBrightness = brightestColor[0] + brightestColor[1] + brightestColor[2];
+
+    // 모든 색상을 반복하면서 가장 밝은 색상 찾기
+    for (const cv::Vec3b& color : colors)
+    {
+        // 현재 색상의 밝기 계산
+        int brightness = color[0] + color[1] + color[2];
+
+        // 가장 밝은 색상보다 더 밝으면 업데이트
+        if (brightness > maxBrightness) {
+            maxBrightness = brightness;
+            brightestColor = color;
+        }
+    }
+
+    // 가장 밝은 색상 반환
+    return brightestColor;
+}
+
+// =============================================================================
+cv::Vec3b CameraControl_rev::findClosestColor(const std::vector<cv::Vec3b>& colorPalette, const cv::Vec3b& targetColor)
+{
+    // 가장 가까운 색상을 저장할 변수 및 초기화
+    cv::Vec3b closestColor = colorPalette[0];
+
+    // 최소 거리 초기화
+    int minDistance = cv::norm(targetColor - colorPalette[0]);
+
+    // 모든 팔레트 색상을 반복하면서 가장 가까운 색상 찾기
+    for (const cv::Vec3b& color : colorPalette)
+    {
+        // 현재 색상과 대상 색상 사이의 거리 계산
+        int distance = cv::norm(targetColor - color);
+
+        // 현재까지의 최소 거리보다 더 가까우면 업데이트
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestColor = color;
+        }
+    }
+
+    // 가장 가까운 색상 반환
+    return closestColor;
+}
+
+// =============================================================================
+std::vector<cv::Vec3b> CameraControl_rev::adjustPaletteScale(const std::vector<cv::Vec3b>& originalPalette, double scaleR, double scaleG, double scaleB)
+{
+    std::vector<cv::Vec3b> adjustedPalette;
+    for (const cv::Vec3b& color : originalPalette) 
+    {
+        // 각 색상의 B, G, R 값을 스케일링
+        uchar newB = static_cast<uchar>(color[0] * scaleB);
+        uchar newG = static_cast<uchar>(color[1] * scaleG);
+        uchar newR = static_cast<uchar>(color[2] * scaleR);
+
+
+        // 값이 255를 초과하지 않도록 제한
+        newB = std::min(255, (int)newB);
+        newG = std::min(255, (int)newG);
+        newR = std::min(255, (int)newR);
+
+        adjustedPalette.push_back(cv::Vec3b(newB, newG, newR));
+    }
+    return adjustedPalette;
+}
+
+// =============================================================================
+std::vector<std::string> compressIronPalette(const std::vector<std::string>& originalPalette, int compressionFactor)
+{
+    std::vector<std::string> compressedPalette;
+    int step = originalPalette.size() / compressionFactor;
+
+    for (int i = 0; i < originalPalette.size(); i += step) {
+        compressedPalette.push_back(originalPalette[i]);
+    }
+
+    return compressedPalette;
+}
+
+// =============================================================================
+cv::Mat CameraControl_rev::applyIronColorMap(cv::Mat& im_gray, PaletteTypes palette, double scaleR, double scaleG, double scaleB)
+{
+    std::vector<cv::Vec3b> bgr_palette = convertPaletteToBGR(GetPalette(palette));
+
+    // 스케일을 적용한 조정된 팔레트 생성
+    std::vector<cv::Vec3b> adjusted_palette = adjustPaletteScale(bgr_palette, scaleR, scaleG, scaleB);
+
+    m_Markcolor = findBrightestColor(adjusted_palette);
+    cv::Vec3b greenColor(0, 0, 255);
+    m_findClosestColor = findClosestColor(adjusted_palette, greenColor);
+
+    // B, G, R 채널 배열 생성
+    cv::Mat b(256, 1, CV_8U);
+    cv::Mat g(256, 1, CV_8U);
+    cv::Mat r(256, 1, CV_8U);
+
+    for (int i = 0; i < 256; ++i) {
+        b.at<uchar>(i, 0) = adjusted_palette[i][0];
+        g.at<uchar>(i, 0) = adjusted_palette[i][1];
+        r.at<uchar>(i, 0) = adjusted_palette[i][2];
+    }
+
+    // B, G, R 채널을 합치고 룩업 테이블 생성
+    cv::Mat channels[] = { b, g, r };
+    cv::Mat lut; // 룩업 테이블 생성
+    cv::merge(channels, 3, lut);
+
+    // 아이언 파레트를 이미지에 적용
+    cv::Mat im_color;
+    cv::LUT(im_gray, lut, im_color);
+
+    return im_color;
+}
+
+// =============================================================================
+std::vector<std::string> CameraControl_rev::CreateRainbowPalette() 
+{
+   
+    // 256가지 레인보우 색상 팔레트 생성
+    for (int i = 0; i < 256; ++i) {
+        int r, g, b;
+
+        if (i < 85) {
+            r = 255 - i * 3;
+            g = 0;
+            b = i * 3;
+        }
+        else if (i < 170) {
+            r = 0;
+            g = (i - 85) * 3;
+            b = 255 - (i - 85) * 3;
+        }
+        else {
+            r = (i - 170) * 3;
+            g = 255 - (i - 170) * 3;
+            b = 0;
+        }
+
+        char color[8];
+        snprintf(color, sizeof(color), "#%02X%02X%02X", r, g, b);
+        Rainbow_palette.push_back(color);
+    }
+
+    return Rainbow_palette;
+}
+
+// =============================================================================
+std::vector<std::string> CameraControl_rev::GetPalette(PaletteTypes paletteType)
+{
+    switch (paletteType)
+    {
+    case PALETTE_IRON:
+        return iron_palette;
+    case PALETTE_RAINBOW:
+        return Rainbow_palette;
+    case PALETTE_JET:
+        return Jet_palette;
+    case PALETTE_INFER:
+        return Infer_palette;
+    case PALETTE_PLASMA:
+        return Plasma_palette;
+    case PALETTE_RED_GRAY:
+        return Red_gray_palette;
+    case PALETTE_VIRIDIS:
+        return Viridis_palette;
+    case PALETTE_MAGMA:
+        return Magma_palette;
+    case PALETTE_CIVIDIS:
+        return Cividis_palette;
+    case PALETTE_COOLWARM:
+        return Coolwarm_palette;
+    case PALETTE_SPRING:
+        return Spring_palette;
+    case PALETTE_SUMMER:
+        return Summer_palette;
+    default:
+        // 기본값 또는 오류 처리를 수행할 수 있음
+        return std::vector<std::string>();
+    }
+}
+
+// =============================================================================
+void CameraControl_rev::SaveFilePeriodically(std::string filePath, cv::Mat& rawdata, cv::Mat& imagedata)
+{
+    std::lock_guard<std::mutex> lock(filemtx);
+
+    if (!m_lastCallTime.wYear)
+    {
+        GetLocalTime(&m_lastCallTime); // 첫 함수 호출시 lastCallTime 초기화
+    }
+
+    SYSTEMTIME currentTime;
+    GetLocalTime(&currentTime);
+
+    // 지난 호출 이후 5분 이상 경과했는지 확인
+    long long lastCallEpoch = (m_lastCallTime.wHour * 3600) + (m_lastCallTime.wMinute * 60) + m_lastCallTime.wSecond;
+    long long currentEpoch = (currentTime.wHour * 3600) + (currentTime.wMinute * 60) + currentTime.wSecond;
+
+    if (currentEpoch >= lastCallEpoch + 300) // 300초 = 5분
+    {
+        if (!WriteCSV(filePath, rawdata, m_nCsvFileCount))
+        {
+            // 오류 처리
+        }
+
+        // 추가: Mat 객체를 JPEG 파일로 저장
+        std::string jpgFilePath = filePath + "image_" + std::to_string(m_nCsvFileCount) + ".jpg";
+        if (!cv::imwrite(jpgFilePath, imagedata))
+        {
+            // 오류 처리
+        }
+
+        m_nCsvFileCount++;
+        m_lastCallTime = currentTime;
+    }
 }

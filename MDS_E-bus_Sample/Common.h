@@ -33,6 +33,7 @@ public:
 	void CreateHorizontalScroll();
 	void SetAutoStartFlag(bool bFlag);
 	bool GetAutoStartFlag();
+	CString GetProgramDirectory();
 public:
 
 	CString uni_char_to_CString_Convert(char* data);

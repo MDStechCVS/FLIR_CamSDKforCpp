@@ -81,6 +81,20 @@ void Common::GetFileList(CString path, vector<CString>& strArray)
 		}
 	}
 }
+// 현재 실행 중인 프로그램의 디렉토리 경로를 반환
+// =============================================================================
+CString Common::GetProgramDirectory()
+{
+	TCHAR szPath[_MAX_PATH];
+	GetModuleFileName(AfxGetApp()->m_hInstance, szPath, _MAX_PATH);
+	CString strProgramDir = szPath;
+	int nLen = strProgramDir.ReverseFind('\\');
+
+	if (nLen > 0)
+		strProgramDir = strProgramDir.Left(nLen);
+
+	return strProgramDir;
+}
 
 // =============================================================================
 // 로그 핸들러 생성
@@ -90,16 +104,8 @@ void Common::CreateLog(CListBox* handle)
 	m_logHandle = handle;
 	//log 생성
 
-	TCHAR szPath[_MAX_PATH];
-	GetModuleFileName(AfxGetApp()->m_hInstance, szPath, _MAX_PATH);
-	CString strProgramDir = szPath;
-	CFileStatus mStatus;
-	int nLen = strProgramDir.ReverseFind('\\');
-	if (nLen > 0)
-		strProgramDir = strProgramDir.Left(nLen);
-
 	CString path;
-	path.Format(_T("%s\\SystemLog\\"), (LPCTSTR)strProgramDir);
+	path.Format(_T("%s\\SystemLog\\"), (LPCTSTR)GetProgramDirectory());
 
 	if (!PathIsDirectory(path))
 	{

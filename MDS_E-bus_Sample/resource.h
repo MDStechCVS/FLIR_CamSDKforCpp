@@ -61,8 +61,14 @@
 #define IDC_BTN_LOAD_INI_FILE           1048
 #define IDC_BTN_INI_APPLY               1049
 #define IDC_BTN_FPS32                   1050
+#define IDC_CK_UYVY                     1050
 #define IDC_BTN_CAM_PARAM               1051
 #define IDC_BTN_CAM_PARAM_APPLY         1052
+#define IDC_CK_COLORMAP                 1053
+#define IDC_CK_MONO                     1054
+#define IDC_EDIT_SCALE                  1055
+#define IDC_EDIT_SCALE2                 1056
+#define IDC_EDIT_SCALE3                 1057
 #define IDC_RADIO_CAM1                  1100
 #define IDC_RADIO_CAM2                  1101
 #define IDC_RADIO_CAM3                  1102
@@ -79,7 +85,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1032
+#define _APS_NEXT_CONTROL_VALUE         1056
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -18,32 +18,7 @@ static char THIS_FILE[] = __FILE__;
 // END
 ////////////////////////////////////
 
-// 컬러맵 초기 데이터
-const TCHAR* ColormapArray::colormapStrings[] =
-{
-    _T("Autumn"),
-    _T("Bone"),
-    _T("Jet"),
-    _T("Winter"),
-    _T("Rainbow"),
-    _T("Ocean"),
-    _T("Summer"),
-    _T("Spring"),
-    _T("Cool"),
-    _T("HSV"),
-    _T("Pink"),
-    _T("Hot"),
-    _T("Parula"),
-    _T("Magma"),
-    _T("Inferno"),
-    _T("Plasma"),
-    _T("Viridis"),
-    _T("Cividis"),
-    _T("Twilight"),
-    _T("Twilight Shifted"),
-    _T("Turbo"),
-    _T("DeepGreen")
-};
+
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
@@ -117,6 +92,9 @@ void CMDS_Ebus_SampleDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_BTN_CAM_PARAM, m_BtnCamParam);
     DDX_Control(pDX, IDC_BTN_CAM_PARAM_APPLY, m_BtnCamParamApply);
     DDX_Control(pDX, IDC_CK_PARAM, m_chGenICam_checkBox);
+    DDX_Control(pDX, IDC_CK_MONO, m_chMonoCheckBox);
+    DDX_Control(pDX, IDC_CK_COLORMAP, m_chColorMapCheckBox);
+    DDX_Control(pDX, IDC_CK_UYVY, m_chUYVYCheckBox);
     DDX_Control(pDX, IDC_CK_MESSAGE, m_chEventsCheckBox);
     DDX_Control(pDX, IDC_CK_POINTER, m_chPointerCheckBox);
     DDX_Control(pDX, IDC_CK_MARKER, m_chMarkerCheckBox);
@@ -153,6 +131,10 @@ void CMDS_Ebus_SampleDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_CB_CAM2_COLORMAP, m_Cam2_Colormap);
     DDX_Control(pDX, IDC_CB_CAM3_COLORMAP, m_Cam3_Colormap);
     DDX_Control(pDX, IDC_CB_CAM4_COLORMAP, m_Cam4_Colormap);
+    DDX_Control(pDX, IDC_EDIT_SCALE, m_Color_Scale);
+    DDX_Control(pDX, IDC_EDIT_SCALE2, m_Color_Scale2);
+    DDX_Control(pDX, IDC_EDIT_SCALE3, m_Color_Scale3);
+    
 }
 
 // =============================================================================
@@ -187,6 +169,10 @@ BEGIN_MESSAGE_MAP(CMDS_Ebus_SampleDlg, CDialogEx)
     ON_CBN_SELCHANGE(IDC_CB_CAM4_COLORMAP, &CMDS_Ebus_SampleDlg::OnCbnSelchangeCam4)
     ON_BN_CLICKED(IDC_BTN_CAM_PARAM, &CMDS_Ebus_SampleDlg::OnBnClickedBtnCamParam)
     ON_BN_CLICKED(IDC_BTN_CAM_PARAM_APPLY, &CMDS_Ebus_SampleDlg::OnBnClickedBtnCamParamApply)
+    ON_BN_CLICKED(IDC_CK_UYVY, &CMDS_Ebus_SampleDlg::OnBnClickedCheckBox)
+    ON_BN_CLICKED(IDC_CK_COLORMAP, &CMDS_Ebus_SampleDlg::OnBnClickedCheckBox)
+    ON_BN_CLICKED(IDC_CK_MESSAGE, &CMDS_Ebus_SampleDlg::OnBnClickedCheckBox)
+    ON_BN_CLICKED(IDC_CK_MONO, &CMDS_Ebus_SampleDlg::OnBnClickedCheckBox)
 END_MESSAGE_MAP()
 
 
@@ -227,7 +213,6 @@ BOOL CMDS_Ebus_SampleDlg::OnInitDialog()
 
     gui_status = (GUI_STATUS)GUI_STEP_IDLE;
 
-    m_chEventsCheckBox.SetCheck(true);
     m_radio.SetCheck(true);
     m_ch_Cam1_ROI_CheckBox.SetCheck(true);
 
@@ -647,10 +632,10 @@ void CMDS_Ebus_SampleDlg::UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFp
         strResult.Format(_T("%.2f"), cam->GetCameraFPS());
         lbFps.SetWindowText(strResult);
 
-        strResult.Format(_T("%d"), cam->m_MinSpot.tempValue);
+        strResult.Format(_T("[%d]"), cam->m_MinSpot.tempValue);
         lbMin.SetWindowText(strResult);
 
-        strResult.Format(_T("%d"), cam->m_MaxSpot.tempValue);
+        strResult.Format(_T("[%d]"), cam->m_MaxSpot.tempValue);
         lbMax.SetWindowText(strResult);
 
         cv::Rect rt = cam->m_Select_rect;
@@ -1127,9 +1112,11 @@ int CMDS_Ebus_SampleDlg::GetSelectCamIndex()
 // =============================================================================
 void CMDS_Ebus_SampleDlg::RadioCtrl(UINT radio_Index)
 {
+    if (m_CamManager == NULL)
+        return;
+
     UpdateData(TRUE);
     CButton* pCheck;
-
     switch (radio_Index)
     {
     case IDC_RADIO_CAM1:
@@ -1176,7 +1163,21 @@ void CMDS_Ebus_SampleDlg::RadioCtrl(UINT radio_Index)
 
         break;
     }
-
+    int nIndex = GetSelectCamIndex();
+    if (m_CamManager->m_Cam[nIndex]->Get16BitType())
+    {
+        if (m_CamManager->m_Cam[nIndex]->GetGrayType())
+        {
+            m_chMonoCheckBox.SetCheck(TRUE);
+            m_chColorMapCheckBox.SetCheck(FALSE);   
+        }
+        else if (m_CamManager->m_Cam[nIndex]->GetColorPaletteType())
+        {
+            m_chColorMapCheckBox.SetCheck(TRUE);           
+            m_chMonoCheckBox.SetCheck(FALSE);          
+        }
+    }
+           
     UpdateData(FALSE);
 }
 
@@ -1192,6 +1193,8 @@ bool CMDS_Ebus_SampleDlg::LoadiniFile()
     //BOOL bValue;
     //iValue = _ttoi(iniValue);
 
+
+
     filePath.Format(Common::GetInstance()->SetProgramPath(_T("CameraParams.ini")));
 
     // 기존 데이터가 있다면 삭제
@@ -1200,9 +1203,10 @@ bool CMDS_Ebus_SampleDlg::LoadiniFile()
     iniSection.Format(_T("System"));
     iniKey.Format(_T("Path"));
     GetPrivateProfileString(iniSection, iniKey, _T("0"), cbuf, MAX_PATH, filePath);
-    strSetfilepath.Format(_T("%s"), cbuf);
+    strSetfilepath.Format(_T("%s\\%s\\"), Common::GetInstance()->GetProgramDirectory(), cbuf);
     Common::GetInstance()->Setsetingfilepath(strSetfilepath);
 
+    /*-------------------------------------------------------------------*/
     iniKey.Format(_T("AutoStart"));
     bool bAutoFlag = GetPrivateProfileInt(iniSection, iniKey, (bool)false, filePath);
     Common::GetInstance()->SetAutoStartFlag(bAutoFlag);
@@ -1361,17 +1365,17 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnIniApply()
 
 // =============================================================================
 // 컬러맵 인덱스를 반환한다
-ColormapTypes CMDS_Ebus_SampleDlg::GetSelectedColormap(CComboBox& comboControl)
+PaletteTypes CMDS_Ebus_SampleDlg::GetSelectedColormap(CComboBox& comboControl)
 {
     int selectedIndex = comboControl.GetCurSel(); // 현재 선택된 아이템의 인덱스 선택
     if (selectedIndex != CB_ERR) // 유효한 선택인지 확인.
     {
-        return static_cast<ColormapTypes>(selectedIndex); // 인덱스를 ColormapTypes 열거형으로 캐스팅합니다.
+        return static_cast<PaletteTypes>(selectedIndex); // 인덱스를 ColormapTypes 열거형으로 캐스팅합니다.
     }
     else
     {
         // 오류 처리. 예를 들어, 기본 값을 반환할 수 있습니다.
-        return COLORMAP_AUTUMN;
+        return PALETTE_IRON;
     }
 }
 
@@ -1429,17 +1433,17 @@ void CMDS_Ebus_SampleDlg::HandleComboChange(int controlId)
     CComboBox* pComboBox = (CComboBox*)GetDlgItem(controlId);
     if (pComboBox)
     {
-        ColormapTypes selectedMap = GetSelectedColormap(*pComboBox);
+        PaletteTypes selectedMap = GetSelectedColormap(*pComboBox);
         ApplyColorSettings(selectedMap, comboIndex);
     }
 }
 
 // =============================================================================
-void CMDS_Ebus_SampleDlg::ApplyColorSettings(ColormapTypes selectedMap, int comboIndex)
+void CMDS_Ebus_SampleDlg::ApplyColorSettings(PaletteTypes selectedMap, int comboIndex)
 {
     if (comboIndex > -1 && m_CamManager->GetDeviceCount() > 0)
     {
-        m_CamManager->m_Cam[comboIndex]->SetColormapType(selectedMap);
+        m_CamManager->m_Cam[comboIndex]->SetPaletteType(selectedMap);
     }
 }
 
@@ -1449,7 +1453,11 @@ void CMDS_Ebus_SampleDlg::PopulateComboBoxes()
 {
     // 할당된 콤보박스 아이템 데이터를 모두 동일하게 초기값 설정
     CComboBox* comboBoxes[] = { &m_Cam1_Colormap, &m_Cam2_Colormap, &m_Cam3_Colormap, &m_Cam4_Colormap };
-    int arrayLength = sizeof(ColormapArray::colormapStrings) / sizeof(ColormapArray::colormapStrings[0]);
+    int arrayLength = 0;
+    while (ColormapArray::colormapStrings[arrayLength] != nullptr)
+    {
+        ++arrayLength;
+    }
 
     for (int i = 0; i < sizeof(comboBoxes) / sizeof(comboBoxes[0]); ++i)
     {
@@ -1459,7 +1467,7 @@ void CMDS_Ebus_SampleDlg::PopulateComboBoxes()
             combo->AddString(ColormapArray::colormapStrings[j]);
         }
         // 초기 선택값을 설정 (예: 첫 번째 항목을 선택)
-        combo->SetCurSel(2); // 초기값 jet color 
+        combo->SetCurSel(0); // 초기값 Iron color 
     }
 }
 
@@ -1513,4 +1521,50 @@ void CMDS_Ebus_SampleDlg::CloseJudgeDlg()
     else {
         // dlg 객체가 유효하지 않거나 윈도우 핸들을 얻을 수 없는 경우 처리
     }
+}
+
+void CMDS_Ebus_SampleDlg::OnBnClickedCheckBox()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+    CString strLog = _T("");
+    // Mono 체크박스 상태 확인 및 처리
+    BOOL isMonoChecked = m_chMonoCheckBox.GetCheck();
+    BOOL isColorMapChecked = m_chColorMapCheckBox.GetCheck();
+    
+    // 클릭된 체크박스의 ID를 얻어옵니다.
+    UINT nID = ((CButton*)GetFocus())->GetDlgCtrlID();
+
+    if (nID == IDC_CK_MONO)
+    {
+        // m_chMonoCheckBox가 선택되었을 때 m_chColorMapCheckBox를 선택 해제
+        if (isMonoChecked)
+        {
+            m_chColorMapCheckBox.SetCheck(BST_UNCHECKED);
+            m_CamManager->m_Cam[GetSelectCamIndex()]->SetGrayType(TRUE);
+            m_CamManager->m_Cam[GetSelectCamIndex()]->SetColorPaletteType(FALSE);
+            strLog.Format(_T("[Cam_Index_%d] Gray Palette Mode"), GetSelectCamIndex() + 1);
+            Common::GetInstance()->AddLog(0, strLog);
+        }
+    }
+    else if (nID == IDC_CK_COLORMAP)
+    {
+        // m_chColorMapCheckBox가 선택되었을 때 m_chMonoCheckBox를 선택 해제
+        if (isColorMapChecked)
+        {
+            m_chMonoCheckBox.SetCheck(BST_UNCHECKED);
+            m_CamManager->m_Cam[GetSelectCamIndex()]->SetGrayType(FALSE);
+            m_CamManager->m_Cam[GetSelectCamIndex()]->SetColorPaletteType(TRUE);
+
+            strLog.Format(_T("[Cam_Index_%d] Color Palette Mode"), GetSelectCamIndex() + 1);
+            Common::GetInstance()->AddLog(0, strLog);
+        }
+    }
+
+    // UYVY 체크박스 상태 확인 및 처리
+    BOOL isUYVYChecked = m_chUYVYCheckBox.GetCheck();
+    m_CamManager->m_Cam[GetSelectCamIndex()]->SetYUVYType(isUYVYChecked);
+    // 16bit / 8bit 체크박스 상태 확인 및 처리
+    BOOL is16BitChecked = m_chEventsCheckBox.GetCheck();
+    m_CamManager->m_Cam[GetSelectCamIndex()]->Set16BitType(is16BitChecked);
 }
