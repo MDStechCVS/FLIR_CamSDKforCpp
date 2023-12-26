@@ -384,7 +384,7 @@ bool CameraControl_rev::AcquireParameter(PvDevice* aDevice, PvStream* aStream, P
     if (rt != 0)
     {
         // 설정 실패 처리
-        strLog.Format(_T("code = [%p] device StreamingCameraParameters fail "), &result);
+        strLog.Format(_T("Error code = [%p][device] Streaming Camera Parameters Set fail "), &result);
         Common::GetInstance()->AddLog(0, strLog);
     }
     else
@@ -397,6 +397,7 @@ bool CameraControl_rev::AcquireParameter(PvDevice* aDevice, PvStream* aStream, P
 
     if (bFlag[0] && bFlag[1] && bFlag[2])
     {
+        SetRunningFlag(true);
         SetThreadFlag(true);
         SetStartFlag(true);
         bbtnDisconnectFlag = false;
@@ -414,7 +415,8 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
 {
     PvResult result = -1;
     CString strLog = _T("");
-
+    CString strIRType = _T("");
+    int nIRType = 0;
     //*--Streaming enabled --*/
    // 0 = Radiometric
    // 1 = TemperatureLinear100mK
@@ -422,12 +424,17 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
 
     switch (Camlist)
     {
+    case FT1000:
+    case A400:
+    case A500:
+    case A600:
+    case A700:
+    case A615:
     case A50:
-    {
-        int nIRType = 2;
-        CString strIRType = _T("");
+    
+        nIRType = 2;
         result = lDeviceParams->SetEnumValue("IRFormat", nIRType);
-        if (nIRType == 2)
+        if (nIRType == TEMPERATURELINEAR10MK)
         {
             strIRType.Format(_T("TemperatureLinear10mK"));
         }
@@ -445,9 +452,9 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
-    }
+    
     case Ax5:
-    {
+    
         // Set TemperatureLinearMode (1 == on, 0 == off)
         result = lDeviceParams->SetEnumValue("TemperatureLinearMode", 1);
 
@@ -478,7 +485,7 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
-    }
+    
     default:
         // 지원하지 않는 카메라 유형 처리
         strLog.Format(_T("[Cam_Index_%d] Unsupported Camera Type: %d"), nIndex + 1, m_Camlist);
@@ -975,6 +982,7 @@ bool CameraControl_rev::CameraStop(int nIndex)
     {
         bFlag[0] = m_Device->StreamDisable();
         bFlag[1] = m_Device->GetParameters()->ExecuteCommand("AcquisitionStop");
+        SetRunningFlag(false);
         SetThreadFlag(false);
         SetStartFlag(true);
     }
@@ -1317,28 +1325,23 @@ bool CameraControl_rev::FindCameraModelName(int nCamIndex, CString strModel)
 }
 
 // =============================================================================
-//카메라별 설정값 불러오기
+//카메라별 파라미터 설정하기
 bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
 {
     
     PvGenParameterArray* lDeviceParams = aDevice->GetParameters();
     PvResult result = -1;
     CString strLog = _T("");
+    bool bFindFlag = false;
 
-    bool bFindFlag = FindCameraModelName(nIndex, _T("a50"));
-    
-    if (bFindFlag)
+    if (FindCameraModelName(nIndex, _T("a50")))
         m_Camlist = A50;
-
-    bFindFlag = FindCameraModelName(nIndex, _T("ax5"));
-
-    if (bFindFlag)
+    else if (FindCameraModelName(nIndex, _T("ax5")))
         m_Camlist = Ax5;
-
-    bFindFlag = FindCameraModelName(nIndex, _T("ft1000"));
-
-    if (bFindFlag)
+    else if (FindCameraModelName(nIndex, _T("ft1000")))
         m_Camlist = FT1000;
+    else
+        m_Camlist = A50;
 
     DWORD pixeltypeValue = ConvertHexValue(m_Cam_Params->strPixelFormat);
     m_pixeltype = (PvPixelType)pixeltypeValue;
@@ -2012,13 +2015,15 @@ std::vector<cv::Vec3b> CameraControl_rev::convertPaletteToBGR(const std::vector<
     std::vector<std::string> cacheKey = hexPalette;
 
     // 캐시에서 이미 변환된 결과를 찾아 반환
-    if (cache.find(cacheKey) != cache.end()) {
+    if (cache.find(cacheKey) != cache.end()) 
+    {
         return cache[cacheKey];
     }
 
     // 변환 작업 수행
     std::vector<cv::Vec3b> bgrPalette;
-    for (const std::string& hexColor : hexPalette) {
+    for (const std::string& hexColor : hexPalette) 
+    {
         cv::Vec3b bgrColor = hexStringToBGR(hexColor);
         bgrPalette.push_back(bgrColor);
     }

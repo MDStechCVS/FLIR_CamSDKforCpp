@@ -148,6 +148,12 @@ enum CameraModelList
 	FT1000,
 	BlackFly
 };
+enum CameraIRFormat
+{
+	RADIOMETRIC,
+	TEMPERATURELINEAR100MK,
+	TEMPERATURELINEAR10MK,
+};
 
 typedef struct CAMERA_PARAMETER
 

@@ -260,6 +260,7 @@ bool CameraManager::CameraAllStop(CMDS_Ebus_SampleDlg* MainDlg)
     {
         
         bFlag = m_Cam[i]->CameraStop(i);
+        m_Cam[i]->SetRunningFlag(false);
         Sleep(1);
     }
 

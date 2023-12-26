@@ -626,7 +626,8 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnDisconnect()
 // =============================================================================
 void CMDS_Ebus_SampleDlg::UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFps, CStatic& lbMin, CStatic& lbMax, CStatic& lbROI, CStatic& lbConnectStatus)
 {
-    if (cam != nullptr) {
+    if (cam != nullptr) 
+    {
         CString strResult;
 
         strResult.Format(_T("%.2f"), cam->GetCameraFPS());
@@ -716,8 +717,10 @@ HBRUSH CMDS_Ebus_SampleDlg::SetCameraConnectionStatus(int camIndex, CameraManage
 {
     HBRUSH hbr = nullptr;
 
-    if (camManager->m_Cam[camIndex] != nullptr) {
-        if (camManager->m_Cam[camIndex]->GetRunningFlag() == true) {
+    if (camManager->m_Cam[camIndex] != nullptr)
+    {
+        if (camManager->m_Cam[camIndex]->GetRunningFlag() == true) 
+        {
             pDC->SetBkColor(RGB_GREEN);
             hbr = greenBrush;
         }
