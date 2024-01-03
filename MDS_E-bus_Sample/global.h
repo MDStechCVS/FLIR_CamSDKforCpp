@@ -16,6 +16,8 @@
 #include <map>
 #include <mutex>
 #include <string>
+#include <chrono>
+#include <ctime>
 #include "Common.h"
 #include "SkinButton.h"
 #include <immintrin.h>

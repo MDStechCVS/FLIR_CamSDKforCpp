@@ -41,6 +41,13 @@ private:
 	CameraModelList m_Camlist; 
 	ThreadStatus m_TStatus; // 스레드 상태
 
+
+	std::mutex drawmtx;
+	std::mutex filemtx;
+	std::mutex videomtx;
+	std::mutex writermtx;
+
+	cv::VideoWriter videoWriter;
 	// Box 영역 내의 최대, 최소 온도값
 	ushort m_Max = 0;
 	ushort m_Min = 65535;
@@ -61,17 +68,21 @@ private:
 	bool m_bGrayFlag; // Gray Scale 이미지 포멧 변경을 위한 변수
 	bool m_bColorFlag; // Color Scale 이미지 포멧 변경을 위한 변수
 	bool m_b16BitFlag; // 8/16Bit 아미지 포멧 변경을 위한 변수
-
+	bool m_isRecording; // 동영상 녹화 중 상태변수
+	bool m_bStartRecording; // 동영상 녹화 중 상태변수
 	cv::Vec3b m_Markcolor;
 	cv::Vec3b m_findClosestColor;
 
 	Mat OriMat; // 이미지 버퍼 사이즈를 저장하기위한 변수
 	Mat m_TempData; // 온도데이터를 저장하기위한 변수
+	Mat m_videoMat; // 녹화 이미지 복사를 위한 변수
+
 	BITMAPINFO* m_BitmapInfo;
 
 	PaletteTypes m_colormapType; // 컬러맵 변수
 
 	int m_nCsvFileCount;
+	int m_nSaveInterval;
 	std::string m_strRawdataPath;
 public:
 
@@ -90,6 +101,8 @@ public:
 	MDSMeasureMinSpotValue m_MinSpot; // 최소 스팟 값
 
 	PvPixelType m_pixeltype;
+
+	
 
 private:
 
@@ -137,7 +150,7 @@ private:
 	cv::Mat DisplayLiveImage(CMDS_Ebus_SampleDlg* MainDlg, cv::Mat& processedImageMat, int nIndex);
 	void CleanupAfterProcessing(CMDS_Ebus_SampleDlg* MainDlg, int nIndex);
 	std::unique_ptr<uint16_t[]> Convert8BitTo16Bit(uint8_t* src, ushort*& dest, int length);
-	bool WriteCSV(string filename, Mat m, int nCnt); // CSV 파일에 쓰기
+	bool WriteCSV(string filename, Mat m, char* strtime); // CSV 파일에 쓰기
 	BITMAPINFO* CreateBitmapInfo(const cv::Mat& imageMat, int w, int h, int num_channels); // 비트맵 생성 및 이미지 맵핑 함수
 	unsigned char* GetImageDataPointer(PvImage* image);
 	bool IsValidBuffer(PvBuffer* aBuffer);
@@ -153,7 +166,7 @@ public:
 
 	/*Main Dialog */
 	CMDS_Ebus_SampleDlg* GetMainDialog();
-	SYSTEMTIME m_lastCallTime;
+	std::chrono::system_clock::time_point lastCallTime;
 	/*Camera Func*/
 	void CameraManagerLink(CameraManager* _link); // CameraManager와 연결
 	void CameraSequence(int nIndex); // 카메라 시퀀스
@@ -194,6 +207,10 @@ public:
 	 void SetRawdataPath(std::string path);
 	 std::string GetRawdataPath();
 
+	 std::string GetImageSavePath();
+	 std::string GetRawSavePath();
+	 std::string GetRecordingPath();
+
 	bool bbtnDisconnectFlag;
 	/*-----------------------------------------*/
 
@@ -211,6 +228,13 @@ public:
 	cv::Vec3b hexStringToBGR(const std::string& hexColor);
 	std::vector<std::string> CreateRainbowPalette();
 	std::vector<std::string> GetPalette(PaletteTypes paletteType);
-	void SaveFilePeriodically(std::string filePath, cv::Mat& rawdata, cv::Mat& imagedata);
-	bool CreateDirectoryIfNotExists(const std::string& directoryPath);
+	void SaveFilePeriodically(cv::Mat& rawdata, cv::Mat& imagedata);
+	bool CreateDirectoryRecursively(const std::string& path);
+	bool StartRecording(int frameWidth, int frameHeight, double frameRate);
+	void StopRecording();
+	void SetStartRecordingFlag(bool bFlag);
+	bool GetStartRecordingFlag();
+	void RecordThreadFunction(double frameRate);
+	void UpdateFrame(Mat newFrame);
+	void ProcessAndRecordFrame(const Mat &processedImageMat, int nWidth, int nHeight);
 };

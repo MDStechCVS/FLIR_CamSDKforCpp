@@ -386,3 +386,30 @@ bool Common::GetAutoStartFlag()
 	return m_bAutoStart;
 }
 
+bool Common::OpenFolder(const std::string& folderPath)
+{
+	// 지정된 경로가 폴더인지 확인
+	if (PathIsDirectoryA(folderPath.c_str()))
+	{
+		// 폴더를 열기 위해 ShellExecute 함수 사용
+		HINSTANCE result = ShellExecuteA(NULL, "open", folderPath.c_str(), NULL, NULL, SW_SHOWNORMAL);
+
+		// 결과 확인
+		if ((int)result > 32)
+		{
+			// 성공적으로 폴더를 열었음
+			return true;
+		}
+		else
+		{
+			// 폴더 열기 실패
+			return false;
+		}
+	}
+	else
+	{
+		// 지정된 경로가 폴더가 아님
+		return false;
+	}
+}
+

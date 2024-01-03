@@ -86,6 +86,12 @@ private:
 	CStatic m_LbCam4max;
 	CStatic m_LbCam4ROI;
 	CStatic m_Cam4ConnectStatus;
+
+	CStatic m_Cam1RecordingStatus;
+	CStatic m_Cam2RecordingStatus;
+	CStatic m_Cam3RecordingStatus;
+	CStatic m_Cam4RecordingStatus;
+
 	CBrush* m_brush;
 	CBrush* m_brush2;
 	CBrush m_bRed;
@@ -146,8 +152,8 @@ public:
 	bool SetBtnEnabled(bool bFlag, CSkinButton* Btn);
 	void SetSelectCamIndex(int nIndex);
 	int GetSelectCamIndex();
-	HBRUSH SetCameraConnectionStatus(int camIndex, CameraManager* camManager, CDC* pDC, HBRUSH greenBrush, HBRUSH redBrush);
-	void UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFps, CStatic& lbMin, CStatic& lbMax, CStatic& lbROI, CStatic& lbConnectStatus);
+	HBRUSH SetCameraFlagStatus(int camIndex, CameraManager* camManager, bool bFlag, CDC* pDC, HBRUSH greenBrush, HBRUSH redBrush);
+	void UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFps, CStatic& lbMin, CStatic& lbMax, CStatic& lbROI, CStatic& lbConnectStatus, CStatic& lbRecordingStatus);
 	PaletteTypes GetSelectedColormap(CComboBox& comboControl);
 	void ApplyColorSettings(PaletteTypes selectedMap, int comboIndex);
 	void PopulateComboBoxes();
@@ -155,6 +161,7 @@ public:
 	bool IsMouseEventCheck(UINT message);
 	void ShowJudgeDlg();
 	void CloseJudgeDlg();
+	
 
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -187,4 +194,8 @@ public:
 	afx_msg void OnBnClickedBtnCamParam();
 	afx_msg void OnBnClickedBtnCamParamApply();
 	afx_msg void OnBnClickedCheckBox();
+	afx_msg void OnBnClickedBtnVideoStop();
+	afx_msg void OnBnClickedBtnVideoStart();
+	afx_msg void OnBnClickedBtnOpenDataFolder();
+	afx_msg void OnStnClickedCam1Recording();
 };

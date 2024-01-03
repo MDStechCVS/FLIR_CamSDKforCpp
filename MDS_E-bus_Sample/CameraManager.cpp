@@ -131,7 +131,7 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
         if (i < lDIVector.size())
         {
             strTemp = lDIVector.at(i)->GetModelName();
-            strLog.Format(_T("[Cam_Index_%d]Model = [%s]"), i + 1, static_cast<LPCTSTR>(strTemp));
+            strLog.Format(_T("[Camera_%d]Model = [%s]"), i + 1, static_cast<LPCTSTR>(strTemp));
             Common::GetInstance()->AddLog(0, strLog);
             CString strValue = (_T(""));
             strValue.Format(_T("%s"), static_cast<LPCTSTR>(lDIVector.at(i)->GetModelName()));
@@ -141,7 +141,7 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
             strValue.Format(_T("%s"), static_cast<LPCTSTR>(lDIVector.at(i)->GetConnectionID()));
             m_strSetIPAddress.push_back(strValue);
 
-            strLog.Format(_T("[Cam_Index_%d] IP Address[%s]"), i + 1, static_cast<LPCTSTR>(m_strSetIPAddress.at(i)));
+            strLog.Format(_T("[Camera_%d] IP Address[%s]"), i + 1, static_cast<LPCTSTR>(m_strSetIPAddress.at(i)));
             Common::GetInstance()->AddLog(0, strLog);
          
             Common::GetInstance()->AddLog(0, _T("------------------------------------"));
@@ -280,7 +280,7 @@ bool CameraManager::CameraAllDisConnect(CMDS_Ebus_SampleDlg* MainDlg)
     {
         m_Cam[i]->m_bThreadFlag = false;
         m_Cam[i]->SetRunningFlag(false);
-        strLog.Format(_T("[Cam_Index_%d],Thread Stop"), i + 1);
+        strLog.Format(_T("[Camera_%d],Thread Stop"), i + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
 
@@ -292,7 +292,7 @@ bool CameraManager::CameraAllDisConnect(CMDS_Ebus_SampleDlg* MainDlg)
         Sleep(100);
         m_Cam[i]->CameraDisconnect();
 
-        strLog.Format(_T("[Cam_Index_%d] CameraStop & Disconnect"), i + 1);
+        strLog.Format(_T("[Camera_%d] CameraStop & Disconnect"), i + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
 

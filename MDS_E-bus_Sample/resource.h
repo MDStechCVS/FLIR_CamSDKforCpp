@@ -69,6 +69,13 @@
 #define IDC_EDIT_SCALE                  1055
 #define IDC_EDIT_SCALE2                 1056
 #define IDC_EDIT_SCALE3                 1057
+#define IDC_BTN_VIDEO_STOP              1058
+#define IDC_BTN_VIDEO_START             1059
+#define IDC_CAM1_RECORDING              1060
+#define IDC_BTN_OPEN_DATA_FOLDER        1061
+#define IDC_CAM2_RECORDING              1062
+#define IDC_CAM3_RECORDING              1063
+#define IDC_CAM4_RECORDING              1064
 #define IDC_RADIO_CAM1                  1100
 #define IDC_RADIO_CAM2                  1101
 #define IDC_RADIO_CAM3                  1102
