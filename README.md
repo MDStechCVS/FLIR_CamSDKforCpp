@@ -27,8 +27,7 @@ e-bus sdk 4.1.6.3809<br>
 
 ## ebus SDK Window GUI
 
-![GUI](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/4ca9ce13-577c-4f1c-8328-eb34d5996d19)
-![GUI](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/74717304-1d63-4975-9c42-190f6e16986b)
+![GUI](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/977f6c2d-563a-434a-86ad-e9ca7649f582)
 
 ## <div align="left">Contact</div>
 For bugs and inquiries, please contact us through GitHub Issues or team email.<br>
