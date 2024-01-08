@@ -52,7 +52,7 @@ private:
 	CSkinButton m_BtnImageStreamCtrl;
 	CSkinButton m_BtnStart;
 	CSkinButton m_BtnStop;
-	CSkinButton m_BtnConnect;
+	//CSkinButton m_BtnConnect;
 	CSkinButton m_BtnDisconnect;
 	CSkinButton m_BtnFPS30;
 	CSkinButton m_BtnFPS60;
@@ -61,10 +61,11 @@ private:
 	CSkinButton m_BtniniApply;
 	CSkinButton m_BtnCamParam;
 	CSkinButton m_BtnCamParamApply;
+	CSkinButton m_BtnDataFolder;
+	CSkinButton m_BtnImageSnap;
+	CSkinButton m_BtnImageRecording;
 
 	CStatic m_logo;
-	CStatic m_LbFPS;
-	CStatic m_LbFPS_Display;
 	CStatic m_LbCamCount;
 	CStatic m_LbCam1fps;
 	CStatic m_LbCam1min;
@@ -96,7 +97,8 @@ private:
 	CBrush* m_brush2;
 	CBrush m_bRed;
 	CBrush m_bGreen;
-	COLORREF m_Color1, m_Color2;
+	CBrush m_bYellow;
+	COLORREF m_Color1, m_Color2, m_Color3;
 	CFont m_basefont, m_Btnfont;
 
 	CComboBox m_Cam1_Colormap;
@@ -125,6 +127,7 @@ public:
 private:
 
 	int m_nSelectCamIndex;
+	bool m_blink[4];
 public:
 
 	bool m_Cam_selecting_roi;
@@ -153,6 +156,7 @@ public:
 	void SetSelectCamIndex(int nIndex);
 	int GetSelectCamIndex();
 	HBRUSH SetCameraFlagStatus(int camIndex, CameraManager* camManager, bool bFlag, CDC* pDC, HBRUSH greenBrush, HBRUSH redBrush);
+	HBRUSH HandleCameraRecordingStatus(int camIndex, CDC* pDC);
 	void UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFps, CStatic& lbMin, CStatic& lbMax, CStatic& lbROI, CStatic& lbConnectStatus, CStatic& lbRecordingStatus);
 	PaletteTypes GetSelectedColormap(CComboBox& comboControl);
 	void ApplyColorSettings(PaletteTypes selectedMap, int comboIndex);
@@ -161,7 +165,7 @@ public:
 	bool IsMouseEventCheck(UINT message);
 	void ShowJudgeDlg();
 	void CloseJudgeDlg();
-	
+	void UpdateCheckBoxes(int camIndex);
 
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -194,8 +198,8 @@ public:
 	afx_msg void OnBnClickedBtnCamParam();
 	afx_msg void OnBnClickedBtnCamParamApply();
 	afx_msg void OnBnClickedCheckBox();
-	afx_msg void OnBnClickedBtnVideoStop();
-	afx_msg void OnBnClickedBtnVideoStart();
 	afx_msg void OnBnClickedBtnOpenDataFolder();
 	afx_msg void OnStnClickedCam1Recording();
+	afx_msg void OnBnClickedBtnImgSnap();
+	afx_msg void OnBnClickedBtnImgRecording();
 };

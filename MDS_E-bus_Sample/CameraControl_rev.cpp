@@ -2,10 +2,6 @@
 #include "CameraControl_rev.h"
 #include "MDS_E-bus_SampleDlg.h"
 
-
-
-
-
 CameraControl_rev::CameraControl_rev(int nIndex)
     : m_nCamIndex(nIndex), Manager(NULL), m_Cam_Params(new Camera_Parameter)
 {
@@ -15,8 +11,10 @@ CameraControl_rev::CameraControl_rev(int nIndex)
 
     // 변수들을 초기화
     Initvariable();
+    SetCamIndex(m_nCamIndex);
+
     LoadCaminiFile(nIndex);
-    SetPixelFormatParameter();
+    SetPixelFormatParametertoGUI();
 
     //Rainbow Palette 생성
     CreateRainbowPalette();
@@ -71,48 +69,22 @@ void CameraControl_rev::Initvariable()
     m_colormapType = PaletteTypes::PALETTE_IRON; // 컬러맵 변수, 초기값은 JET으로 설정
 
     m_TempData = cv::Mat();
-
     m_videoMat = cv::Mat();
 
     bbtnDisconnectFlag = false; // 버튼을 클릭하여 장치 연결 해제된경우
 
     std::string strPath = CT2A(Common::GetInstance()->Getsetingfilepath());
-    m_strRawdataPath = strPath + "Camera_" + std::to_string(m_nCamIndex + 1) + "\\";
+    m_strRawdataPath = strPath + "Camera_" + std::to_string(GetCamIndex() + 1) + "\\";
     SetRawdataPath(m_strRawdataPath);
 
-    CreateDirectoryRecursively(GetRawdataPath());
-    CreateDirectoryRecursively(GetImageSavePath());
-    CreateDirectoryRecursively(GetRawSavePath());
-    CreateDirectoryRecursively(GetRecordingPath());
+    Common::GetInstance()->CreateDirectoryRecursively(GetRawdataPath());
+    Common::GetInstance()->CreateDirectoryRecursively(GetImageSavePath());
+    Common::GetInstance()->CreateDirectoryRecursively(GetRawSavePath());
+    Common::GetInstance()->CreateDirectoryRecursively(GetRecordingPath());
 
-    strLog.Format(_T("---------Camera[%d] variable Initialize "), m_nCamIndex + 1);
+    strLog.Format(_T("---------Camera[%d] variable Initialize "), GetCamIndex() + 1);
     Common::GetInstance()->AddLog(0, strLog);
 
-}
-
-// =============================================================================
-bool CameraControl_rev::CreateDirectoryRecursively(const std::string& path)
-{
-    if (!path.empty())
-    {
-        CString strLog;
-        if (SHCreateDirectoryExA(nullptr, path.c_str(), nullptr) == ERROR_SUCCESS)
-        {
-            
-            // 디렉터리가 생성되었거나 이미 존재함
-            strLog.Format(_T("---------Camera[%d] Create Directory [%s]"), m_nCamIndex + 1, CString(path.c_str()));
-            Common::GetInstance()->AddLog(0, strLog);
-            return true; // 경로 생성 성공
-        }
-        else
-        {
-            // 디렉터리 생성 실패 시 수행할 작업을 이곳에 추가
-            strLog.Format(_T("---------Camera[%d] Directory Create Fail [%s]"), m_nCamIndex + 1, CString(path.c_str()));
-            Common::GetInstance()->AddLog(0, strLog);
-        }
-    }
-
-    return false;
 }
 
 // =============================================================================
@@ -140,7 +112,7 @@ bool CameraControl_rev::Camera_destroy()
     }
 
     CString strLog = _T("");
-    strLog.Format(_T("---------Camera[%d] destroy---------"), m_nCamIndex+1);
+    strLog.Format(_T("---------Camera[%d] destroy---------"), GetCamIndex()+1);
     Common::GetInstance()->AddLog(0, strLog);
 
     Common::GetInstance()->AddLog(0, _T("------------------------------------"));
@@ -154,14 +126,14 @@ void CameraControl_rev::CameraDisconnect()
     //녹화 중지
     StopRecording();
     // 카메라 정지
-    CameraStop(m_nCamIndex);
+    CameraStop(GetCamIndex());
 
     // 장치가 연결되어 있고 실행 중이 아닐 때
     if (m_Device != nullptr && !m_bRunning)
     {
         // 장치의 이벤트를 등록 해제하고 연결 해제
         PvGenParameterArray* lGenDevice = m_Device->GetParameters();
-        lGenDevice->Get(m_nCamIndex)->UnregisterEventSink(0);
+        lGenDevice->Get(GetCamIndex())->UnregisterEventSink(0);
         SetStartFlag(false);
         m_Device->Disconnect();
         Camera_destroy();
@@ -412,8 +384,7 @@ bool CameraControl_rev::AcquireParameter(PvDevice* aDevice, PvStream* aStream, P
         bFlag[2] = true;
     }
 
-
-    int rt = SetStreamingCameraParameters(lDeviceParams, nIndex, m_Camlist);
+    int rt = SetStreamingCameraParameters(lDeviceParams, nIndex, (CameraModelList)m_Camlist);
     if (rt != 0)
     {
         // 설정 실패 처리
@@ -481,7 +452,7 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
         else
         {
             
-            strLog.Format(_T("[Camera_%d] Set IRFormat = %s"), nIndex + 1, strIRType);
+            strLog.Format(_T("[Camera_%d] Set IRFormat = %s"), nIndex + 1, (CString)strIRType);
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
@@ -518,7 +489,11 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
-    
+    case BlackFly:
+        strLog.Format(_T("[Camera_%d] Real image camera BlackFly"), nIndex + 1);
+        Common::GetInstance()->AddLog(0, strLog);
+        
+        break;
     default:
         // 지원하지 않는 카메라 유형 처리
         strLog.Format(_T("[Camera_%d] Unsupported Camera Type: %d"), nIndex + 1, m_Camlist);
@@ -677,6 +652,7 @@ void CameraControl_rev::ImageProcessing(PvBuffer* aBuffer, int nIndex)
     // 일정 간격으로 이미지, 로우데이터 자동 저장 
     SaveFilePeriodically(m_TempData, processedImageMat);
 
+
     //녹화 대기 함수
     ProcessAndRecordFrame(processedImageMat, nWidth, nHeight);
 
@@ -696,12 +672,12 @@ void CameraControl_rev::ProcessAndRecordFrame(const Mat &processedImageMat, int 
             if (StartRecording(nWidth, nHeight, GetCameraFPS()))
             {
                 // StartRecording open 성공   
-                strLog.Format(_T("---------Camera[%d] Video Start Recording"), m_nCamIndex + 1);
+                strLog.Format(_T("---------Camera[%d] Video Start Recording"), GetCamIndex() + 1);
                 Common::GetInstance()->AddLog(0, strLog);
             }
             else
             {
-                strLog.Format(_T("---------Camera[%d] Video Open Fail"), m_nCamIndex + 1);
+                strLog.Format(_T("---------Camera[%d] Video Open Fail"), GetCamIndex() + 1);
                 Common::GetInstance()->AddLog(0, strLog);
             }
         }
@@ -726,7 +702,7 @@ void CameraControl_rev::putTextOnCamModel(cv::Mat& imageMat)
     if (!imageMat.empty()) 
     {
         // CString을 std::string으로 변환합니다.
-        CString cstrText = Manager->m_strSetModelName.at(m_nCamIndex);
+        CString cstrText = Manager->m_strSetModelName.at(GetCamIndex());
         std::string strText = std::string(CT2CA(cstrText));
 
         // 텍스트를 이미지에 삽입합니다.
@@ -822,6 +798,9 @@ double CameraControl_rev::GetScaleFactor()
         case Ax5:
             dScale = (0.04f);
             break;
+        case BlackFly :
+            dScale = 0;
+            break;
         default:
             dScale = (0.01f);
             break;
@@ -889,12 +868,11 @@ void CameraControl_rev::ProcessImageData(std::unique_ptr<uint16_t[]>&& data, int
 
 // =============================================================================
 // mat data *.csv format save
-bool CameraControl_rev::WriteCSV(string filename, Mat m, char* strtime)
+bool CameraControl_rev::WriteCSV(string strPath, Mat mData)
 {  
-    string strfilename = filename + "rawData_" + strtime + ".tmp";
     ofstream myfile;
-    myfile.open(strfilename.c_str());
-    myfile << cv::format(m, cv::Formatter::FMT_CSV) << std::endl;
+    myfile.open(strPath.c_str());
+    myfile << cv::format(mData, cv::Formatter::FMT_CSV) << std::endl;
     myfile.close();
 
     return true;
@@ -995,7 +973,7 @@ bool CameraControl_rev::DestroyThread(void)
     }
 
     CString strLog = _T("");
-    strLog.Format(_T("Camera[%d] Thread Status = THREAD_STOP"), m_nCamIndex);
+    strLog.Format(_T("Camera[%d] Thread Status = THREAD_STOP"), GetCamIndex());
     Common::GetInstance()->AddLog(0, strLog);
 
     return true;
@@ -1025,8 +1003,7 @@ bool CameraControl_rev::CameraStart(int nIndex)
     CameraSequence(nIndex);
 
     bFlag = true;
-
-    MainDlg->gui_status = GUI_STEP_RUN;
+    MainDlg->gui_status = GUI_STATUS::GUI_STEP_RUN;
 
     return bFlag;
 }
@@ -1061,7 +1038,7 @@ bool CameraControl_rev::CameraStop(int nIndex)
         Common::GetInstance()->AddLog(0, strLog);
     }
 
-    MainDlg->gui_status = GUI_STEP_STOP;
+    MainDlg->gui_status = GUI_STATUS::GUI_STEP_STOP;
     return bRtn;
 }
 
@@ -1096,7 +1073,7 @@ BITMAPINFO* CameraControl_rev::CreateBitmapInfo(const cv::Mat& imageMat, int w, 
     try
     {
         m_BitmapInfo = new BITMAPINFO;
-        bpp = imageMat.elemSize() * 8;
+        bpp = (int)imageMat.elemSize() * 8;
 
         if (GetYUVYType() || GetColorPaletteType())
         {
@@ -1117,12 +1094,11 @@ BITMAPINFO* CameraControl_rev::CreateBitmapInfo(const cv::Mat& imageMat, int w, 
         }
         else
         {
+            bpp = 24;
             imageSize = w * h;
             m_BitmapInfo = reinterpret_cast<BITMAPINFO*>(new BYTE[sizeof(BITMAPINFO)]);
+            // 픽셀당 비트 수 (bpp)
             nbiClrUsed = 0;
-         /*   throw std::runtime_error("Failed to allocate for BITMAPINFO");
-            imageSize = w * h;
-            nbiClrUsed = 0;*/
         }
 
         BITMAPINFOHEADER& bmiHeader = m_BitmapInfo->bmiHeader;
@@ -1322,6 +1298,18 @@ bool CameraControl_rev::GetYUVYType()
 }
 
 // =============================================================================
+void CameraControl_rev::SetRGBType(bool bFlag)
+{
+    m_bRGBFlag = bFlag;
+}
+
+// =============================================================================
+bool CameraControl_rev::GetRGBType()
+{
+    return m_bRGBFlag;
+}
+
+// =============================================================================
 bool CameraControl_rev::GetGrayType()
 {
     return m_bGrayFlag;
@@ -1369,13 +1357,11 @@ std::string CameraControl_rev::GetRawdataPath()
     return m_strRawdataPath;
 }
 
-
 // =============================================================================
 std::string CameraControl_rev::GetImageSavePath()
 {
     return GetRawdataPath() + "Image\\";
 }
-
 
 // =============================================================================
 std::string CameraControl_rev::GetRawSavePath()
@@ -1391,38 +1377,35 @@ std::string CameraControl_rev::GetRecordingPath()
 
 // =============================================================================
 //입력된 카메라 모델명이 구조체에 있는지 확인
-bool CameraControl_rev::FindCameraModelName(int nCamIndex, CString strModel)
+CameraModelList CameraControl_rev::FindCameraModel(int nCamIndex)
 {
     CString strModelID = _T("");
-    bool SearchFlag = false;
     strModelID.Format(_T("%s"), Manager->m_strSetModelName.at(nCamIndex));
 
     CString sContentsLower = strModelID.MakeLower();
 
-    if (-1 != sContentsLower.Find(strModel.MakeLower()))
-        SearchFlag = true;
+    if (sContentsLower.Find(_T("a50")) != -1)
+        return A50;
+    else if (sContentsLower.Find(_T("ax5")) != -1)
+        return Ax5;
+    else if (sContentsLower.Find(_T("ft1000")) != -1)
+        return FT1000;
+    else if (sContentsLower.Find(_T("blackfly")) != -1)
+        return BlackFly;
 
-    return SearchFlag;
+    return A50; // 기본값
 }
 
 // =============================================================================
 //카메라별 파라미터 설정하기
 bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
 {
-    
     PvGenParameterArray* lDeviceParams = aDevice->GetParameters();
     PvResult result = -1;
     CString strLog = _T("");
     bool bFindFlag = false;
 
-    if (FindCameraModelName(nIndex, _T("a50")))
-        m_Camlist = A50;
-    else if (FindCameraModelName(nIndex, _T("ax5")))
-        m_Camlist = Ax5;
-    else if (FindCameraModelName(nIndex, _T("ft1000")))
-        m_Camlist = FT1000;
-    else
-        m_Camlist = A50;
+    m_Camlist = FindCameraModel(nIndex);
 
     DWORD pixeltypeValue = ConvertHexValue(m_Cam_Params->strPixelFormat);
     m_pixeltype = (PvPixelType)pixeltypeValue;
@@ -1443,6 +1426,14 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
     else if (m_Cam_Params->strPixelFormat == YUV422_8_UYVY)
     {
         strPixelFormat = "YUV422_8_UYVY";
+    }
+    else if (m_Cam_Params->strPixelFormat == RGB8PACK)
+    {
+        strPixelFormat = "RGB_8_Pack";
+    }
+    else
+    {
+        strPixelFormat = "Mono8";
     }
 
     switch (m_Camlist)
@@ -1475,6 +1466,9 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
 
     case Ax5:
 
+        strLog.Format(_T("[Camera_%d] Cam Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
+        Common::GetInstance()->AddLog(0, strLog);
+
         //ax5
         result = lDeviceParams->SetEnumValue("PixelFormat", m_pixeltype);
 
@@ -1504,7 +1498,26 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
         }
         break;
 
+    case BlackFly:
+        strLog.Format(_T("[Camera_%d] Cam Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
+        Common::GetInstance()->AddLog(0, strLog);
 
+        result = lDeviceParams->SetEnumValue("PixelFormat", m_pixeltype);
+
+        if (!result.IsOK())
+        {
+            strLog.Format(_T("Set PixelFormat Fail code = %d"), &result);
+            Common::GetInstance()->AddLog(0, strLog);
+        }
+        else
+        {
+            strLog.Format(_T("[Camera_%d]Set PixelFormat [%s] %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
+            Common::GetInstance()->AddLog(0, strLog);
+        }
+        break;
+
+
+        break;
 
     default:
         result = lDeviceParams->SetEnumValue("PixelFormat", m_pixeltype);
@@ -1543,24 +1556,35 @@ void CameraControl_rev::LoadCaminiFile(int nIndex)
         SetYUVYType(TRUE);  
         Set16BitType(FALSE);
         SetGrayType(FALSE);
+        SetRGBType(FALSE);
     }
     else if (m_Cam_Params->strPixelFormat == MONO8)
     {
         SetGrayType(TRUE);
         SetYUVYType(FALSE);
         Set16BitType(FALSE);
+        SetRGBType(FALSE);
     }
     else if (m_Cam_Params->strPixelFormat == MONO16 || m_Cam_Params->strPixelFormat == MONO14)
     {
         Set16BitType(TRUE);
         SetGrayType(TRUE);
         SetYUVYType(FALSE);
+        SetRGBType(FALSE);
+    }
+    else if (m_Cam_Params->strPixelFormat == RGB8PACK)
+    {
+        SetGrayType(FALSE);
+        SetYUVYType(FALSE);
+        Set16BitType(FALSE);
+        SetRGBType(TRUE);
     }
     else
     {
         SetGrayType(FALSE);
         SetYUVYType(FALSE);
         Set16BitType(FALSE);
+        SetRGBType(FALSE);
     }
 }
 
@@ -1581,6 +1605,13 @@ cv::Size CameraControl_rev::GetImageSize()
 template <typename T>
 cv::Mat CameraControl_rev::NormalizeAndProcessImage(const T* data, int height, int width, int cvType)
 {
+    if (data == nullptr)
+    {
+        // data가 nullptr일 경우 예외처리 또는 기본값 설정을 수행할 수 있습니다.
+        // 여기서는 기본값으로 빈 이미지를 반환합니다.
+        return cv::Mat();
+    }
+
     cv::Mat imageMat(height, width, cvType, (void*)data);
     int nTemp = std::numeric_limits<T>::max();
     cv::normalize(imageMat, imageMat, 0, std::numeric_limits<T>::max(), cv::NORM_MINMAX);
@@ -1590,8 +1621,7 @@ cv::Mat CameraControl_rev::NormalizeAndProcessImage(const T* data, int height, i
     int range = static_cast<int>(max_val) - static_cast<int>(min_val);
     if (range == 0)
         range = 1;
-
-
+    
     //imageMat.convertTo(imageMat, cvType, std::numeric_limits<T>::max() / range, -(min_val)* std::numeric_limits<T>::max() / range);
 
     return imageMat; 
@@ -1784,7 +1814,8 @@ cv::Mat CameraControl_rev::DisplayLiveImage(CMDS_Ebus_SampleDlg* MainDlg, cv::Ma
 
     cv::Mat colorMappedImage;
     cv::Mat ResultImage;
-    int num_channels = MainDlg->m_chEventsCheckBox.GetCheck() ? 16 : 8;
+    Mat GrayImage;
+    int num_channels = Get16BitType() ? 16 : 8;
     int nImageType = processedImageMat.type();
     CString strLog;
     // 16bit
@@ -1800,15 +1831,13 @@ cv::Mat CameraControl_rev::DisplayLiveImage(CMDS_Ebus_SampleDlg* MainDlg, cv::Ma
         }
         else if (GetGrayType())
         {
-            Mat GrayImage;
+            
             cv::cvtColor(processedImageMat, GrayImage, cv::COLOR_GRAY2BGR);
             cv::normalize(GrayImage, ResultImage, 0, 255, cv::NORM_MINMAX, CV_8UC1);
             cv::cvtColor(ResultImage, ResultImage, cv::COLOR_BGR2GRAY);
         }
         else
         {
-            //strLog.Format(_T("[Camera_%d] DisplayLiveImage Fail Image"), m_nCamIndex + 1);
-            //Common::GetInstance()->AddLog(0, strLog);
             processedImageMat.copyTo(ResultImage);
         }
     }
@@ -1818,19 +1847,19 @@ cv::Mat CameraControl_rev::DisplayLiveImage(CMDS_Ebus_SampleDlg* MainDlg, cv::Ma
         if (GetYUVYType())
         {
             ResultImage = ConvertUYVYToBGR8(processedImageMat);
-            //cv::cvtColor(colorMappedImage, ResultImage, cv::COLOR_BGR2RGB);
         }
         else if (GetGrayType() == TRUE)
         {
-            Mat GrayImage;
             cv::cvtColor(processedImageMat, GrayImage, cv::COLOR_GRAY2BGR);
             cv::normalize(GrayImage, ResultImage, 0, 255, cv::NORM_MINMAX, CV_8UC1);
             cv::cvtColor(ResultImage, ResultImage, cv::COLOR_BGR2GRAY);
         }
+        else if (GetRGBType())
+        {
+            processedImageMat.copyTo(ResultImage);
+        }
         else
         {
-            //strLog.Format(_T("[Camera_%d] DisplayLiveImage Fail Image"), m_nCamIndex + 1);
-            //Common::GetInstance()->AddLog(0, strLog);
             processedImageMat.copyTo(ResultImage);
         }
     }
@@ -1849,10 +1878,6 @@ void CameraControl_rev::CleanupAfterProcessing(CMDS_Ebus_SampleDlg* MainDlg, int
         delete[] m_BitmapInfo;
         m_BitmapInfo = nullptr;
     }
-
-
-    //free(roiArr);
-    //delete[] roiArr;
 }
 
 // =============================================================================
@@ -1860,21 +1885,20 @@ void CameraControl_rev::CleanupAfterProcessing(CMDS_Ebus_SampleDlg* MainDlg, int
 cv::Mat CameraControl_rev::ProcessImageBasedOnSettings(byte* imageDataPtr, int nHeight, int nWidth, CMDS_Ebus_SampleDlg* MainDlg)
 {
     bool isYUVYType = GetYUVYType() == TRUE;
-    int dataType = 0;
-    if (MainDlg->m_chEventsCheckBox.GetCheck())
+    bool isRGBType = GetRGBType() == TRUE;
+    int dataType = CV_8UC1;
+
+    if (Get16BitType())
     {
         dataType = CV_16UC1;
     }
-    else
+    else if (isYUVYType)
     {
-        if (isYUVYType)
-        {
-            dataType = CV_8UC2;
-        }
-        else
-        {
-            dataType = CV_8UC1;
-        }
+        dataType = CV_8UC2;
+    }
+    else if (isRGBType)
+    {
+        dataType = CV_8UC3;
     }
 
     return NormalizeAndProcessImage(imageDataPtr, nHeight, nWidth, dataType);
@@ -1957,7 +1981,7 @@ PaletteTypes CameraControl_rev::GetPaletteType()
 }
 
 // =============================================================================
-void CameraControl_rev::SetPixelFormatParameter()
+void CameraControl_rev::SetPixelFormatParametertoGUI()
 {
     CMDS_Ebus_SampleDlg* MainDlg = GetMainDialog();
     CString strLog = _T("");
@@ -1965,35 +1989,34 @@ void CameraControl_rev::SetPixelFormatParameter()
     // YUVY
     if(GetYUVYType())
     {
-        strLog.Format(_T("[Camera_%d] YUV422_8_UYVY Mode"), m_nCamIndex + 1);
+        strLog.Format(_T("[Camera_%d] YUV422_8_UYVY Mode"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
         MainDlg->m_chUYVYCheckBox.SetCheck(TRUE);
 
-        MainDlg->m_chEventsCheckBox.SetCheck(FALSE); //8비트 고정
+        Set16BitType(true); //8비트 고정
         MainDlg->m_chEventsCheckBox.EnableWindow(FALSE); //8비트 고정
+
 
         MainDlg->m_chColorMapCheckBox.EnableWindow(FALSE);
         MainDlg->m_chMonoCheckBox.EnableWindow(FALSE);
 
-        strLog.Format(_T("[Camera_%d] UYVY CheckBox Checked"), m_nCamIndex + 1);
+        strLog.Format(_T("[Camera_%d] UYVY CheckBox Checked"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
-        strLog.Format(_T("[Camera_%d] 16Bit CheckBox Checked, Disable Windows"), m_nCamIndex + 1);
-        Common::GetInstance()->AddLog(0, strLog);
-
-        strLog.Format(_T("[Camera_%d] ColorMap  Disable Windows"), m_nCamIndex + 1);
+        strLog.Format(_T("[Camera_%d] 16Bit CheckBox Checked, Disable Windows"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
-        strLog.Format(_T("[Camera_%d] Mono  Disable Windows"), m_nCamIndex + 1);
+        strLog.Format(_T("[Camera_%d] ColorMap  Disable Windows"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
+        strLog.Format(_T("[Camera_%d] Mono  Disable Windows"), GetCamIndex() + 1);
+        Common::GetInstance()->AddLog(0, strLog);
     }
 
     // mono 8
     else if (GetGrayType() && Get16BitType() == FALSE)
     {
         SetYUVYType(FALSE);
-        MainDlg->m_chMonoCheckBox.SetCheck(TRUE);
         MainDlg->m_chEventsCheckBox.SetCheck(FALSE);
 
         MainDlg->m_chColorMapCheckBox.EnableWindow(FALSE);
@@ -2001,7 +2024,7 @@ void CameraControl_rev::SetPixelFormatParameter()
 
     }
     // mono 16
-    else if (GetGrayType() && Get16BitType() == TRUE)
+    else if (GetGrayType() && Get16BitType())
     {
         SetYUVYType(FALSE);
 
@@ -2009,12 +2032,14 @@ void CameraControl_rev::SetPixelFormatParameter()
         MainDlg->m_chEventsCheckBox.SetCheck(TRUE);
 
         MainDlg->m_chColorMapCheckBox.EnableWindow(TRUE);
-        MainDlg->m_chMonoCheckBox.EnableWindow(TRUE);
     }
-
+    // rgb 8
+    else if (GetRGBType())
+    {
+    }
     
-    MainDlg->m_chUYVYCheckBox.EnableWindow(FALSE);
-    MainDlg->m_chEventsCheckBox.EnableWindow(FALSE);
+    //MainDlg->m_chUYVYCheckBox.EnableWindow(FALSE);
+    //MainDlg->m_chEventsCheckBox.EnableWindow(FALSE);
 }
 
 // =============================================================================
@@ -2152,13 +2177,13 @@ cv::Vec3b CameraControl_rev::findClosestColor(const std::vector<cv::Vec3b>& colo
     cv::Vec3b closestColor = colorPalette[0];
 
     // 최소 거리 초기화
-    int minDistance = cv::norm(targetColor - colorPalette[0]);
+    int minDistance = (int)cv::norm(targetColor - colorPalette[0]);
 
     // 모든 팔레트 색상을 반복하면서 가장 가까운 색상 찾기
     for (const cv::Vec3b& color : colorPalette)
     {
         // 현재 색상과 대상 색상 사이의 거리 계산
-        int distance = cv::norm(targetColor - color);
+        int distance = (int)cv::norm(targetColor - color);
 
         // 현재까지의 최소 거리보다 더 가까우면 업데이트
         if (distance < minDistance) {
@@ -2191,19 +2216,6 @@ std::vector<cv::Vec3b> CameraControl_rev::adjustPaletteScale(const std::vector<c
         adjustedPalette.push_back(cv::Vec3b(newB, newG, newR));
     }
     return adjustedPalette;
-}
-
-// =============================================================================
-std::vector<std::string> compressIronPalette(const std::vector<std::string>& originalPalette, int compressionFactor)
-{
-    std::vector<std::string> compressedPalette;
-    int step = originalPalette.size() / compressionFactor;
-
-    for (int i = 0; i < originalPalette.size(); i += step) {
-        compressedPalette.push_back(originalPalette[i]);
-    }
-
-    return compressedPalette;
 }
 
 // =============================================================================
@@ -2244,7 +2256,6 @@ cv::Mat CameraControl_rev::applyIronColorMap(cv::Mat& im_gray, PaletteTypes pale
 // =============================================================================
 std::vector<std::string> CameraControl_rev::CreateRainbowPalette() 
 {
-   
     // 256가지 레인보우 색상 팔레트 생성
     for (int i = 0; i < 256; ++i) {
         int r, g, b;
@@ -2308,11 +2319,89 @@ std::vector<std::string> CameraControl_rev::GetPalette(PaletteTypes paletteType)
     }
 }
 
+std::string CameraControl_rev::GenerateFileNameWithTimestamp(const std::string& basePath, const std::string& prefix, const std::string& extension)
+{
+    // 현재 시간 정보 가져오기
+    auto currentTime = std::chrono::system_clock::now();
+    auto now = std::chrono::system_clock::to_time_t(currentTime);
+    struct tm localTime;
+    localtime_s(&localTime, &now);
+
+    // 시간 정보를 이용하여 파일 이름 생성
+    char timeStr[50];
+    strftime(timeStr, sizeof(timeStr), "_%Y_%m_%d_%H_%M_%S", &localTime);
+
+    // 최종 파일 경로 생성
+    std::string filePath = basePath + prefix + timeStr + extension;
+
+    return filePath;
+}
+
+bool CameraControl_rev::SaveImageWithTimestamp(const cv::Mat& image)
+{
+    std::string basePath = GetImageSavePath(); // 이미지 저장 경로
+    std::string prefix = "temperature_image"; // 파일 이름 접두사
+    std::string extension = ".jpg"; // 확장자
+
+    // 파일 이름 생성
+    std::string filePath = GenerateFileNameWithTimestamp(basePath, prefix, extension);
+
+    // 이미지 저장
+    if (!cv::imwrite(filePath, image))
+    {
+        // 오류 처리
+        return false;
+    }
+
+    // 성공적으로 저장한 경우 로그 출력
+    CString strLog;
+    std::wstring filePathW(filePath.begin(), filePath.end());
+    strLog.Format(_T("Completed writeback to image file: %s"), filePathW.c_str());
+    Common::GetInstance()->AddLog(0, strLog);
+
+    return true;
+}
+
+bool CameraControl_rev::SaveRawDataWithTimestamp(const cv::Mat& rawData)
+{
+    std::string basePath = GetRawSavePath(); // Raw 데이터 저장 경로
+    std::string prefix = "rawdata"; // 파일 이름 접두사
+    std::string extension = ".tmp"; // 확장자
+
+    // 파일 이름 생성
+    std::string filePath = GenerateFileNameWithTimestamp(basePath, prefix, extension);
+
+    // Raw 데이터 저장
+    if (!WriteCSV(filePath, rawData))
+    {
+        // 오류 처리
+        return false;
+    }
+
+    // 성공적으로 저장한 경우 로그 출력
+    CString strLog;
+    std::wstring filePathW(filePath.begin(), filePath.end());
+    strLog.Format(_T("Completed writeback to raw data file: %s"), filePathW.c_str());
+    Common::GetInstance()->AddLog(0, strLog);
+
+    return true;
+}
+
 // =============================================================================
 void CameraControl_rev::SaveFilePeriodically(cv::Mat& rawdata, cv::Mat& imagedata)
 {
+    if (rawdata.empty() || imagedata.empty())
+        return;
+
     std::lock_guard<std::mutex> lock(filemtx);
     CString strLog = _T("");
+
+    //유저 선택 이미지 저장
+    if (GetMouseImageSaveFlag())
+    {
+        SaveImageWithTimestamp(imagedata);
+        SetMouseImageSaveFlag(FALSE);
+    }
 
     if (lastCallTime.time_since_epoch().count() == 0)
     {
@@ -2326,41 +2415,17 @@ void CameraControl_rev::SaveFilePeriodically(cv::Mat& rawdata, cv::Mat& imagedat
 
     if (elapsedSeconds >= seconds) // 300초 = 5분
     {
-        // 추가: Mat 객체를 JPEG 파일로 저장
-        auto now = std::chrono::system_clock::to_time_t(currentTime);
-        struct tm localTime;
-        localtime_s(&localTime, &now);
+        // 추가: Mat 객체를 JPEG, tmp 파일로 저장
 
-        // 파일 이름 생성
-        char timeStr[50];
-        strftime(timeStr, sizeof(timeStr), "_%Y_%m_%d_%H_%M_%S", &localTime);
-        std::string jpgFilePath = GetImageSavePath() + "temperature_image" + timeStr + ".jpg";
-
-        if (!WriteCSV(GetRawSavePath(), rawdata, timeStr))
-        {
-            // 오류 처리
-        }
-        else
-        {
-            strLog.Format(_T("---------Camera[%d] Completed writeback to temperature raw data"), m_nCamIndex + 1);
-            Common::GetInstance()->AddLog(0, strLog);
-        }
-
-        if (!cv::imwrite(jpgFilePath, imagedata))
-        {
-            // 오류 처리
-        }
-        else
-        {
-            strLog.Format(_T("---------Camera[%d] Completed writeback to temperature image"), m_nCamIndex + 1);
-            Common::GetInstance()->AddLog(0, strLog);
-        }
+        SaveRawDataWithTimestamp(rawdata);
+        SaveImageWithTimestamp(imagedata);
 
         m_nCsvFileCount++;
         lastCallTime = currentTime;
     }
 }
 
+// =============================================================================
 bool CameraControl_rev::StartRecording(int frameWidth, int frameHeight, double frameRate)
 {
     std::lock_guard<std::mutex> lock(videomtx);
@@ -2368,7 +2433,7 @@ bool CameraControl_rev::StartRecording(int frameWidth, int frameHeight, double f
 
     if (m_isRecording)
     {
-        strLog.Format(_T("---------Camera[%d] Already recording"), m_nCamIndex + 1);
+        strLog.Format(_T("---------Camera[%d] Already recording"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
         return false; // 이미 녹화 중이므로 false 반환
@@ -2394,13 +2459,13 @@ bool CameraControl_rev::StartRecording(int frameWidth, int frameHeight, double f
 
     if (!videoWriter.isOpened())
     {
-        strLog.Format(_T("---------Camera[%d] VideoWriter for video recording cannot be opened"), m_nCamIndex + 1);
+        strLog.Format(_T("---------Camera[%d] VideoWriter for video recording cannot be opened"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
         return false; // 녹화 실패 반환
     }
     else
     {
-        strLog.Format(_T("---------Camera[%d] Video Writer open success"), m_nCamIndex + 1);
+        strLog.Format(_T("---------Camera[%d] Video Writer open success"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
 
@@ -2409,6 +2474,7 @@ bool CameraControl_rev::StartRecording(int frameWidth, int frameHeight, double f
     return true; // 녹화 시작 성공 반환
 }
 
+// =============================================================================
 void CameraControl_rev::RecordThreadFunction(double frameRate) 
 {
     std::chrono::milliseconds frameDuration(static_cast<int>(1000 / frameRate));
@@ -2445,6 +2511,7 @@ void CameraControl_rev::RecordThreadFunction(double frameRate)
     }
 }
 
+// =============================================================================
 void CameraControl_rev::StopRecording() 
 {
     std::lock_guard<std::mutex> lock(videomtx);
@@ -2459,16 +2526,42 @@ void CameraControl_rev::StopRecording()
     SetStartRecordingFlag(false);
 
     CString strLog = _T("");
-    strLog.Format(_T("---------Camera[%d] Video Stop Recording"), m_nCamIndex + 1);
+    strLog.Format(_T("---------Camera[%d] Video Stop Recording"), GetCamIndex() + 1);
     Common::GetInstance()->AddLog(0, strLog);
 }
 
+// =============================================================================
 void CameraControl_rev::SetStartRecordingFlag(bool bFlag)
 {
     m_bStartRecording = bFlag;
 }
 
+// =============================================================================
 bool CameraControl_rev::GetStartRecordingFlag()
 {
     return m_bStartRecording;
 }
+
+// =============================================================================
+void CameraControl_rev::SetMouseImageSaveFlag(bool bFlag)
+{
+    m_bMouseImageSave = bFlag;
+}
+// =============================================================================
+bool CameraControl_rev::GetMouseImageSaveFlag()
+{
+    return m_bMouseImageSave;
+}
+
+// =============================================================================
+void CameraControl_rev::SetCamIndex(int nIndex)
+{
+    m_nCamIndex = nIndex;
+}
+
+// =============================================================================
+int CameraControl_rev::GetCamIndex()
+{
+    return m_nCamIndex;
+}
+

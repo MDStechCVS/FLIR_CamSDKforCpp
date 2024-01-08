@@ -66,10 +66,12 @@ private:
 	bool m_PaletteInitialized = false; // 팔레트 설정 변수
 	bool m_bYUVYFlag;  // YUVY 사용시 이미지 포멧 변경을 위한 변수
 	bool m_bGrayFlag; // Gray Scale 이미지 포멧 변경을 위한 변수
+	bool m_bRGBFlag; // RGB 실화상 이미지 포멧 변경을 위한 변수
 	bool m_bColorFlag; // Color Scale 이미지 포멧 변경을 위한 변수
 	bool m_b16BitFlag; // 8/16Bit 아미지 포멧 변경을 위한 변수
 	bool m_isRecording; // 동영상 녹화 중 상태변수
 	bool m_bStartRecording; // 동영상 녹화 중 상태변수
+	bool m_bMouseImageSave; // 마우스 우클릭으로 이미지 저장 변수
 	cv::Vec3b m_Markcolor;
 	cv::Vec3b m_findClosestColor;
 
@@ -119,7 +121,7 @@ private:
 	void ConfigureStream(PvDevice* aDevice, PvStream* aStream, int nIndex); // Stream 파라미터 설정
 	PvPipeline* CreatePipeline(PvDevice* aDevice, PvStream* aStream, int nIndex); // 파이프라인 생성자 함수
 	int SetStreamingCameraParameters(PvGenParameterArray* lDeviceParams, int nIndex, CameraModelList Camlist); // 스트리밍 시 파라미터 설정하는 함수
-	bool FindCameraModelName(int nCamIndex, CString strModel); // 카메라 모델 이름 찾기
+	CameraModelList FindCameraModel(int nCamIndex); // 카메라 모델 이름 찾기
 	bool CameraParamSetting(int nIndex, PvDevice* aDevice); // 카메라 파라미터 설정
 	 /*-----------------------------------------*/
 	
@@ -150,7 +152,7 @@ private:
 	cv::Mat DisplayLiveImage(CMDS_Ebus_SampleDlg* MainDlg, cv::Mat& processedImageMat, int nIndex);
 	void CleanupAfterProcessing(CMDS_Ebus_SampleDlg* MainDlg, int nIndex);
 	std::unique_ptr<uint16_t[]> Convert8BitTo16Bit(uint8_t* src, ushort*& dest, int length);
-	bool WriteCSV(string filename, Mat m, char* strtime); // CSV 파일에 쓰기
+	bool WriteCSV(string strPath, Mat mData); // CSV 파일에 쓰기
 	BITMAPINFO* CreateBitmapInfo(const cv::Mat& imageMat, int w, int h, int num_channels); // 비트맵 생성 및 이미지 맵핑 함수
 	unsigned char* GetImageDataPointer(PvImage* image);
 	bool IsValidBuffer(PvBuffer* aBuffer);
@@ -178,7 +180,7 @@ public:
 	int ReStartSequence(int nIndex); // 다시 시작 시퀀스
 	bool Camera_destroy(); // 카메라 종료시 동적 할당된 메모리 정리
 	void LoadCaminiFile(int nIndex); // 카메라 파라미터 설정파일 
-	void SetPixelFormatParameter(); // PixelFormat 파라미터 설정 
+	void SetPixelFormatParametertoGUI(); // PixelFormat 파라미터 설정 
 
 	/*Status*/
 	void SetRunningFlag(bool bFlag); // 카메라 러닝 플래그 
@@ -204,12 +206,21 @@ public:
 	void SetPaletteType(PaletteTypes type);
 	PaletteTypes GetPaletteType();
 
-	 void SetRawdataPath(std::string path);
-	 std::string GetRawdataPath();
+	void SetRawdataPath(std::string path);
+	std::string GetRawdataPath();
+	
+	std::string GetImageSavePath();
+	std::string GetRawSavePath();
+	std::string GetRecordingPath();
 
-	 std::string GetImageSavePath();
-	 std::string GetRawSavePath();
-	 std::string GetRecordingPath();
+	void SetMouseImageSaveFlag(bool bFlag);
+	bool GetMouseImageSaveFlag();
+
+	void SetCamIndex(int nIndex);
+	int GetCamIndex();
+
+	void SetRGBType(bool bFlag);
+	bool GetRGBType();
 
 	bool bbtnDisconnectFlag;
 	/*-----------------------------------------*/
@@ -220,7 +231,6 @@ public:
 	cv::Vec3b findClosestColor(const std::vector<cv::Vec3b>& colorPalette, const cv::Vec3b& targetColor); // 파레트에서 지정된 색이랑 비슷한 색 찾기
 	/*-----------------------------------------*/
 	BITMAPINFO* ConvertImageTo32BitWithBitmapInfo(const cv::Mat& imageMat, int w, int h);
-	cv::Mat temperaturePalette(const cv::Mat& temperatureData);
 	
 	Mat applyIronColorMap(cv::Mat& im_gray, PaletteTypes palette, double scaleR, double scaleG, double scaleB);
 	std::vector<cv::Vec3b> adjustPaletteScale(const std::vector<cv::Vec3b>& originalPalette, double scaleR, double scaleG, double scaleB);
@@ -229,7 +239,6 @@ public:
 	std::vector<std::string> CreateRainbowPalette();
 	std::vector<std::string> GetPalette(PaletteTypes paletteType);
 	void SaveFilePeriodically(cv::Mat& rawdata, cv::Mat& imagedata);
-	bool CreateDirectoryRecursively(const std::string& path);
 	bool StartRecording(int frameWidth, int frameHeight, double frameRate);
 	void StopRecording();
 	void SetStartRecordingFlag(bool bFlag);
@@ -237,4 +246,7 @@ public:
 	void RecordThreadFunction(double frameRate);
 	void UpdateFrame(Mat newFrame);
 	void ProcessAndRecordFrame(const Mat &processedImageMat, int nWidth, int nHeight);
+	std::string GenerateFileNameWithTimestamp(const std::string& basePath, const std::string& prefix, const std::string& extension);
+	bool SaveImageWithTimestamp(const cv::Mat& image);
+	bool SaveRawDataWithTimestamp(const cv::Mat& rawData);
 };

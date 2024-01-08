@@ -728,3 +728,17 @@ std::vector<std::string> Summer_palette =
 "#fefe66", "#fefe66", "#ffff66", "#ffff66"
 
 };
+
+// =============================================================================
+std::vector<std::string> compressIronPalette(const std::vector<std::string>& originalPalette, int compressionFactor)
+{
+    std::vector<std::string> compressedPalette;
+    int step = originalPalette.size() / compressionFactor;
+
+    for (int i = 0; i < originalPalette.size(); i += step) 
+    {
+        compressedPalette.push_back(originalPalette[i]);
+    }
+
+    return compressedPalette;
+}

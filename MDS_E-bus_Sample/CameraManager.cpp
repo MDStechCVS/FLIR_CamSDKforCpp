@@ -45,9 +45,9 @@ void CameraManager::SetDeviceCount(int nCnt)
 // =============================================================================
 // 설정 파일에 저장되어 있는 IP Address와 물리적으로 연결되어 있는 IP Address를 비교하여 
 // 저장된 IP와 연결되어 있는 IP가 동일하다면  IP Address를 구조체에 저장한다.
+/*
 void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
 {
-
     if (MainDlg->gui_status == GUI_STEP_RUN)
         return;
     PvSystem lSystem;
@@ -150,6 +150,73 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
     int nCnt = (int)m_strSetIPAddress.size();
     SetDeviceCount(nCnt);
 }
+*/
+void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
+{
+    if (MainDlg->gui_status == GUI_STATUS::GUI_STEP_RUN)
+        return;
+
+    PvSystem lSystem;
+    lSystem.Find();
+
+    uint32_t nInterfaceCount = lSystem.GetInterfaceCount();
+
+    // 먼저 모든 장치 정보를 저장
+    std::map<CString, CString> deviceMap;
+    for (uint32_t i = 0; i < nInterfaceCount; i++)
+    {
+        const PvInterface* lInterface = dynamic_cast<const PvInterface*>(lSystem.GetInterface(i));
+        if (lInterface != NULL)
+        {
+            uint32_t nDeviceCnt = lInterface->GetDeviceCount();
+            for (uint32_t j = 0; j < nDeviceCnt; j++)
+            {
+                const PvDeviceInfo* lDI = dynamic_cast<const PvDeviceInfo*>(lInterface->GetDeviceInfo(j));
+                if (lDI != NULL)
+                {
+                    CString strInterfaceID;
+                    strInterfaceID.Format(_T("%s"), static_cast<LPCTSTR>(lDI->GetConnectionID()));
+
+                    CString modelName = lDI->GetModelName();
+                    deviceMap[strInterfaceID] = modelName;
+                }
+            }
+        }
+    }
+
+    // m_strLoadIPAddress 순서대로 일치하는 장치 찾기
+    for (const CString& loadIP : m_strLoadIPAddress)
+    {
+        if (deviceMap.find(loadIP) != deviceMap.end())
+        {
+            m_strSetIPAddress.push_back(loadIP);
+            m_strSetModelName.push_back(deviceMap[loadIP]);
+        }
+    }
+
+    // 중복 제거 후 정렬
+    //std::sort(m_strSetIPAddress.begin(), m_strSetIPAddress.end());
+    //std::sort(m_strSetModelName.begin(), m_strSetModelName.end());
+
+    SetDeviceCount(static_cast<int>(m_strSetIPAddress.size()));
+
+    // 결과 출력 및 벡터에 저장
+    int nDeviceCnt = static_cast<int>(m_strSetIPAddress.size());
+    for (int i = 0; i < nDeviceCnt; i++)
+    {
+        CString strValue = m_strSetIPAddress[i];
+        CString strModelName = m_strSetModelName[i]; // 모델 이름 가져오기
+
+        CString strLog;
+        strLog.Format(_T("[Camera_%d] IP Address[%s], Model Name[%s]"), i + 1, static_cast<LPCTSTR>(strValue), static_cast<LPCTSTR>(strModelName));
+        Common::GetInstance()->AddLog(0, strLog);
+
+        Common::GetInstance()->AddLog(0, _T("------------------------------------"));
+    }
+
+    SetDeviceCount(nDeviceCnt);
+}
+
 
 // =============================================================================
 // 여기에서 a와 b의 필드를 비교하고, 중복 여부를 반환.
@@ -196,7 +263,7 @@ bool CameraManager::CreateCamera(int cameraIndex)
 
     if (cameraIndex >= 0 && cameraIndex < CAMERA_COUNT)
     {
-        if (m_Cam[cameraIndex] == NULL)
+        if (m_Cam[cameraIndex] == nullptr)
         {
             m_Cam[cameraIndex] = new CameraControl_rev(cameraIndex);
             m_Cam[cameraIndex]->CameraManagerLink(MainDlg->m_CamManager);
@@ -247,7 +314,7 @@ bool CameraManager::CameraAllStart(CMDS_Ebus_SampleDlg* MainDlg)
     }
 
     bFlag = true;
-    MainDlg->gui_status = GUI_STEP_RUN;
+    MainDlg->gui_status = GUI_STATUS::GUI_STEP_RUN;
 
     return bFlag;
 }
@@ -264,7 +331,7 @@ bool CameraManager::CameraAllStop(CMDS_Ebus_SampleDlg* MainDlg)
         Sleep(1);
     }
 
-    MainDlg->gui_status = GUI_STEP_STOP;
+    MainDlg->gui_status = GUI_STATUS::GUI_STEP_STOP;
     Common::GetInstance()->AddLog(0, _T("All Camera Streaming Stop"));
 
     return bFlag;
@@ -296,7 +363,7 @@ bool CameraManager::CameraAllDisConnect(CMDS_Ebus_SampleDlg* MainDlg)
         Common::GetInstance()->AddLog(0, strLog);
     }
 
-    MainDlg->gui_status = GUI_STEP_DISCONNECT;
+    MainDlg->gui_status = GUI_STATUS::GUI_STEP_DISCONNECT;
     Common::GetInstance()->AddLog(0, _T("------------------------------------"));
 
     return bFlag;

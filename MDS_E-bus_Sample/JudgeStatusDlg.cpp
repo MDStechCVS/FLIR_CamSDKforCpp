@@ -82,6 +82,7 @@ BOOL JudgeStatusDlg::OnInitDialog()
 	m_brush_Devstatus.CreateSolidBrush(RGB(0, 255, 0));
 	_textColor_Devstatus = RGB(255, 255, 255);
 
+	m_bCancelled = FALSE;
 
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -316,9 +317,18 @@ void JudgeStatusDlg::OnRButtonDown(UINT nFlags, CPoint point)
 
 void JudgeStatusDlg::CloseDialog()
 {
+
 }
+
+bool JudgeStatusDlg::isCancleStatus()
+{
+	return m_bCancelled;
+}
+
 void JudgeStatusDlg::OnCancel()
 {
+	m_bCancelled = TRUE;
+
 	CDialogEx::OnCancel();
 }
 

@@ -35,6 +35,7 @@ public:
 	bool GetAutoStartFlag();
 	CString GetProgramDirectory();
 	bool OpenFolder(const std::string& folderPath);
+	bool CreateDirectoryRecursively(const std::string& path);
 public:
 
 	CString uni_char_to_CString_Convert(char* data);

@@ -413,3 +413,27 @@ bool Common::OpenFolder(const std::string& folderPath)
 	}
 }
 
+// =============================================================================
+bool Common::CreateDirectoryRecursively(const std::string& path)
+{
+	if (!path.empty())
+	{
+		CString strLog;
+		if (SHCreateDirectoryExA(nullptr, path.c_str(), nullptr) == ERROR_SUCCESS)
+		{
+
+			// 디렉터리가 생성되었거나 이미 존재함
+			strLog.Format(_T("Create Directory [%s]"), CString(path.c_str()));
+			AddLog(0, strLog);
+			return true; // 경로 생성 성공
+		}
+		else
+		{
+			// 디렉터리 생성 실패 시 수행할 작업을 이곳에 추가
+			strLog.Format(_T("Directory Create Fail [%s]"), CString(path.c_str()));
+			AddLog(0, strLog);
+		}
+	}
+
+	return false;
+}

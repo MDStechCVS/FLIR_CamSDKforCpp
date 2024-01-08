@@ -103,6 +103,7 @@
 #define MONO16 ( "0x1100007" )
 #define MONO14 ( "0x1100025" )
 #define YUV422_8_UYVY ( "0x210001F" )
+#define RGB8PACK ( "0x2180014" )
 
 #define FAHRENHEIT 273.15f
 

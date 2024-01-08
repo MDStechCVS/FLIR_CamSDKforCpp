@@ -80,10 +80,7 @@ void CMDS_Ebus_SampleDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_BTN_IMG_STREAM, m_BtnImageStreamCtrl);
     DDX_Control(pDX, IDC_BTN_START, m_BtnStart);
     DDX_Control(pDX, IDC_BTN_STOP, m_BtnStop);
-    DDX_Control(pDX, IDC_BTN_CONNECTED, m_BtnConnect);
     DDX_Control(pDX, IDC_BTN_DISCONNECT, m_BtnDisconnect);
-    DDX_Control(pDX, IDC_STATIC_FPS, m_LbFPS);
-    DDX_Control(pDX, IDC_STATIC_FPS_DISPLAY, m_LbFPS_Display);
     DDX_Control(pDX, IDC_BTN_FPS30, m_BtnFPS30);
     DDX_Control(pDX, IDC_BTN_FPS60, m_BtnFPS60);
     DDX_Control(pDX, IDC_BTN_DEVICEFIND, m_BtnDeviceFind);
@@ -91,6 +88,9 @@ void CMDS_Ebus_SampleDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_BTN_INI_APPLY, m_BtniniApply);
     DDX_Control(pDX, IDC_BTN_CAM_PARAM, m_BtnCamParam);
     DDX_Control(pDX, IDC_BTN_CAM_PARAM_APPLY, m_BtnCamParamApply);
+    DDX_Control(pDX, IDC_BTN_OPEN_DATA_FOLDER, m_BtnDataFolder);
+    DDX_Control(pDX, IDC_BTN_IMG_SNAP, m_BtnImageSnap);
+    DDX_Control(pDX, IDC_BTN_IMG_RECORDING, m_BtnImageRecording);
     DDX_Control(pDX, IDC_CK_PARAM, m_chGenICam_checkBox);
     DDX_Control(pDX, IDC_CK_MONO, m_chMonoCheckBox);
     DDX_Control(pDX, IDC_CK_COLORMAP, m_chColorMapCheckBox);
@@ -160,7 +160,6 @@ BEGIN_MESSAGE_MAP(CMDS_Ebus_SampleDlg, CDialogEx)
     ON_BN_CLICKED(IDC_BTN_FPS60, &CMDS_Ebus_SampleDlg::OnBnClickedBtnFps60)
     ON_BN_CLICKED(IDC_BTN_FPS30, &CMDS_Ebus_SampleDlg::OnBnClickedBtnFps30)
     ON_BN_CLICKED(IDC_CK_PARAM, &CMDS_Ebus_SampleDlg::OnBnClickedCkParam)
-    ON_BN_CLICKED(IDC_BTN_CONNECTED, &CMDS_Ebus_SampleDlg::OnBnClickedBtnConnected)
     ON_BN_CLICKED(IDC_CK_POINTER, &CMDS_Ebus_SampleDlg::OnBnClickedCkPointer)
     ON_BN_CLICKED(IDC_CK_MARKER, &CMDS_Ebus_SampleDlg::OnBnClickedCkMarker)
     ON_BN_CLICKED(IDC_BTN_DEVICEFIND, &CMDS_Ebus_SampleDlg::OnBnClickedBtnDeviceFind)
@@ -177,14 +176,14 @@ BEGIN_MESSAGE_MAP(CMDS_Ebus_SampleDlg, CDialogEx)
     ON_BN_CLICKED(IDC_CK_COLORMAP, &CMDS_Ebus_SampleDlg::OnBnClickedCheckBox)
     ON_BN_CLICKED(IDC_CK_MESSAGE, &CMDS_Ebus_SampleDlg::OnBnClickedCheckBox)
     ON_BN_CLICKED(IDC_CK_MONO, &CMDS_Ebus_SampleDlg::OnBnClickedCheckBox)
-    ON_BN_CLICKED(IDC_BTN_VIDEO_STOP, &CMDS_Ebus_SampleDlg::OnBnClickedBtnVideoStop)
-    ON_BN_CLICKED(IDC_BTN_VIDEO_START, &CMDS_Ebus_SampleDlg::OnBnClickedBtnVideoStart)
     ON_BN_CLICKED(IDC_BTN_OPEN_DATA_FOLDER, &CMDS_Ebus_SampleDlg::OnBnClickedBtnOpenDataFolder)
     ON_CONTROL(STN_CLICKED, IDC_CAM1_RECORDING, &CMDS_Ebus_SampleDlg::OnStnClickedCam1Recording)
     ON_CONTROL(STN_CLICKED, IDC_CAM2_RECORDING, &CMDS_Ebus_SampleDlg::OnStnClickedCam1Recording)
     ON_CONTROL(STN_CLICKED, IDC_CAM3_RECORDING, &CMDS_Ebus_SampleDlg::OnStnClickedCam1Recording)
     ON_CONTROL(STN_CLICKED, IDC_CAM4_RECORDING, &CMDS_Ebus_SampleDlg::OnStnClickedCam1Recording)
 
+    ON_BN_CLICKED(IDC_BTN_IMG_SNAP, &CMDS_Ebus_SampleDlg::OnBnClickedBtnImgSnap)
+    ON_BN_CLICKED(IDC_BTN_IMG_RECORDING, &CMDS_Ebus_SampleDlg::OnBnClickedBtnImgRecording)
 END_MESSAGE_MAP()
 
 
@@ -252,8 +251,10 @@ void CMDS_Ebus_SampleDlg::InitSystemParam()
 
     m_Color1 = RGB_RED;
     m_Color2 = RGB_GREEN;
+    m_Color3 = RGBYELLOW;
     m_bRed.CreateSolidBrush(m_Color1);
     m_bGreen.CreateSolidBrush(m_Color2);
+    m_bYellow.CreateSolidBrush(m_Color3);
 
 
     //m_basefont.CreateFont(25, 0, 0, 0, FW_BOLD,
@@ -451,6 +452,7 @@ void CMDS_Ebus_SampleDlg::OnDestroy()
     }
     m_bRed.DeleteObject();
     m_bGreen.DeleteObject();
+    m_bYellow.DeleteObject();
 
     if (dlg != NULL)
     {
@@ -655,6 +657,15 @@ void CMDS_Ebus_SampleDlg::UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFp
         strResult.Format(_T("X = [%d] Y = [%d] W = [%d] H = [%d], pixel size = [%d]"),
             rt.x, rt.y, rt.width, rt.height, rt.width * rt.height);
         lbROI.SetWindowText(strResult);
+        
+        if (cam != nullptr)
+        {
+            if (cam->GetStartRecordingFlag())
+            {
+                m_blink[cam->GetCamIndex()] = !m_blink[cam->GetCamIndex()];
+            }             
+        }
+            
 
         lbConnectStatus.Invalidate();
         lbConnectStatus.UpdateWindow();
@@ -671,7 +682,7 @@ void CMDS_Ebus_SampleDlg::OnTimer(UINT_PTR nIDEvent)
 
     CDialogEx::OnTimer(nIDEvent);
 
-    if (gui_status == GUI_STEP_IDLE)
+    if (gui_status == GUI_STEP_IDLE && m_CamManager != nullptr)
     {
         int nDeviceCnt = m_CamManager->GetDeviceCount();
 
@@ -689,9 +700,7 @@ void CMDS_Ebus_SampleDlg::OnTimer(UINT_PTR nIDEvent)
                 m_CamManager->CreateCamera(i);
             }
         }
-        m_progress.SetPos(50);
     }
-
 
     if (m_CamManager->GetDeviceCount() > 0) 
     {
@@ -703,18 +712,24 @@ void CMDS_Ebus_SampleDlg::OnTimer(UINT_PTR nIDEvent)
         UpdateCameraInfo(m_CamManager->m_Cam[CAM_2], m_LbCam2fps, m_LbCam2min, m_LbCam2max, m_LbCam2ROI, m_Cam2ConnectStatus, m_Cam2RecordingStatus);
         UpdateCameraInfo(m_CamManager->m_Cam[CAM_3], m_LbCam3fps, m_LbCam3min, m_LbCam3max, m_LbCam3ROI, m_Cam3ConnectStatus, m_Cam3RecordingStatus);
         UpdateCameraInfo(m_CamManager->m_Cam[CAM_4], m_LbCam4fps, m_LbCam4min, m_LbCam4max, m_LbCam4ROI, m_Cam4ConnectStatus, m_Cam4RecordingStatus);
+ 
     }
 
+    static int progressValue = 0;
     if (gui_status == GUI_STEP_RUN)
     {
         CloseJudgeDlg();
 
-        m_progress.SetPos(100);
+         // 정적 변수로 현재 진행 상태를 유지
+        progressValue = (progressValue + 1) % 101; // 0에서 100까지 순환
+        m_progress.SetPos(progressValue);
+
     }
-    else if(gui_status == GUI_STEP_STOP || gui_status ==  GUI_STEP_DISCONNECT 
-        || gui_status ==  GUI_STEP_ERROR)
+    else if(gui_status == GUI_STATUS::GUI_STEP_STOP || gui_status == GUI_STATUS::GUI_STEP_DISCONNECT
+        || gui_status == GUI_STATUS::GUI_STEP_ERROR)
     {
         m_progress.SetPos(0);
+        progressValue = 0;
     }
 }
 
@@ -755,6 +770,7 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
     // TODO:  여기서 DC의 특성을 변경합니다.
 
+
     // TODO:  기본값이 적당하지 않으면 다른 브러시를 반환합니다.
     UINT nID = pWnd->GetDlgCtrlID();
 
@@ -764,11 +780,15 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
     case CTLCOLOR_BTN:
     case CTLCOLOR_EDIT:
     case CTLCOLOR_LISTBOX:
-    
-        pDC->SetTextColor(WHITE);
-        pDC->SelectStockObject(WHITE_PEN);
-        pDC->SetBkColor(BLACK);
-        return (HBRUSH)(m_brush2->GetSafeHandle());
+        switch (nID)
+        {
+        case IDC_LIST_LOG:
+            pDC->SetTextColor(WHITE);
+            pDC->SelectStockObject(WHITE_PEN);
+            pDC->SetBkColor(BLACK);
+            return (HBRUSH)(m_brush2->GetSafeHandle());
+
+        }
 
     case CTLCOLOR_STATIC:
         switch (nID) 
@@ -786,17 +806,13 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
             if (m_CamManager->m_Cam[CAM_4] != nullptr)
                 return SetCameraFlagStatus(CAM_4, m_CamManager, m_CamManager->m_Cam[CAM_4]->GetRunningFlag(), pDC, m_bGreen, m_bRed);
         case IDC_CAM1_RECORDING:
-            if (m_CamManager->m_Cam[CAM_1] != nullptr)
-                return SetCameraFlagStatus(CAM_1, m_CamManager, m_CamManager->m_Cam[CAM_1]->GetStartRecordingFlag(), pDC, m_bGreen, m_bRed);
+            return HandleCameraRecordingStatus(CAM_1, pDC);
         case IDC_CAM2_RECORDING:
-            if (m_CamManager->m_Cam[CAM_2] != nullptr)
-                return SetCameraFlagStatus(CAM_2, m_CamManager, m_CamManager->m_Cam[CAM_2]->GetStartRecordingFlag(), pDC, m_bGreen, m_bRed);
+            return HandleCameraRecordingStatus(CAM_2, pDC);
         case IDC_CAM3_RECORDING:
-            if (m_CamManager->m_Cam[CAM_3] != nullptr)
-                return SetCameraFlagStatus(CAM_3, m_CamManager, m_CamManager->m_Cam[CAM_3]->GetStartRecordingFlag(), pDC, m_bGreen, m_bRed);
+            return HandleCameraRecordingStatus(CAM_3, pDC);
         case IDC_CAM4_RECORDING:
-            if (m_CamManager->m_Cam[CAM_4] != nullptr)
-                return SetCameraFlagStatus(CAM_4, m_CamManager, m_CamManager->m_Cam[CAM_4]->GetStartRecordingFlag(), pDC, m_bGreen, m_bRed);
+            return HandleCameraRecordingStatus(CAM_4, pDC);
         }
     case CTLCOLOR_DLG:
         pDC->SetTextColor(BLACK);
@@ -807,6 +823,28 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
     }
 
     return hbr;
+}
+
+HBRUSH CMDS_Ebus_SampleDlg::HandleCameraRecordingStatus(int camIndex, CDC* pDC)
+{
+    HBRUSH  RedBrush, YellowBrush;
+    RedBrush = m_bRed;
+    YellowBrush = m_bYellow;
+
+    if (m_CamManager->m_Cam[camIndex] != nullptr)
+    {
+        if (m_blink[camIndex] && m_CamManager->m_Cam[camIndex]->GetStartRecordingFlag())
+        {
+            // 녹화 중일 때 깜박이는 효과
+            pDC->SetBkColor(YellowBrush ? RGBYELLOW : RGB_RED);
+            return YellowBrush ? YellowBrush : RedBrush;
+        }
+        else
+        {
+            //return SetCameraFlagStatus(camIndex, m_CamManager, m_CamManager->m_Cam[camIndex]->GetStartRecordingFlag(), pDC, m_bGreen, m_bRed);
+        }
+    }
+    return nullptr;
 }
 
 // =============================================================================
@@ -868,12 +906,12 @@ void CMDS_Ebus_SampleDlg::Btn_Interface_setting()
 {
     /*m_BtnDeviceCtrl.SetFont(&m_basefont, true);*/
 
-    m_BtnDeviceCtrl.SetText(_T("Device control"));
-    m_BtnCommunicationCtrl.SetText(_T("Communication control"));
-    m_BtnImageStreamCtrl.SetText(_T("Image stream control"));
+    m_BtnDeviceCtrl.SetText(_T("Device"));
+    m_BtnCommunicationCtrl.SetText(_T("Comm"));
+    m_BtnImageStreamCtrl.SetText(_T("Image stream"));
     m_BtnStart.SetText(_T("Start"));
     m_BtnStop.SetText(_T("Stop"));
-    m_BtnConnect.SetText(_T("Connect / Select"));
+    /*m_BtnConnect.SetText(_T("Connect / Select"));*/
     m_BtnDisconnect.SetText(_T("Disconnect"));
     m_BtnFPS30.SetText(_T("FPS 30"));
     m_BtnFPS60.SetText(_T("FPS 60"));
@@ -882,9 +920,13 @@ void CMDS_Ebus_SampleDlg::Btn_Interface_setting()
     m_BtniniApply.SetText(_T("Apply"));
     m_BtnCamParam.SetText(_T("Camera Parameter"));
     m_BtnCamParamApply.SetText(_T("Apply"));
+    m_BtnDataFolder.SetText(_T("Data Folder"));
+    m_BtnImageSnap.SetText(_T("ImageSnap"));
+    m_BtnImageRecording.SetText(_T("Image Recording"));
+
     m_progress.SetRange(0, 100);
 
-    m_BtnConnect.EnableWindow(false);
+    /*m_BtnConnect.EnableWindow(false);*/
 }
 
 bool CMDS_Ebus_SampleDlg::IsMouseEventCheck(UINT message)
@@ -898,41 +940,40 @@ BOOL CMDS_Ebus_SampleDlg::PreTranslateMessage(MSG* pMsg)
     const int buttonIDs[] =
     {
         IDC_BTN_DEVICE, IDC_BTN_COMMUNICATION, IDC_BTN_IMG_STREAM,
-        IDC_BTN_START, IDC_BTN_STOP, IDC_BTN_CONNECTED,
+        IDC_BTN_START, IDC_BTN_STOP,
         IDC_BTN_DISCONNECT, IDC_BTN_FPS30, IDC_BTN_FPS60,
         IDC_BTN_DEVICEFIND, IDC_BTN_LOAD_INI_FILE, IDC_BTN_INI_APPLY, IDC_BTN_CAM_PARAM,
-        IDC_BTN_CAM_PARAM_APPLY
+        IDC_BTN_CAM_PARAM_APPLY, IDC_BTN_OPEN_DATA_FOLDER,IDC_BTN_IMG_SNAP, IDC_BTN_IMG_RECORDING,
+    };
+    CRect Camrect[CAMERA_COUNT];
+
+    // 각 카메라의 영역을 정의합니다.
+    CStatic* DisplayCam[CAMERA_COUNT] =
+    {
+        (CStatic*)GetDlgItem(IDC_CAM1),
+        (CStatic*)GetDlgItem(IDC_CAM2),
+        (CStatic*)GetDlgItem(IDC_CAM3),
+        (CStatic*)GetDlgItem(IDC_CAM4)
     };
 
+    CPoint point;
+    GetCursorPos(&point);
+    ScreenToClient(&point);
+
     if (IsMouseEventCheck(pMsg->message))
-    {
-        CPoint point;
-        GetCursorPos(&point);
-        ScreenToClient(&point);
-
-        // 각 카메라의 영역을 정의합니다.
-        CStatic* DisplayCam[CAMERA_COUNT] =
-        {
-            (CStatic*)GetDlgItem(IDC_CAM1),
-            (CStatic*)GetDlgItem(IDC_CAM2),
-            (CStatic*)GetDlgItem(IDC_CAM3),
-            (CStatic*)GetDlgItem(IDC_CAM4)
-        };
-
-        CRect Camrect[CAMERA_COUNT];
-        for (int i = 0; i < 4; ++i) 
+    {   
+        for (int i = 0; i < CAMERA_COUNT; ++i)
         {
             DisplayCam[i]->GetWindowRect(&Camrect[i]);
             ScreenToClient(&Camrect[i]);
         }
 
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < CAMERA_COUNT; ++i)
         {
             if (Camrect[i].PtInRect(point))
             {
                 CAM_INDEX camIndex = static_cast<CAM_INDEX>(i);
-                UpdateCameraROI(DisplayCam[i], Camrect[i], m_CamManager, camIndex, m_Cam_selecting_roi, m_StartPos, m_EndPos, pMsg->message);
-                break; // 해당 카메라에서 이벤트 처리 후 루프 종료
+                UpdateCameraROI(DisplayCam[i], Camrect[i], m_CamManager, camIndex, m_Cam_selecting_roi, m_StartPos, m_EndPos, pMsg->message);          
             }
         }
     }
@@ -948,6 +989,27 @@ BOOL CMDS_Ebus_SampleDlg::PreTranslateMessage(MSG* pMsg)
             if (rect.PtInRect(pMsg->pt))
             {
                 pbutton->RandomizeColors();
+            }
+        }
+
+        for (int i = 0; i < CAMERA_COUNT; ++i)
+        {
+            DisplayCam[i]->GetWindowRect(&Camrect[i]);
+            ScreenToClient(&Camrect[i]);
+        }
+
+        UINT radioIDs[] = { IDC_RADIO_CAM1, IDC_RADIO_CAM2, IDC_RADIO_CAM3, IDC_RADIO_CAM4 };
+        for (int i = 0; i < CAMERA_COUNT; ++i)
+        {
+            if (Camrect[i].PtInRect(point))
+            {
+                CAM_INDEX camIndex = static_cast<CAM_INDEX>(i);
+
+                if (i < sizeof(radioIDs) / sizeof(radioIDs[0]) && m_CamManager->m_Cam[i] != nullptr)
+                {
+                    RadioCtrl(radioIDs[i]); // 라디오 버튼 업데이트 함수 호출
+                }
+                break; // 해당 카메라에서 이벤트 처리 후 루프 종료
             }
         }
     }
@@ -1075,25 +1137,7 @@ void CMDS_Ebus_SampleDlg::UpdateButtonStyle(CSkinButton* pbutton, const CPoint& 
     }
 }
 
-// =============================================================================
-void CMDS_Ebus_SampleDlg::OnBnClickedBtnConnected()
-{
-    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
-    CRect lDisplayRect, lDisplayRect2;
-    GetDlgItem(IDC_DISPLAYPOS)->GetClientRect(&lDisplayRect);
-    GetDlgItem(IDC_DISPLAYPOS)->ClientToScreen(&lDisplayRect);
-
-    GetDlgItem(IDC_DISPLAYPOS2)->GetClientRect(&lDisplayRect2);
-    GetDlgItem(IDC_DISPLAYPOS2)->ClientToScreen(&lDisplayRect2);
-
-    ScreenToClient(&lDisplayRect);
-
-    Interface_state(true);
-    this->EnableWindow(TRUE);
-    this->SetFocus();
-    UpdateWindow();
-}
 
 // =============================================================================
 void CMDS_Ebus_SampleDlg::DlgEnabledWindows()
@@ -1146,62 +1190,66 @@ int CMDS_Ebus_SampleDlg::GetSelectCamIndex()
 // =============================================================================
 void CMDS_Ebus_SampleDlg::RadioCtrl(UINT radio_Index)
 {
-    if (m_CamManager == NULL)
+    if (m_CamManager == nullptr)
         return;
 
-    UpdateData(TRUE);
-    CButton* pCheck;
+    
+
+    // Radio 인덱스를 카메라 인덱스로 변환
+    int camIndex = -1;
     switch (radio_Index)
     {
     case IDC_RADIO_CAM1:
-        SetSelectCamIndex(CAM_1);
-
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM2);
-        pCheck->SetCheck(FALSE);
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM3);
-        pCheck->SetCheck(FALSE);
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM4);
-        pCheck->SetCheck(FALSE);
+        camIndex = 0;
         break;
     case IDC_RADIO_CAM2:
-        SetSelectCamIndex(CAM_2);
-
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM1);
-        pCheck->SetCheck(FALSE);
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM3);
-        pCheck->SetCheck(FALSE);
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM4);
-        pCheck->SetCheck(FALSE);
+        camIndex = 1;
         break;
     case IDC_RADIO_CAM3:
-        SetSelectCamIndex(CAM_3);
-
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM1);
-        pCheck->SetCheck(FALSE);
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM2);
-        pCheck->SetCheck(FALSE);
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM4);
-        pCheck->SetCheck(FALSE);
+        camIndex = 2;
         break;
     case IDC_RADIO_CAM4:
-        SetSelectCamIndex(CAM_4);
-
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM1);
-        pCheck->SetCheck(FALSE);
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM2);
-        pCheck->SetCheck(FALSE);
-        pCheck = (CButton*)GetDlgItem(IDC_RADIO_CAM3);
-        pCheck->SetCheck(FALSE);
+        camIndex = 3;
         break;
     default:
-
+        camIndex = -1; // 유효하지 않은 인덱스
         break;
     }
-    if (m_CamManager->m_Cam[GetSelectCamIndex()] != nullptr)
+
+    UpdateData(TRUE);
+    if (camIndex != -1)
     {
+        SetSelectCamIndex(camIndex);
+
+        // 모든 라디오 버튼을 초기화
+        const UINT radioIDs[] = { IDC_RADIO_CAM1, IDC_RADIO_CAM2, IDC_RADIO_CAM3, IDC_RADIO_CAM4 };
+        for (UINT id : radioIDs)
+        {
+            CButton* pCheck = (CButton*)GetDlgItem(id);
+            if (pCheck != nullptr)
+            {
+                // 현재 인덱스의 라디오 버튼만 체크, 나머지는 체크 해제
+                pCheck->SetCheck(id == radio_Index);
+            }
+        }
+
+        UpdateCheckBoxes(camIndex);
+    }
+
+    UpdateData(FALSE);
+}
+
+void CMDS_Ebus_SampleDlg::UpdateCheckBoxes(int camIndex)
+{
+    if (m_CamManager->m_Cam[camIndex] != nullptr)
+    {
+        // 체크박스 상태 설정 로직
+         //16비트 타입일때는 UYVY 사용안함
+
         int nIndex = GetSelectCamIndex();
         if (m_CamManager->m_Cam[nIndex]->Get16BitType())
         {
+            m_chUYVYCheckBox.EnableWindow(FALSE);
             if (m_CamManager->m_Cam[nIndex]->GetGrayType())
             {
                 m_chMonoCheckBox.SetCheck(TRUE);
@@ -1212,10 +1260,37 @@ void CMDS_Ebus_SampleDlg::RadioCtrl(UINT radio_Index)
                 m_chColorMapCheckBox.SetCheck(TRUE);
                 m_chMonoCheckBox.SetCheck(FALSE);
             }
+            else if (m_CamManager->m_Cam[nIndex]->GetRGBType())
+            {
+                m_chUYVYCheckBox.SetCheck(FALSE);
+                m_chColorMapCheckBox.SetCheck(FALSE);
+                m_chMonoCheckBox.SetCheck(FALSE);
+            }
+        }
+        // 실화상 카메라일경우
+        if (m_CamManager->m_Cam[nIndex]->GetRGBType())
+        {
+            m_chUYVYCheckBox.EnableWindow(FALSE);
+            m_chColorMapCheckBox.EnableWindow(FALSE);
+            m_chMonoCheckBox.EnableWindow(FALSE);
+            m_chEventsCheckBox.EnableWindow(FALSE);
+        }
+        else if (m_CamManager->m_Cam[nIndex]->GetYUVYType() == FALSE && m_CamManager->m_Cam[nIndex]->Get16BitType())
+        {
+            //m_chUYVYCheckBox.EnableWindow(TRUE);
+            m_chColorMapCheckBox.EnableWindow(TRUE);
+            m_chMonoCheckBox.EnableWindow(TRUE);
+            m_chEventsCheckBox.EnableWindow(FALSE);
+        }
+        //UYVY 경우
+        else
+        {
+            m_chUYVYCheckBox.EnableWindow(TRUE);
+            m_chColorMapCheckBox.EnableWindow(FALSE);
+            m_chMonoCheckBox.EnableWindow(FALSE);
+            m_chEventsCheckBox.EnableWindow(FALSE);
         }
     }
-           
-    UpdateData(FALSE);
 }
 
 // =============================================================================
@@ -1300,6 +1375,7 @@ cv::Rect CMDS_Ebus_SampleDlg::mapRectToImage(const cv::Rect& rect, const cv::Siz
 // 마우스 드래그 영역 정보를 저장한다.
 void CMDS_Ebus_SampleDlg::UpdateCameraROI(CStatic* displayControl, const CRect& controlRect, CameraManager* camManager, int cameraIndex, bool& selectingROI, cv::Point& startPos, cv::Point& endPos, UINT message) 
 {
+    
     CRect rect;
     displayControl->GetWindowRect(&rect);
     ScreenToClient(&rect);
@@ -1310,11 +1386,23 @@ void CMDS_Ebus_SampleDlg::UpdateCameraROI(CStatic* displayControl, const CRect& 
         GetCursorPos(&clientPoint);
         ScreenToClient(&clientPoint);
 
-        if (message == WM_LBUTTONDBLCLK) {
+        if (message == WM_LBUTTONDBLCLK) 
+        {
             // Double click event
         }
+        if (message == WM_RBUTTONDOWN)
+        {
+            //RBDown click event
+        // 팝업 메뉴를 띄우려면 다음과 같이 사용할 수 있습니다.
 
-        if (message == WM_LBUTTONDOWN) {
+ 
+            camManager->m_Cam[cameraIndex]->SetMouseImageSaveFlag(true);
+                
+            
+        }
+
+        if (message == WM_LBUTTONDOWN) 
+        {
             if (rect.PtInRect(clientPoint)) {
                 startPos = cvPoint(clientPoint.x - rect.left, clientPoint.y - rect.top);
                 selectingROI = true;
@@ -1447,23 +1535,23 @@ void CMDS_Ebus_SampleDlg::HandleComboChange(int controlId)
     switch (controlId)
     {
     case IDC_CB_CAM1_COLORMAP:
-        comboIndex = 0;
+        comboIndex = CAM_1;
         break;
 
     case IDC_CB_CAM2_COLORMAP:
-        comboIndex = 1;
+        comboIndex = CAM_2;
         break;
 
     case IDC_CB_CAM3_COLORMAP:
-        comboIndex = 2;
+        comboIndex = CAM_3;
         break;
 
     case IDC_CB_CAM4_COLORMAP:
-        comboIndex = 3;
+        comboIndex = CAM_4;
         break;
 
     default:
-        comboIndex = 0;
+        comboIndex = CAM_1;
         break;
     }
 
@@ -1533,6 +1621,8 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnCamParamApply()
             m_CamManager->m_Cam[GetSelectCamIndex()]->m_Pipeline, GetSelectCamIndex());
     }
 }
+
+// =============================================================================
 void CMDS_Ebus_SampleDlg::ShowJudgeDlg()
 {
     if (m_CamManager->GetDeviceCount() > 0)
@@ -1543,9 +1633,14 @@ void CMDS_Ebus_SampleDlg::ShowJudgeDlg()
     }
 
 }
+
+// =============================================================================
 void CMDS_Ebus_SampleDlg::CloseJudgeDlg()
 {
-    if (dlg != NULL && dlg->GetSafeHwnd() != NULL) 
+    if (dlg->isCancleStatus())
+        return;
+
+    if (dlg != nullptr && dlg->GetSafeHwnd() != nullptr)
     {
         if (IsWindowVisible()) 
         {
@@ -1560,6 +1655,7 @@ void CMDS_Ebus_SampleDlg::CloseJudgeDlg()
     }
 }
 
+// =============================================================================
 void CMDS_Ebus_SampleDlg::OnBnClickedCheckBox()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -1606,25 +1702,13 @@ void CMDS_Ebus_SampleDlg::OnBnClickedCheckBox()
     m_CamManager->m_Cam[GetSelectCamIndex()]->Set16BitType(is16BitChecked);
 }
 
-
-void CMDS_Ebus_SampleDlg::OnBnClickedBtnVideoStop()
-{
-    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-
-    m_CamManager->m_Cam[GetSelectCamIndex()]->StopRecording();
-}
-
-
-void CMDS_Ebus_SampleDlg::OnBnClickedBtnVideoStart()
-{
-    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-
-    m_CamManager->m_Cam[GetSelectCamIndex()]->SetStartRecordingFlag(true);
-}
-
-
+// =============================================================================
 void CMDS_Ebus_SampleDlg::OnBnClickedBtnOpenDataFolder()
 {
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    if (m_CamManager == nullptr || m_CamManager->m_Cam[GetSelectCamIndex()] == nullptr)
+        return;
+
     CString strLog = _T("");
     std::string strPath = m_CamManager->m_Cam[GetSelectCamIndex()]->GetRawdataPath();
     if (Common::GetInstance()->OpenFolder(strPath))
@@ -1635,81 +1719,65 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnOpenDataFolder()
     {
         strLog.Format(_T("[Camera_%d] Need to check folder path"), GetSelectCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
-    }
-    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-
+    }   
 }
 
-
+// =============================================================================
 void CMDS_Ebus_SampleDlg::OnStnClickedCam1Recording()
 {
-    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-    bool bFlag = false;
     CWnd* pClickedWnd = GetDlgItem(GetCurrentMessage()->wParam);
-    if (pClickedWnd)
+    if (!pClickedWnd)
+        return;
+
+    int nID = pClickedWnd->GetDlgCtrlID();
+
+    if (nID >= IDC_CAM1_RECORDING && nID <= IDC_CAM4_RECORDING)
     {
-        int nID = pClickedWnd->GetDlgCtrlID();
-        switch (nID)
+        int camIndex = nID - IDC_CAM1_RECORDING; // 컨트롤의 ID에 따라 카메라 인덱스 계산
+
+        if (m_CamManager->m_Cam[camIndex] != nullptr)
         {
-        case IDC_CAM1_RECORDING:
-            if (m_CamManager->m_Cam[CAM_1] != nullptr)
+            bool bFlag = m_CamManager->m_Cam[camIndex]->GetStartRecordingFlag();
+            if (!bFlag)
             {
-                bFlag = m_CamManager->m_Cam[CAM_1]->GetStartRecordingFlag();
-                if (!bFlag)
-                {
-                    m_CamManager->m_Cam[CAM_1]->SetStartRecordingFlag(true);
-                }
-                else
-                {
-                    m_CamManager->m_Cam[GetSelectCamIndex()]->StopRecording();
-                }
+                m_CamManager->m_Cam[camIndex]->SetStartRecordingFlag(true);
             }
-            break;
+            else
+            {
+                m_CamManager->m_Cam[GetSelectCamIndex()]->StopRecording();
+            }
+        }
+    }
+}
 
-        case IDC_CAM2_RECORDING:
-            if (m_CamManager->m_Cam[CAM_2] != nullptr)
-            {
-                bFlag = m_CamManager->m_Cam[CAM_2]->GetStartRecordingFlag();
-                if (!bFlag)
-                {
-                    m_CamManager->m_Cam[CAM_2]->SetStartRecordingFlag(true);
-                }
-                else
-                {
-                    m_CamManager->m_Cam[GetSelectCamIndex()]->StopRecording();
-                }
-            }
-            break;
+// =============================================================================
+void CMDS_Ebus_SampleDlg::OnBnClickedBtnImgSnap()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    if (m_CamManager->m_Cam[GetSelectCamIndex()] != nullptr)
+    {
+        bool bFlag = m_CamManager->m_Cam[GetSelectCamIndex()]->GetMouseImageSaveFlag();
+        if (!bFlag)
+        {
+            m_CamManager->m_Cam[GetSelectCamIndex()]->SetMouseImageSaveFlag(true);
+        }
+    }
+}
 
-        case IDC_CAM3_RECORDING:
-            if (m_CamManager->m_Cam[CAM_3] != nullptr)
-            {
-                bFlag = m_CamManager->m_Cam[CAM_3]->GetStartRecordingFlag();
-                if (!bFlag)
-                {
-                    m_CamManager->m_Cam[CAM_3]->SetStartRecordingFlag(true);
-                }
-                else
-                {
-                    m_CamManager->m_Cam[GetSelectCamIndex()]->StopRecording();
-                }
-            }
-            break;
+void CMDS_Ebus_SampleDlg::OnBnClickedBtnImgRecording()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
-        case IDC_CAM4_RECORDING:
-            if (m_CamManager->m_Cam[CAM_4] != nullptr)
-            {
-                bFlag = m_CamManager->m_Cam[CAM_4]->GetStartRecordingFlag();
-                if (!bFlag)
-                {
-                    m_CamManager->m_Cam[CAM_4]->SetStartRecordingFlag(true);
-                }
-                else
-                {
-                    m_CamManager->m_Cam[GetSelectCamIndex()]->StopRecording();
-                }
-            }
-            break;
+    if (m_CamManager->m_Cam[GetSelectCamIndex()] != nullptr)
+    {
+        bool bFlag = m_CamManager->m_Cam[GetSelectCamIndex()]->GetStartRecordingFlag();
+        if (!bFlag)
+        {
+            m_CamManager->m_Cam[GetSelectCamIndex()]->SetStartRecordingFlag(true);
+        }
+        else
+        {
+            m_CamManager->m_Cam[GetSelectCamIndex()]->StopRecording();
         }
     }
 }

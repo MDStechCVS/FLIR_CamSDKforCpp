@@ -17,15 +17,13 @@
 #define IDC_MODE                        1006
 #define IDC_BTN_COMMUNICATION           1007
 #define IDC_BTN_DEVICE                  1008
-#define IDC_DISPLAYPOS2                 1009
 #define IDC_BTN_DISCONNECT              1010
-#define IDC_STATIC_FPS                  1011
 #define IDC_BTN_IMG_STREAM              1012
-#define IDC_STATIC_FPS_DISPLAY          1013
+#define IDC_BTN_IMG_SNAP                1013
 #define IDC_STATIC_CAMCOUNT             1014
 #define IDC_CK_MESSAGE                  1015
 #define IDC_CK_PARAM                    1016
-#define IDC_BTN_CONNECTED               1017
+#define IDC_BTN_IMG_RECORDING           1017
 #define IDC_LOGO                        1018
 #define IDC_CK_POINTER                  1019
 #define IDC_CK_MARKER                   1020
@@ -47,7 +45,6 @@
 #define IDC_PROGRESS1                   1035
 #define IDC_CAM2_IS_CONNECT             1036
 #define IDC_CAM3_IS_CONNECT             1037
-#define IDC_CAM4_ISCONNECT              1038
 #define IDC_CAM4_IS_CONNECT             1038
 #define IDC_STATIC_CAM2_Max             1039
 #define IDC_STATIC_CAM2_Min             1040
@@ -69,13 +66,11 @@
 #define IDC_EDIT_SCALE                  1055
 #define IDC_EDIT_SCALE2                 1056
 #define IDC_EDIT_SCALE3                 1057
-#define IDC_BTN_VIDEO_STOP              1058
-#define IDC_BTN_VIDEO_START             1059
 #define IDC_CAM1_RECORDING              1060
-#define IDC_BTN_OPEN_DATA_FOLDER        1061
-#define IDC_CAM2_RECORDING              1062
-#define IDC_CAM3_RECORDING              1063
-#define IDC_CAM4_RECORDING              1064
+#define IDC_CAM2_RECORDING              1061
+#define IDC_CAM3_RECORDING              1062
+#define IDC_CAM4_RECORDING              1063
+#define IDC_BTN_OPEN_DATA_FOLDER        1064
 #define IDC_RADIO_CAM1                  1100
 #define IDC_RADIO_CAM2                  1101
 #define IDC_RADIO_CAM3                  1102
@@ -90,9 +85,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1056
+#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_COMMAND_VALUE         32772
+#define _APS_NEXT_CONTROL_VALUE         1059
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
