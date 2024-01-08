@@ -184,8 +184,9 @@ void Common::AddLog(int verbosity, LPCTSTR lpszFormat, ...)
 		m_fWriteFile.SeekToEnd(); // 파일 끝으로 이동
 		strWriteData = strWriteData + _T("\r\n"); // 로그 문자열에 개행 문자 추가
 		m_fWriteFile.Write(strWriteData, strWriteData.GetLength() * 2); // 로그 문자열을 파일에 쓰기
+		m_fWriteFile.Flush(); // 파일 쓰기 버퍼 비우기
 	}
-	m_fWriteFile.Flush(); // 파일 쓰기 버퍼 비우기
+
 
 	LPTSTR  lpBuffer = strWriteData.GetBuffer(); // 문자열을 TCHAR 형태로 변환하여 버퍼 얻음
 	strWriteData.ReleaseBuffer();
@@ -423,14 +424,14 @@ bool Common::CreateDirectoryRecursively(const std::string& path)
 		{
 
 			// 디렉터리가 생성되었거나 이미 존재함
-			strLog.Format(_T("Create Directory [%s]"), CString(path.c_str()));
+			strLog.Format(_T("Create Directory \n[%s]"), CString(path.c_str()));
 			AddLog(0, strLog);
 			return true; // 경로 생성 성공
 		}
 		else
 		{
 			// 디렉터리 생성 실패 시 수행할 작업을 이곳에 추가
-			strLog.Format(_T("Directory Create Fail [%s]"), CString(path.c_str()));
+			strLog.Format(_T("Folder already exists in the path \n[%s]"), CString(path.c_str()));
 			AddLog(0, strLog);
 		}
 	}

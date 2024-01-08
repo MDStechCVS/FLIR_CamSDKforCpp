@@ -82,7 +82,7 @@ void CameraControl_rev::Initvariable()
     Common::GetInstance()->CreateDirectoryRecursively(GetRawSavePath());
     Common::GetInstance()->CreateDirectoryRecursively(GetRecordingPath());
 
-    strLog.Format(_T("---------Camera[%d] variable Initialize "), GetCamIndex() + 1);
+    strLog.Format(_T("---------Camera[%d] Variable Initialize "), GetCamIndex() + 1);
     Common::GetInstance()->AddLog(0, strLog);
 
 }
@@ -187,15 +187,15 @@ PvDevice* CameraControl_rev::ConnectToDevice(int nIndex)
         Common::GetInstance()->AddLog(0, _T("------------------------------------"));
 
         // GigE Vision 디바이스에 연결
-        strLog.Format(_T("[Camera_%d] Connecting.. to device"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]] Connecting.. to device"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
         // 카메라 모델
         CString strModelName = Manager->m_strSetModelName.at(nIndex);
-        strLog.Format(_T("[Camera_%d]Model = [%s]"), nIndex + 1, static_cast<LPCTSTR>(strModelName));
+        strLog.Format(_T("[Camera[%d]] Model = [%s]"), nIndex + 1, static_cast<LPCTSTR>(strModelName));
         Common::GetInstance()->AddLog(0, strLog);
 
         PvString ConnectionID = Manager->m_strSetIPAddress.at(nIndex);
-        strLog.Format(_T("[Camera_%d] IP Address = [%s]"), nIndex + 1, static_cast<LPCTSTR>(Manager->m_strSetIPAddress.at(nIndex)));
+        strLog.Format(_T("[Camera[%d]] IP Address = [%s]"), nIndex + 1, static_cast<LPCTSTR>(Manager->m_strSetIPAddress.at(nIndex)));
         Common::GetInstance()->AddLog(0, strLog);
         
         device = PvDevice::CreateAndConnect(ConnectionID, &lResult);
@@ -209,7 +209,7 @@ PvDevice* CameraControl_rev::ConnectToDevice(int nIndex)
         }
         else
         {
-            strLog.Format(_T("[Camera_%d] Connect Success"), nIndex + 1);
+            strLog.Format(_T("[Camera[%d]] Connect Success"), nIndex + 1);
             Common::GetInstance()->AddLog(0, strLog);
         }
     }
@@ -240,7 +240,7 @@ PvStream* CameraControl_rev::OpenStream(int nIndex)
 
         if (lStream != nullptr)
         {
-            strLog.Format(_T("[Camera_%d] Stream opened successfully."), nIndex + 1);
+            strLog.Format(_T("[Camera[%d]] Stream opened successfully."), nIndex + 1);
             Common::GetInstance()->AddLog(0, strLog);
 
             Common::GetInstance()->AddLog(0, _T("------------------------------------"));
@@ -248,13 +248,13 @@ PvStream* CameraControl_rev::OpenStream(int nIndex)
         }
         else
         {
-            strLog.Format(_T("[Camera_%d] Unable to stream from device. Retrying... %d"), nIndex + 1, nRtyCnt);
+            strLog.Format(_T("[Camera[%d]] Unable to stream from device. Retrying... %d"), nIndex + 1, nRtyCnt);
             Common::GetInstance()->AddLog(0, strLog);
             nRtyCnt++;
 
             if (nRtyCnt > maxRetries)
             {
-                strLog.Format(_T("[Camera_%d] Unable to stream from device after %d retries. ResultCode = %p"), nIndex + 1, maxRetries, &lResult);
+                strLog.Format(_T("[Camera[%d]] Unable to stream from device after %d retries. ResultCode = %p"), nIndex + 1, maxRetries, &lResult);
                 Common::GetInstance()->AddLog(0, strLog);
             }
         }
@@ -278,12 +278,12 @@ void CameraControl_rev::ConfigureStream(PvDevice* aDevice, PvStream* aStream, in
 
         // 패킷 크기 협상
         lDeviceGEV->NegotiatePacketSize();
-        strLog.Format(_T("[Camera_%d] Negotiate packet size"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]] Negotiate packet size"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
         // 장치 스트리밍 대상 설정
         lDeviceGEV->SetStreamDestination(lStreamGEV->GetLocalIPAddress(), lStreamGEV->GetLocalPort());
-        strLog.Format(_T("[Camera_%d] Configure device streaming destination"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]] Configure device streaming destination"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
         Common::GetInstance()->AddLog(0, _T("------------------------------------"));
@@ -303,7 +303,7 @@ PvPipeline* CameraControl_rev::CreatePipeline(PvDevice* aDevice, PvStream* aStre
         {
             // 스트림이 존재하는 경우 새로운 PvPipeline 생성
             lPipeline = new PvPipeline(aStream);
-            strLog.Format(_T("[Camera_%d] Pipeline %s"), nIndex + 1, lPipeline ? _T("Create Success") : _T("Create Fail"));
+            strLog.Format(_T("[Camera[%d]] Pipeline %s"), nIndex + 1, lPipeline ? _T("Create Success") : _T("Create Fail"));
         }
         else if (aDevice != nullptr)
         {
@@ -311,7 +311,7 @@ PvPipeline* CameraControl_rev::CreatePipeline(PvDevice* aDevice, PvStream* aStre
             m_Pipeline->SetBufferCount(BUFFER_COUNT);
             m_Pipeline->SetBufferSize(lSize);
             lPipeline = m_Pipeline;
-            strLog.Format(_T("[Camera_%d] Pipeline SetBufferCount, SetBufferSize Success"), nIndex + 1);
+            strLog.Format(_T("[Camera[%d]] Pipeline SetBufferCount, SetBufferSize Success"), nIndex + 1);
         }
 
         if (lPipeline != nullptr)
@@ -445,14 +445,14 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
 
         if (!result.IsOK())
         {
-            strLog.Format(_T("[Camera_%d] Set IRFormat Fail code = %p"), nIndex + 1, &result);
+            strLog.Format(_T("[Camera[%d]] Set IRFormat Fail code = %p"), nIndex + 1, &result);
             Common::GetInstance()->AddLog(0, strLog);
             return -1; 
         }
         else
         {
             
-            strLog.Format(_T("[Camera_%d] Set IRFormat = %s"), nIndex + 1, (CString)strIRType);
+            strLog.Format(_T("[Camera[%d]] Set IRFormat = %s"), nIndex + 1, (CString)strIRType);
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
@@ -464,13 +464,13 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
 
         if (!result.IsOK())
         {
-            strLog.Format(_T("[Camera_%d] Set TemperatureLinearMode Fail code = [%p]"), nIndex + 1, &result);
+            strLog.Format(_T("[Camera[%d]] Set TemperatureLinearMode Fail code = [%p]"), nIndex + 1, &result);
             Common::GetInstance()->AddLog(0, strLog);
             return -1; 
         }
         else
         {
-            strLog.Format(_T("[Camera_%d] Set TemperatureLinearMode on Success "), nIndex + 1);
+            strLog.Format(_T("[Camera[%d]] Set TemperatureLinearMode on Success "), nIndex + 1);
             Common::GetInstance()->AddLog(0, strLog);
         }
 
@@ -479,24 +479,24 @@ int CameraControl_rev::SetStreamingCameraParameters(PvGenParameterArray * lDevic
 
         if (!result.IsOK())
         {
-            strLog.Format(_T("[Camera_%d] Set TemperatureLinearResolution Fail code = %p"), nIndex + 1, &result);
+            strLog.Format(_T("[Camera[%d]] Set TemperatureLinearResolution Fail code = %p"), nIndex + 1, &result);
             Common::GetInstance()->AddLog(0, strLog);
             return -1; 
         }
         else
         {
-            strLog.Format(_T("[Camera_%d] Set TemperatureLinearResolution high Success"), nIndex + 1);
+            strLog.Format(_T("[Camera[%d]] Set TemperatureLinearResolution high Success"), nIndex + 1);
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
     case BlackFly:
-        strLog.Format(_T("[Camera_%d] Real image camera BlackFly"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]] Real image camera BlackFly"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
         
         break;
     default:
         // 지원하지 않는 카메라 유형 처리
-        strLog.Format(_T("[Camera_%d] Unsupported Camera Type: %d"), nIndex + 1, m_Camlist);
+        strLog.Format(_T("[Camera[%d]] Unsupported Camera Type: %d"), nIndex + 1, m_Camlist);
         Common::GetInstance()->AddLog(0, strLog);
         return -1; 
     }
@@ -583,7 +583,7 @@ void CameraControl_rev::ImageProcessing(PvBuffer* aBuffer, int nIndex)
     lDeviceParams->GetFloatValue("O", dOValue);
     lDeviceParams->GetFloatValue("J1", dJ1Value);
     lDeviceParams->GetFloatValue("Spot", dSpot);
-    strLog.Format(_T("[Camera_%d] R = %d, Spot = %.2f B = %.2f, O = %.2f, J1 = %.2f"), nIndex + 1, RVaule, dSpot, dBValue, dOValue, dJ1Value);
+    strLog.Format(_T("[Camera[%d]] R = %d, Spot = %.2f B = %.2f, O = %.2f, J1 = %.2f"), nIndex + 1, RVaule, dSpot, dBValue, dOValue, dJ1Value);
 
     if (MainDlg->m_chGenICam_checkBox.GetCheck() && m_Camlist == Ax5)
         Common::GetInstance()->AddLog(0, strLog);
@@ -1028,13 +1028,13 @@ bool CameraControl_rev::CameraStop(int nIndex)
     if (bFlag[1] == true && bFlag[0] == true)
     {
         bRtn = true;
-        strLog.Format(_T("[Camera_%d] Camera Stop success"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]] Camera Stop success"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
     else
     {
         bRtn = false;
-        strLog.Format(_T("[Camera_%d] Camera Stop fail"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]] Camera Stop fail"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
 
@@ -1173,12 +1173,12 @@ int CameraControl_rev::ReStartSequence(int nIndex)
     if (m_Device != NULL)
     {
         CameraDisconnect();
-        strLog.Format(_T("[Camera_%d][RC]Disconnect."), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]][RC]Disconnect."), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
    
     PvString ConnectionID = Manager->m_strSetIPAddress.at(nIndex);
-    strLog.Format(_T("[Camera_%d][RC]IP Address = [%s]"), nIndex + 1, Manager->m_strSetIPAddress.at(nIndex));
+    strLog.Format(_T("[Camera[%d]][RC]IP Address = [%s]"), nIndex + 1, Manager->m_strSetIPAddress.at(nIndex));
     Common::GetInstance()->AddLog(0, strLog);
 
     m_Device = NULL;
@@ -1186,7 +1186,7 @@ int CameraControl_rev::ReStartSequence(int nIndex)
 
     if (lResult.IsOK())
     {
-        strLog.Format(_T("[Camera_%d] Connect Success"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]] Connect Success"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
     else
@@ -1447,7 +1447,7 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
     case A50:
 
         // 카메라 모델이름 받아오기
-        strLog.Format(_T("[Camera_%d] Cam Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
+        strLog.Format(_T("[Camera[%d]] Camera Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
         Common::GetInstance()->AddLog(0, strLog);
         //a50 pixel format 파라미터 설정
         result = lDeviceParams->SetEnumValue("PixelFormat", m_pixeltype);
@@ -1459,14 +1459,14 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
         }
         else
         {
-            strLog.Format(_T("[Camera_%d]Set PixelFormat [%s] %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
+            strLog.Format(_T("[Camera[%d]] Set PixelFormat [%s] %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
 
     case Ax5:
 
-        strLog.Format(_T("[Camera_%d] Cam Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
+        strLog.Format(_T("[Camera[%d]] Camera Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
         Common::GetInstance()->AddLog(0, strLog);
 
         //ax5
@@ -1474,12 +1474,12 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
 
         if (!result.IsOK())
         {
-            strLog.Format(_T("[Camera_%d] Set PixelFormat Fail code = %d"), nIndex + 1, &result);
+            strLog.Format(_T("[Camera[%d]] Set PixelFormat Fail code = %d"), nIndex + 1, &result);
             Common::GetInstance()->AddLog(0, strLog);
         }
         else
         {
-            strLog.Format(_T("[Camera_%d] Set PixelFormat %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
+            strLog.Format(_T("[Camera[%d]] Set PixelFormat %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
             Common::GetInstance()->AddLog(0, strLog);
         }
    
@@ -1488,18 +1488,18 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
 
         if (!result.IsOK())
         {
-            strLog.Format(_T("[Camera_%d] Set DigitalOutput Fail code = %d"), nIndex + 1, &result);
+            strLog.Format(_T("[Camera[%d]] Set DigitalOutput Fail code = %d"), nIndex + 1, &result);
             Common::GetInstance()->AddLog(0, strLog);
         }
         else
         {
-            strLog.Format(_T("[Camera_%d] Set DigitalOutput Success"), nIndex + 1);
+            strLog.Format(_T("[Camera[%d]] Set DigitalOutput Success"), nIndex + 1);
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
 
     case BlackFly:
-        strLog.Format(_T("[Camera_%d] Cam Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
+        strLog.Format(_T("[Camera[%d]] Camera Model = %s"), nIndex + 1, Manager->m_strSetModelName.at(nIndex));
         Common::GetInstance()->AddLog(0, strLog);
 
         result = lDeviceParams->SetEnumValue("PixelFormat", m_pixeltype);
@@ -1511,7 +1511,7 @@ bool CameraControl_rev::CameraParamSetting(int nIndex, PvDevice* aDevice)
         }
         else
         {
-            strLog.Format(_T("[Camera_%d]Set PixelFormat [%s] %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
+            strLog.Format(_T("[Camera[%d]] Set PixelFormat [%s] %s"), nIndex + 1, strPixelFormat, m_Cam_Params->strPixelFormat);
             Common::GetInstance()->AddLog(0, strLog);
         }
         break;
@@ -1989,7 +1989,7 @@ void CameraControl_rev::SetPixelFormatParametertoGUI()
     // YUVY
     if(GetYUVYType())
     {
-        strLog.Format(_T("[Camera_%d] YUV422_8_UYVY Mode"), GetCamIndex() + 1);
+        strLog.Format(_T("[Camera[%d]] YUV422_8_UYVY Mode"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
         MainDlg->m_chUYVYCheckBox.SetCheck(TRUE);
@@ -2001,15 +2001,15 @@ void CameraControl_rev::SetPixelFormatParametertoGUI()
         MainDlg->m_chColorMapCheckBox.EnableWindow(FALSE);
         MainDlg->m_chMonoCheckBox.EnableWindow(FALSE);
 
-        strLog.Format(_T("[Camera_%d] UYVY CheckBox Checked"), GetCamIndex() + 1);
+        strLog.Format(_T("[Camera[%d]] UYVY CheckBox Checked"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
-        strLog.Format(_T("[Camera_%d] 16Bit CheckBox Checked, Disable Windows"), GetCamIndex() + 1);
-        Common::GetInstance()->AddLog(0, strLog);
-
-        strLog.Format(_T("[Camera_%d] ColorMap  Disable Windows"), GetCamIndex() + 1);
+        strLog.Format(_T("[Camera[%d]] 16Bit CheckBox Checked, Disable Windows"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
-        strLog.Format(_T("[Camera_%d] Mono  Disable Windows"), GetCamIndex() + 1);
+        strLog.Format(_T("[Camera[%d]] ColorMap  Disable Windows"), GetCamIndex() + 1);
+        Common::GetInstance()->AddLog(0, strLog);
+
+        strLog.Format(_T("[Camera[%d]] Mono  Disable Windows"), GetCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
 
@@ -2356,7 +2356,7 @@ bool CameraControl_rev::SaveImageWithTimestamp(const cv::Mat& image)
     // 성공적으로 저장한 경우 로그 출력
     CString strLog;
     std::wstring filePathW(filePath.begin(), filePath.end());
-    strLog.Format(_T("Completed writeback to image file: %s"), filePathW.c_str());
+    strLog.Format(_T("Completed writeback to image file: \n%s"), filePathW.c_str());
     Common::GetInstance()->AddLog(0, strLog);
 
     return true;
@@ -2381,7 +2381,7 @@ bool CameraControl_rev::SaveRawDataWithTimestamp(const cv::Mat& rawData)
     // 성공적으로 저장한 경우 로그 출력
     CString strLog;
     std::wstring filePathW(filePath.begin(), filePath.end());
-    strLog.Format(_T("Completed writeback to raw data file: %s"), filePathW.c_str());
+    strLog.Format(_T("Completed writeback to raw data file: \n%s"), filePathW.c_str());
     Common::GetInstance()->AddLog(0, strLog);
 
     return true;

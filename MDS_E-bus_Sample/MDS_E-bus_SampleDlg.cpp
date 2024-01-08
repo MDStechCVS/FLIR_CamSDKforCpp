@@ -616,7 +616,7 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnDisconnect()
         m_CamManager->m_Cam[nIndex]->m_bThreadFlag = false;
         m_CamManager->m_Cam[nIndex]->SetRunningFlag(false);
 
-        strLog.Format(_T("[Camera_%d] Thread Stop"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]] Thread Stop"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
         Common::GetInstance()->AddLog(0, _T("------------------------------------"));
@@ -625,7 +625,7 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnDisconnect()
         Sleep(100);
         m_CamManager->m_Cam[nIndex]->CameraDisconnect();
 
-        strLog.Format(_T("[Camera_%d],CameraStop & Disconnect"), nIndex + 1);
+        strLog.Format(_T("[Camera[%d]],CameraStop & Disconnect"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
         Common::GetInstance()->AddLog(0, _T("------------------------------------"));
     }
@@ -836,8 +836,8 @@ HBRUSH CMDS_Ebus_SampleDlg::HandleCameraRecordingStatus(int camIndex, CDC* pDC)
         if (m_blink[camIndex] && m_CamManager->m_Cam[camIndex]->GetStartRecordingFlag())
         {
             // 녹화 중일 때 깜박이는 효과
-            pDC->SetBkColor(YellowBrush ? RGBYELLOW : RGB_RED);
-            return YellowBrush ? YellowBrush : RedBrush;
+            pDC->SetBkColor(RedBrush ? RGBYELLOW : RGB_RED);
+            return RedBrush ? RedBrush : YellowBrush;
         }
         else
         {
@@ -1676,7 +1676,7 @@ void CMDS_Ebus_SampleDlg::OnBnClickedCheckBox()
             m_chColorMapCheckBox.SetCheck(BST_UNCHECKED);
             m_CamManager->m_Cam[GetSelectCamIndex()]->SetGrayType(TRUE);
             m_CamManager->m_Cam[GetSelectCamIndex()]->SetColorPaletteType(FALSE);
-            strLog.Format(_T("[Camera_%d] Gray Palette Mode"), GetSelectCamIndex() + 1);
+            strLog.Format(_T("[Camera[%d]] Gray Palette Mode"), GetSelectCamIndex() + 1);
             Common::GetInstance()->AddLog(0, strLog);
         }
     }
@@ -1689,7 +1689,7 @@ void CMDS_Ebus_SampleDlg::OnBnClickedCheckBox()
             m_CamManager->m_Cam[GetSelectCamIndex()]->SetGrayType(FALSE);
             m_CamManager->m_Cam[GetSelectCamIndex()]->SetColorPaletteType(TRUE);
 
-            strLog.Format(_T("[Camera_%d] Color Palette Mode"), GetSelectCamIndex() + 1);
+            strLog.Format(_T("[Camera[%d]] Color Palette Mode"), GetSelectCamIndex() + 1);
             Common::GetInstance()->AddLog(0, strLog);
         }
     }
@@ -1717,7 +1717,7 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnOpenDataFolder()
     }
     else
     {
-        strLog.Format(_T("[Camera_%d] Need to check folder path"), GetSelectCamIndex() + 1);
+        strLog.Format(_T("[Camera[%d]] Need to check folder path"), GetSelectCamIndex() + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }   
 }

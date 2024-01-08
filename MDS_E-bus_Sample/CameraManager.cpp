@@ -98,7 +98,7 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
         CString strModelName = m_strSetModelName[i]; // 모델 이름 가져오기
 
         CString strLog;
-        strLog.Format(_T("[Camera_%d] IP Address[%s], Model Name[%s]"), i + 1, static_cast<LPCTSTR>(strValue), static_cast<LPCTSTR>(strModelName));
+        strLog.Format(_T("[Camera[%d]] IP Address[%s], Model Name[%s]"), i + 1, static_cast<LPCTSTR>(strValue), static_cast<LPCTSTR>(strModelName));
         Common::GetInstance()->AddLog(0, strLog);
 
         Common::GetInstance()->AddLog(0, _T("------------------------------------"));
@@ -234,7 +234,7 @@ bool CameraManager::CameraAllDisConnect(CMDS_Ebus_SampleDlg* MainDlg)
     {
         m_Cam[i]->m_bThreadFlag = false;
         m_Cam[i]->SetRunningFlag(false);
-        strLog.Format(_T("[Camera_%d],Thread Stop"), i + 1);
+        strLog.Format(_T("[Camera[%d]],Thread Stop"), i + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
 
@@ -246,7 +246,7 @@ bool CameraManager::CameraAllDisConnect(CMDS_Ebus_SampleDlg* MainDlg)
         Sleep(100);
         m_Cam[i]->CameraDisconnect();
 
-        strLog.Format(_T("[Camera_%d] CameraStop & Disconnect"), i + 1);
+        strLog.Format(_T("[Camera[%d]] CameraStop & Disconnect"), i + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
 
