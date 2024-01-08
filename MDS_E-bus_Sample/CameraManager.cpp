@@ -45,112 +45,6 @@ void CameraManager::SetDeviceCount(int nCnt)
 // =============================================================================
 // 설정 파일에 저장되어 있는 IP Address와 물리적으로 연결되어 있는 IP Address를 비교하여 
 // 저장된 IP와 연결되어 있는 IP가 동일하다면  IP Address를 구조체에 저장한다.
-/*
-void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
-{
-    if (MainDlg->gui_status == GUI_STEP_RUN)
-        return;
-    PvSystem lSystem;
-    lSystem.Find();
-
-    CString strlnterfaceID = _T("");
-
-    if (!lDIVector.empty())
-        lDIVector.clear();
-
-    uint32_t nIntercafeCount = lSystem.GetInterfaceCount();
-    int nIndex = 0;
-    for (uint32_t i = 0; i < nIntercafeCount; i++)
-    {
-        const PvInterface* lInterface = dynamic_cast<const PvInterface*>(lSystem.GetInterface(i));
-        if (lInterface != NULL)
-        {
-            uint32_t nLocalCnt = lInterface->GetDeviceCount();
-            for (uint32_t j = 0; j < nLocalCnt; j++)
-            {
-                const PvDeviceInfo* lDI = dynamic_cast<const PvDeviceInfo*>(lInterface->GetDeviceInfo(j));
-                if (lDI != NULL)
-                {                       
-                    strlnterfaceID.Format(_T("%s"), static_cast<LPCTSTR>(lDI->GetConnectionID()));
-                    
-                    // strLoadIPAddress에서 lDI와 일치하는 위치 찾기
-                    auto it = std::find(m_strLoadIPAddress.begin(), m_strLoadIPAddress.end(), strlnterfaceID);
-                    if (it != m_strLoadIPAddress.end())
-                    {
-                        int nIndex = (int)std::distance(m_strLoadIPAddress.begin(), it);
-                        bool exists = false;
-                        for (const PvDeviceInfo* deviceInfo : lDIVector)
-                        {
-                            // 중복을 확인.
-                            if (CompareDeviceInfo(*lDI, *deviceInfo))
-                            {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists)
-                        {
-                            if (lDIVector.empty())
-                            {
-                                lDIVector.push_back(lDI);
-                                m_strLoadIPAddress.erase(it); // 삽입한 위치의 IP 주소는 삭제
-                            }
-                            else
-                            {
-                                // nIndex 위치에 lDI 삽입
-                                nIndex = std::min(nIndex, static_cast<int>(lDIVector.size()));
-                                lDIVector.insert(lDIVector.begin() + nIndex, lDI);
-                                m_strLoadIPAddress.erase(it); // 삽입한 위치의 IP 주소는 삭제
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    std::sort(m_strLoadIPAddress.begin(), m_strLoadIPAddress.end());
-    m_strLoadIPAddress.erase(unique(m_strLoadIPAddress.begin(), m_strLoadIPAddress.end()), m_strLoadIPAddress.end());
-
-    std::sort(lDIVector.begin(), lDIVector.end());
-    lDIVector.erase(unique(lDIVector.begin(), lDIVector.end()), lDIVector.end());
-
-    CString strLog = _T("");
-    strLog.Format(_T("Setfile Load Device Count [%d]"), m_strLoadIPAddress.size());
-    Common::GetInstance()->AddLog(0, strLog);
-
-    strLog.Format(_T("Contact Device Count [%d]"), lDIVector.size());
-    Common::GetInstance()->AddLog(0, strLog);
-
-    int nDeviceCnt = (int)lDIVector.size();
-
-    
-    PvString strTemp;
-    for (int i = 0; i < nDeviceCnt; i++)
-    {
-        if (i < lDIVector.size())
-        {
-            strTemp = lDIVector.at(i)->GetModelName();
-            strLog.Format(_T("[Camera_%d]Model = [%s]"), i + 1, static_cast<LPCTSTR>(strTemp));
-            Common::GetInstance()->AddLog(0, strLog);
-            CString strValue = (_T(""));
-            strValue.Format(_T("%s"), static_cast<LPCTSTR>(lDIVector.at(i)->GetModelName()));
-            m_strSetModelName.push_back(strValue);
-
-            strTemp = lDIVector.at(i)->GetConnectionID();
-            strValue.Format(_T("%s"), static_cast<LPCTSTR>(lDIVector.at(i)->GetConnectionID()));
-            m_strSetIPAddress.push_back(strValue);
-
-            strLog.Format(_T("[Camera_%d] IP Address[%s]"), i + 1, static_cast<LPCTSTR>(m_strSetIPAddress.at(i)));
-            Common::GetInstance()->AddLog(0, strLog);
-         
-            Common::GetInstance()->AddLog(0, _T("------------------------------------"));
-        }
-    }
-    int nCnt = (int)m_strSetIPAddress.size();
-    SetDeviceCount(nCnt);
-}
-*/
 void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
 {
     if (MainDlg->gui_status == GUI_STATUS::GUI_STEP_RUN)
@@ -194,10 +88,6 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
         }
     }
 
-    // 중복 제거 후 정렬
-    //std::sort(m_strSetIPAddress.begin(), m_strSetIPAddress.end());
-    //std::sort(m_strSetModelName.begin(), m_strSetModelName.end());
-
     SetDeviceCount(static_cast<int>(m_strSetIPAddress.size()));
 
     // 결과 출력 및 벡터에 저장
@@ -213,10 +103,7 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
 
         Common::GetInstance()->AddLog(0, _T("------------------------------------"));
     }
-
-    SetDeviceCount(nDeviceCnt);
 }
-
 
 // =============================================================================
 // 여기에서 a와 b의 필드를 비교하고, 중복 여부를 반환.
