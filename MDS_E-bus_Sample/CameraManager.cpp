@@ -216,10 +216,9 @@ bool CameraManager::CameraAllStop(CMDS_Ebus_SampleDlg* MainDlg)
         bFlag = m_Cam[i]->CameraStop(i);
         m_Cam[i]->SetRunningFlag(false);
         Sleep(1);
+        MainDlg->gui_status = GUI_STATUS::GUI_STEP_STOP;
+        Common::GetInstance()->AddLog(0, _T("Camera[%d] Streaming Stop"), i+1);
     }
-
-    MainDlg->gui_status = GUI_STATUS::GUI_STEP_STOP;
-    Common::GetInstance()->AddLog(0, _T("All Camera Streaming Stop"));
 
     return bFlag;
 }

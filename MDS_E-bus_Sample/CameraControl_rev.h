@@ -41,7 +41,6 @@ private:
 	CameraModelList m_Camlist; 
 	ThreadStatus m_TStatus; // 스레드 상태
 
-
 	std::mutex drawmtx;
 	std::mutex filemtx;
 	std::mutex videomtx;
@@ -103,9 +102,6 @@ public:
 	MDSMeasureMinSpotValue m_MinSpot; // 최소 스팟 값
 
 	PvPixelType m_pixeltype;
-
-	
-
 private:
 
 	void SetImageSize(Mat Img); // 이미지 크기 설정

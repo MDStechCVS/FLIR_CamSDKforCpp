@@ -1,0 +1,3867 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::NormTypes'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/base.hpp"
+                },
+                "region": {
+                  "startLine": 384,
+                  "startColumn": 39,
+                  "endLine": 384,
+                  "endColumn": 39
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::AccessFlag'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.hpp"
+                },
+                "region": {
+                  "startLine": 66,
+                  "startColumn": 1,
+                  "endLine": 66,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??7cv@@YA_NAEBW4AccessFlag@0@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::debug_build_guard::_InputArray::KindFlag'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.hpp"
+                },
+                "region": {
+                  "startLine": 266,
+                  "startColumn": 1,
+                  "endLine": 266,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??7debug_build_guard@cv@@YA_NAEBW4KindFlag@_InputArray@01@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::UMatData::MemoryFlag'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.hpp"
+                },
+                "region": {
+                  "startLine": 583,
+                  "startColumn": 1,
+                  "endLine": 583,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??7cv@@YA_NAEBW4MemoryFlag@UMatData@0@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cv::MatStep::buf' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.inl.hpp"
+                },
+                "region": {
+                  "startLine": 1239,
+                  "startColumn": 10,
+                  "endLine": 1239,
+                  "endColumn": 10
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0MatStep@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cv::MatStep::buf"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cv::MatStep::buf' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.inl.hpp"
+                },
+                "region": {
+                  "startLine": 1245,
+                  "startColumn": 10,
+                  "endLine": 1245,
+                  "endColumn": 10
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0MatStep@cv@@QEAA@_K@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cv::MatStep::buf"
+          }
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '*' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '*' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.inl.hpp"
+                },
+                "region": {
+                  "startLine": 1874,
+                  "startColumn": 12,
+                  "endLine": 1874,
+                  "endColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?elemSize@SparseMat@cv@@QEBA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '+' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '+' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.inl.hpp"
+                },
+                "region": {
+                  "startLine": 1874,
+                  "startColumn": 12,
+                  "endLine": 1874,
+                  "endColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?elemSize@SparseMat@cv@@QEBA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::Formatter::FormatType'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/operations.hpp"
+                },
+                "region": {
+                  "startLine": 451,
+                  "startColumn": 16,
+                  "endLine": 451,
+                  "endColumn": 16
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?format@cv@@YA?AU?$Ptr@VFormatted@cv@@@1@AEBV_InputArray@debug_build_guard@1@W4FormatType@Formatter@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '*' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '*' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/utility.hpp"
+                },
+                "region": {
+                  "startLine": 568,
+                  "startColumn": 61,
+                  "endLine": 568,
+                  "endColumn": 61
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?getElemSize@cv@@YA_KH@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '+' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '+' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/utility.hpp"
+                },
+                "region": {
+                  "startLine": 568,
+                  "startColumn": 61,
+                  "endLine": 568,
+                  "endColumn": 61
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?getElemSize@cv@@YA_KH@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26439",
+          "message": {
+            "text": "이 종류의 함수는 throw할 수 없습니다. 'noexcept'로 선언합니다(f.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/async.hpp"
+                },
+                "region": {
+                  "startLine": 73,
+                  "startColumn": 5,
+                  "endLine": 73,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0AsyncArray@cv@@QEAA@$$QEAV01@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cvflann::UntypedMatrix::type' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/matrix.h"
+                },
+                "region": {
+                  "startLine": 95,
+                  "startColumn": 5,
+                  "endLine": 95,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0UntypedMatrix@cvflann@@QEAA@PEAXJJ@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cvflann::UntypedMatrix::type"
+          }
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cvflann::flann_datatype_t'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/saving.h"
+                },
+                "region": {
+                  "startLine": 51,
+                  "startColumn": 58,
+                  "endLine": 51,
+                  "endColumn": 65
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?type@?$Datatype@D@cvflann@@SA?AW4flann_datatype_t@2@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '+' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '+' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/dist.h"
+                },
+                "region": {
+                  "startLine": 85,
+                  "startColumn": 76,
+                  "endLine": 85,
+                  "endColumn": 80
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??$round@_J@cvflann@@YA_JM@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cvflann::flann_algorithm_t'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/kdtree_index.h"
+                },
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 32,
+                  "endLine": 57,
+                  "endColumn": 32
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0KDTreeIndexParams@cvflann@@QEAA@H@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cvflann::flann_centers_init_t'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/kmeans_index.h"
+                },
+                "region": {
+                  "startLine": 63,
+                  "startColumn": 5,
+                  "endLine": 63,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0KMeansIndexParams@cvflann@@QEAA@HHW4flann_centers_init_t@1@MH@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '*' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '*' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 363,
+                  "startColumn": 30,
+                  "endLine": 363,
+                  "endColumn": 45
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$LshTable@E@lsh@cvflann@@QEAA@II@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '*' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '*' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 364,
+                  "startColumn": 28,
+                  "endLine": 364,
+                  "endColumn": 43
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$LshTable@E@lsh@cvflann@@QEAA@II@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cvflann::lsh::LshStats::bucket_size_std_dev' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 1,
+                  "endLine": 102,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0LshStats@lsh@cvflann@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cvflann::lsh::LshStats::bucket_size_std_dev"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cvflann::lsh::LshStats::bucket_size_max_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 1,
+                  "endLine": 102,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0LshStats@lsh@cvflann@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cvflann::lsh::LshStats::bucket_size_max_"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cvflann::lsh::LshStats::bucket_size_min_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 1,
+                  "endLine": 102,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0LshStats@lsh@cvflann@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cvflann::lsh::LshStats::bucket_size_min_"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cvflann::lsh::LshStats::bucket_size_median_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 1,
+                  "endLine": 102,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0LshStats@lsh@cvflann@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cvflann::lsh::LshStats::bucket_size_median_"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cvflann::lsh::LshStats::bucket_size_mean_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 1,
+                  "endLine": 102,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0LshStats@lsh@cvflann@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cvflann::lsh::LshStats::bucket_size_mean_"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cvflann::lsh::LshStats::n_buckets_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 1,
+                  "endLine": 102,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0LshStats@lsh@cvflann@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cvflann::lsh::LshStats::n_buckets_"
+          }
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '+' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '+' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/imgproc.hpp"
+                },
+                "region": {
+                  "startLine": 4992,
+                  "startColumn": 16,
+                  "endLine": 4992,
+                  "endColumn": 40
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??ELineIterator@cv@@QEAAAEAV01@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '+' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '+' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/objdetect.hpp"
+                },
+                "region": {
+                  "startLine": 151,
+                  "startColumn": 37,
+                  "endLine": 151,
+                  "endColumn": 88
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??RSimilarRects@cv@@QEBA_NAEBV?$Rect_@H@1@0@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::HOGDescriptor::HistogramNormType'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/objdetect.hpp"
+                },
+                "region": {
+                  "startLine": 412,
+                  "startColumn": 26,
+                  "endLine": 412,
+                  "endColumn": 42
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0HOGDescriptor@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::DetectionBasedTracker::ObjectStatus'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/objdetect/detection_based_tracker.hpp"
+                },
+                "region": {
+                  "startLine": 150,
+                  "startColumn": 13,
+                  "endLine": 150,
+                  "endColumn": 13
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0ExtObject@DetectionBasedTracker@cv@@QEAA@HV?$Rect_@H@2@W4ObjectStatus@12@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::aruco::CornerRefineMethod'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/objdetect/aruco_detector.hpp"
+                },
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 9,
+                  "endLine": 37,
+                  "endColumn": 34
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0DetectorParameters@aruco@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::cuda::Event::CreateFlags'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.hpp"
+                },
+                "region": {
+                  "startLine": 957,
+                  "startColumn": 1,
+                  "endLine": 957,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??7cuda@cv@@YA_NAEBW4CreateFlags@Event@01@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '*' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '*' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+                },
+                "region": {
+                  "startLine": 325,
+                  "startColumn": 12,
+                  "endLine": 325,
+                  "endColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?elemSize@GpuMat@cuda@cv@@QEBA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '+' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '+' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+                },
+                "region": {
+                  "startLine": 325,
+                  "startColumn": 12,
+                  "endLine": 325,
+                  "endColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?elemSize@GpuMat@cuda@cv@@QEBA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '*' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '*' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+                },
+                "region": {
+                  "startLine": 448,
+                  "startColumn": 12,
+                  "endLine": 448,
+                  "endColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?elemSize@GpuMatND@cuda@cv@@QEBA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '+' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '+' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+                },
+                "region": {
+                  "startLine": 448,
+                  "startColumn": 12,
+                  "endLine": 448,
+                  "endColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?elemSize@GpuMatND@cuda@cv@@QEBA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::cuda::HostMem::AllocType'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+                },
+                "region": {
+                  "startLine": 501,
+                  "startColumn": 10,
+                  "endLine": 501,
+                  "endColumn": 10
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0HostMem@cuda@cv@@QEAA@W4AllocType@012@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '*' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '*' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+                },
+                "region": {
+                  "startLine": 598,
+                  "startColumn": 12,
+                  "endLine": 598,
+                  "endColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?elemSize@HostMem@cuda@cv@@QEBA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "산술 오버플로: 4 바이트 값의 '+' 연산자를 사용한 다음 결과를 8 바이트 값에 캐스트합니다. 오버플로를 방지하려면 '+' 연산자를 호출하기 전에 더 광범위한 형식에 값을 캐스트합니다(io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+                },
+                "region": {
+                  "startLine": 598,
+                  "startColumn": 12,
+                  "endLine": 598,
+                  "endColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?elemSize@HostMem@cuda@cv@@QEBA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::cuda::FeatureSet'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+                },
+                "region": {
+                  "startLine": 734,
+                  "startColumn": 18,
+                  "endLine": 734,
+                  "endColumn": 18
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?supports@DeviceInfo@cuda@cv@@QEBA_NW4FeatureSet@23@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cv::detail::RotationWarperBase<cv::detail::CompressedRectilinearProjector>::projector_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching/detail/warpers.hpp"
+                },
+                "region": {
+                  "startLine": 188,
+                  "startColumn": 1,
+                  "endLine": 188,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$RotationWarperBase@UCompressedRectilinearProjector@detail@cv@@@detail@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cv::detail::RotationWarperBase<cv::detail::CompressedRectilinearProjector>::projector_"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cv::detail::RotationWarperBase<cv::detail::CompressedRectilinearPortraitProjector>::projector_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching/detail/warpers.hpp"
+                },
+                "region": {
+                  "startLine": 188,
+                  "startColumn": 1,
+                  "endLine": 188,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$RotationWarperBase@UCompressedRectilinearPortraitProjector@detail@cv@@@detail@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cv::detail::RotationWarperBase<cv::detail::CompressedRectilinearPortraitProjector>::projector_"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cv::detail::RotationWarperBase<cv::detail::PaniniProjector>::projector_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching/detail/warpers.hpp"
+                },
+                "region": {
+                  "startLine": 188,
+                  "startColumn": 1,
+                  "endLine": 188,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$RotationWarperBase@UPaniniProjector@detail@cv@@@detail@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cv::detail::RotationWarperBase<cv::detail::PaniniProjector>::projector_"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cv::detail::RotationWarperBase<cv::detail::PaniniPortraitProjector>::projector_' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching/detail/warpers.hpp"
+                },
+                "region": {
+                  "startLine": 188,
+                  "startColumn": 1,
+                  "endLine": 188,
+                  "endColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$RotationWarperBase@UPaniniPortraitProjector@detail@cv@@@detail@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cv::detail::RotationWarperBase<cv::detail::PaniniPortraitProjector>::projector_"
+          }
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::detail::DpSeamFinder::CostFunction'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching/detail/seam_finders.hpp"
+                },
+                "region": {
+                  "startLine": 128,
+                  "startColumn": 41,
+                  "endLine": 128,
+                  "endColumn": 48
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?costFunction@DpSeamFinder@detail@cv@@QEBA?AW4CostFunction@123@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::InterpolationFlags'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching.hpp"
+                },
+                "region": {
+                  "startLine": 201,
+                  "startColumn": 61,
+                  "endLine": 201,
+                  "endColumn": 68
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?interpolationFlags@Stitcher@cv@@QEBA?AW4InterpolationFlags@2@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cv::detail::WaveCorrectKind'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching.hpp"
+                },
+                "region": {
+                  "startLine": 204,
+                  "startColumn": 55,
+                  "endLine": 204,
+                  "endColumn": 62
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?waveCorrectKind@Stitcher@cv@@QEBA?AW4WaveCorrectKind@detail@2@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C28159",
+          "message": {
+            "text": "'GetTickCount64'을(를) 'GetTickCount' 대신 사용하십시오. 이유: GetTickCount overflows roughly every 49 days.  Code that does not take that into account can loop indefinitely.  GetTickCount64 operates on 64 bit values and does not have that problem"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Includes/PvSampleUtils.h"
+                },
+                "region": {
+                  "startLine": 198,
+                  "startColumn": 14,
+                  "endLine": 198,
+                  "endColumn": 26
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?PvGetTickCountMs@@YA_KXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'PvDeviceInfoType'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Includes/PvSampleUtils.h"
+                },
+                "region": {
+                  "startLine": 380,
+                  "startColumn": 26,
+                  "endLine": 380,
+                  "endColumn": 65
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?PvSelectDevice@@YAPEBVPvDeviceInfo@@AEAVPvSystem@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_brush' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_brush"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_brush2' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_brush2"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_Color1' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_Color1"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_Color2' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_Color2"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_Color3' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_Color3"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_nSelectCamIndex' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_nSelectCamIndex"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_blink' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_blink"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_Cam_selecting_roi' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_Cam_selecting_roi"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::gui_status' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::gui_status"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'CMDS_Ebus_SampleDlg::m_CamManager' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 22,
+                  "endLine": 55,
+                  "endColumn": 22
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0CMDS_Ebus_SampleDlg@@QEAA@PEAVCWnd@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "CMDS_Ebus_SampleDlg::m_CamManager"
+          }
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'GUI_STATUS'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 218,
+                  "startColumn": 5,
+                  "endLine": 218,
+                  "endColumn": 30
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?OnInitDialog@CMDS_Ebus_SampleDlg@@MEAAHXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6011",
+          "message": {
+            "text": "NULL 포인터 'm_CamManager'을(를) 역참조하고 있습니다. "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 703,
+                  "startColumn": 9,
+                  "endLine": 703,
+                  "endColumn": 39
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?OnTimer@CMDS_Ebus_SampleDlg@@QEAAX_K@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                          },
+                          "region": {
+                            "startLine": 674,
+                            "startColumn": 23
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                          },
+                          "region": {
+                            "startLine": 676,
+                            "startColumn": 37
+                          }
+                        },
+                        "message": {
+                          "text": "'m_CamManager'은(는) NULL일 수 있습니다. (이 분기 건너뛰기)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ],
+                      "importance": "important"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                          },
+                          "region": {
+                            "startLine": 696,
+                            "startColumn": 40
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                          },
+                          "region": {
+                            "startLine": 703,
+                            "startColumn": 36
+                          }
+                        },
+                        "message": {
+                          "text": "이 분기 건너뛰기, ('m_CamManager->m_Cam[CAM_1]!=0'이(가) false라고 가정)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ],
+                      "importance": "important"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                          },
+                          "region": {
+                            "startLine": 703,
+                            "startColumn": 36
+                          }
+                        },
+                        "message": {
+                          "text": "'m_CamManager'이(가) 역참조되었지만 여전히 NULL일 수 있습니다."
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'CAM_INDEX'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 984,
+                  "startColumn": 27,
+                  "endLine": 984,
+                  "endColumn": 61
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?PreTranslateMessage@CMDS_Ebus_SampleDlg@@UEAAHPEAUtagMSG@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6284",
+          "message": {
+            "text": "개체가 _Param_(2)으로 전달되었습니다. 'ATL::CStringT<wchar_t,StrTraitMFC_DLL<wchar_t,ATL::ChTraitsCRT<wchar_t> > >::Format'에 대한 호출에는 문자열이 필요합니다. 실제 형식: 'class ATL::CStringT<wchar_t,class StrTraitMFC_DLL<wchar_t,class ATL::ChTraitsCRT<wchar_t> > >'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 1327,
+                  "startColumn": 5,
+                  "endLine": 1327,
+                  "endColumn": 89
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?LoadiniFile@CMDS_Ebus_SampleDlg@@QEAA_NXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'PaletteTypes'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+                },
+                "region": {
+                  "startLine": 1507,
+                  "startColumn": 9,
+                  "endLine": 1507,
+                  "endColumn": 42
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?GetSelectedColormap@CMDS_Ebus_SampleDlg@@QEAA?AW4PaletteTypes@@AEAVCComboBox@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26812",
+          "message": {
+            "text": "열거형 형식 'cvflann::lsh::LshTable<unsigned char>::SpeedLevel'이(가) 범위가 지정되지 않았습니다. 'enum'(Enum.3) 대신 'enum class'를 사용하세요."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+                },
+                "region": {
+                  "startLine": 283,
+                  "startColumn": 9,
+                  "endLine": 283,
+                  "endColumn": 24
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?initialize@?$LshTable@E@lsh@cvflann@@AEAAX_K@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6269",
+          "message": {
+            "text": "연산 순서가 잘못된 것 같습니다.  역참조가 무시되었습니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/any.h"
+                },
+                "region": {
+                  "startLine": 97,
+                  "startColumn": 10,
+                  "endLine": 97,
+                  "endColumn": 33
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?move@?$big_any_policy@W4flann_algorithm_t@cvflann@@@anyimpl@cvflann@@UEAAXPEBQEAXPEAPEAX@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6269",
+          "message": {
+            "text": "연산 순서가 잘못된 것 같습니다.  역참조가 무시되었습니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/any.h"
+                },
+                "region": {
+                  "startLine": 97,
+                  "startColumn": 10,
+                  "endLine": 97,
+                  "endColumn": 33
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "?move@?$big_any_policy@W4flann_centers_init_t@cvflann@@@anyimpl@cvflann@@UEAAXPEBQEAXPEAPEAX@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cv::AutoBuffer<__int64,1>::buf' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/utility.hpp"
+                },
+                "region": {
+                  "startLine": 971,
+                  "startColumn": 30,
+                  "endLine": 971,
+                  "endColumn": 30
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$AutoBuffer@_J$00@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cv::AutoBuffer<__int64,1>::buf"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "'cv::AutoBuffer<double,1>::buf' 변수가 초기화되지 않았습니다. 항상 멤버 변수를 초기화하세요(type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/utility.hpp"
+                },
+                "region": {
+                  "startLine": 971,
+                  "startColumn": 30,
+                  "endLine": 971,
+                  "endColumn": 30
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$AutoBuffer@N$00@cv@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "cv::AutoBuffer<double,1>::buf"
+          }
+        },
+        {
+          "ruleId": "C6294",
+          "message": {
+            "text": "for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 578,
+                  "startColumn": 5,
+                  "endLine": 578,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@M$02$00@cv@@QEAA@MMM@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6201",
+          "message": {
+            "text": "스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '3'이(가) 유효한 인덱스 범위 '0' - '2'을(를) 벗어납니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 578,
+                  "startColumn": 39,
+                  "endLine": 578,
+                  "endColumn": 44
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@M$02$00@cv@@QEAA@MMM@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6294",
+          "message": {
+            "text": "for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 578,
+                  "startColumn": 5,
+                  "endLine": 578,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@N$02$00@cv@@QEAA@NNN@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6201",
+          "message": {
+            "text": "스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '3'이(가) 유효한 인덱스 범위 '0' - '2'을(를) 벗어납니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 578,
+                  "startColumn": 39,
+                  "endLine": 578,
+                  "endColumn": 44
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@N$02$00@cv@@QEAA@NNN@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6294",
+          "message": {
+            "text": "for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 570,
+                  "startColumn": 5,
+                  "endLine": 570,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@M$01$00@cv@@QEAA@MM@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6201",
+          "message": {
+            "text": "스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '2'이(가) 유효한 인덱스 범위 '0' - '1'을(를) 벗어납니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 570,
+                  "startColumn": 39,
+                  "endLine": 570,
+                  "endColumn": 44
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@M$01$00@cv@@QEAA@MM@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6294",
+          "message": {
+            "text": "for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 570,
+                  "startColumn": 5,
+                  "endLine": 570,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@N$01$00@cv@@QEAA@NN@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6201",
+          "message": {
+            "text": "스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '2'이(가) 유효한 인덱스 범위 '0' - '1'을(를) 벗어납니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 570,
+                  "startColumn": 39,
+                  "endLine": 570,
+                  "endColumn": 44
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@N$01$00@cv@@QEAA@NN@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6294",
+          "message": {
+            "text": "for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 586,
+                  "startColumn": 5,
+                  "endLine": 586,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@M$03$00@cv@@QEAA@MMMM@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6201",
+          "message": {
+            "text": "스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '4'이(가) 유효한 인덱스 범위 '0' - '3'을(를) 벗어납니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 586,
+                  "startColumn": 39,
+                  "endLine": 586,
+                  "endColumn": 44
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@M$03$00@cv@@QEAA@MMMM@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6294",
+          "message": {
+            "text": "for 루프가 잘못 정의되었습니다. 초기 조건이 충족되지 않으므로 루프 본문이 실행되지 않습니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 586,
+                  "startColumn": 5,
+                  "endLine": 586,
+                  "endColumn": 5
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@N$03$00@cv@@QEAA@NNNN@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6201",
+          "message": {
+            "text": "스택에 할당되었을 가능성이 있는 버퍼 'this->val'에 대해 인덱스 '4'이(가) 유효한 인덱스 범위 '0' - '3'을(를) 벗어납니다."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+                },
+                "region": {
+                  "startLine": 586,
+                  "startColumn": 39,
+                  "endLine": 586,
+                  "endColumn": 44
+                }
+              },
+              "logicalLocations": [
+                {
+                  "decoratedName": "??0?$Matx@N$03$00@cv@@QEAA@NNNN@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.29.30151.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00C5C1B0 -il C:\\Users\\MDS_TEST\\AppData\\Local\\Temp\\_CL_4eb03a1bast -typedil -f MDS_E-bus_SampleDlg.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -pc \\:/ -D_MSC_VER=1929 -D_MSC_FULL_VER=192930151 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -I D:\\share\\Test_Version\\FLIR_CamSDKforCpp\\MDS_E-bus_Sample\\Includes -I D:\\share\\Test_Version\\FLIR_CamSDKforCpp\\MDS_E-bus_Sample\\Libraries\\OpenCV4.7\\include -nologo -W 3 -diagnostics:column -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_WINDOWS -D_DEBUG -D_CRT_SECURE_NO_WARNINGS -D_CRT_NON_CONFORMING_SWPRINTFS -D_WINSOCK_DEPRECATED_NO_WARNINGS -D_UNICODE -DUNICODE -D_AFXDLL -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -MDd -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -Zc:wchar_t -Zc:forScope -std:c++14 -Fox64\\Debug\\MDS_E-bus_SampleDlg.obj -Fdx64\\Debug\\vc142.pdb -external:W 3 -Gd -analyze:projectdirectory D:\\share\\Test_Version\\FLIR_CamSDKforCpp\\MDS_E-bus_Sample -analyze:rulesetdirectory ;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\Team Tools\\Static Analysis Tools\\\\Rule Sets; -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\Team Tools\\Static Analysis Tools\\Rule Sets\\NativeRecommendedRules.ruleset -analyze:quiet -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX86\\x86\\EspXEngine.dll -FC -errorreport:prompt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Tools\\MSVC\\14.29.30133\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Tools\\MSVC\\14.29.30133\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Tools\\MSVC\\14.29.30133\\include -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional\\VC\\Auxiliary\\VS\\include -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -external:I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um",
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/base.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "0574ff2ef616ac1d18327d2ed735a28c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "05d2eeeeb3b8a7f9a0a699f52da658e5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/mat.inl.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "20a376c6f61edfd80c4dba55c2982b36"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/operations.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "3938bc55e8d605e0d16e029d3f4d167a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/utility.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "cff54c69fe853c57eb56a1d46b3bdc0b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/async.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "e4d4579c3554beaed024226c1da64d3e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/matrix.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "77e5404c14065f7aaf66b0c4b4b44a9f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/saving.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "eece032a3094774441fe18826a55d915"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/dist.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "e3a89d32fc72d5b8a69bfe11b1c69e98"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/kdtree_index.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "ae6042e7e0f4a7a4de55c0c6eb5c10e6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/kmeans_index.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "88d8460609021980190535a16b85a334"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/lsh_table.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "1f26cc2b084912e332f65bc02403fb04"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/imgproc.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "7e5faf260c11d4e0ae6dab7f4828d3a9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/objdetect.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "b0d8d146c0541cf3470841a58b44c244"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/objdetect/detection_based_tracker.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "26321d5ec1be0c55a2fc65300584f7d1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/objdetect/aruco_detector.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "2942e264eefbed4e7fd91c77961fcc27"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "3d45d4924242631586e24e70c2baa5e6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/cuda.inl.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "9f9f02bfd29b06b20617efe0bfdb08d5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching/detail/warpers.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "18d75c718bbc6309be206a498910be7a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching/detail/seam_finders.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "bb3d26ccbb4fe02904de125e2af43068"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/stitching.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "10afc11c5294868e1762a6218bba180b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/flann/any.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "d877a52e26aead57c57adbcd21a9e7db"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Libraries/OpenCV4.7/include/opencv2/core/matx.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "9a7304012504321ec87223d49cfaca3e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/stdafx.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "73cd422db43f2d90bfe08a7fd5169600"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/stdafx.h"
+          },
+          "hashes": {
+            "md5": "b05f748e5204ddd0eff6410a93811a8d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/targetver.h"
+          },
+          "hashes": {
+            "md5": "aef069a6cefaa6bd28c7a1d97137fe69"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv/cv.h"
+          },
+          "hashes": {
+            "md5": "c800e77b835888b670054309ff92db8e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/core_c.h"
+          },
+          "hashes": {
+            "md5": "7303d94502feafae630a17edac8952dc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/types_c.h"
+          },
+          "hashes": {
+            "md5": "dbcf7a6b1ba8336f32a511c6d85d0aa7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/cvdef.h"
+          },
+          "hashes": {
+            "md5": "7d235beda0ff06e8b69fd4ab6965d8fa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/version.hpp"
+          },
+          "hashes": {
+            "md5": "75868b01e33b805f06212060f81a7452"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/hal/interface.h"
+          },
+          "hashes": {
+            "md5": "587769baae1091773bd045114a86b342"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/cv_cpu_dispatch.h"
+          },
+          "hashes": {
+            "md5": "a8f2812f335d8831910fdcc1e37baefd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core.hpp"
+          },
+          "hashes": {
+            "md5": "9d10fcdd69b625db969953ac843c4a6a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/opencv_modules.hpp"
+          },
+          "hashes": {
+            "md5": "08ab48e453f2e4ff16912cb7d402edf3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/cvstd.hpp"
+          },
+          "hashes": {
+            "md5": "bac43e95c85b3bdf80baf3b82a664e4e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/cvstd_wrapper.hpp"
+          },
+          "hashes": {
+            "md5": "ea2d5604cd0fe9d57b18e5625ddb1a9a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/neon_utils.hpp"
+          },
+          "hashes": {
+            "md5": "2cdc2cb80d4bed0fd0e1745d7ac80031"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/vsx_utils.hpp"
+          },
+          "hashes": {
+            "md5": "f2d6bd0b7d608774f01c2e2a91c0ce86"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/check.hpp"
+          },
+          "hashes": {
+            "md5": "5dc1e27523d733c8d889e8f461482988"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/traits.hpp"
+          },
+          "hashes": {
+            "md5": "580f41d7b5b985d8a1feec5a9e1f6a39"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/saturate.hpp"
+          },
+          "hashes": {
+            "md5": "2fb2f41e0b9846324e5ffeec66caea54"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/fast_math.hpp"
+          },
+          "hashes": {
+            "md5": "712849bff2b065893117a69ef684c7c2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/types.hpp"
+          },
+          "hashes": {
+            "md5": "41054ee556330353d3a58fca730a7c33"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/bufferpool.hpp"
+          },
+          "hashes": {
+            "md5": "301e1a8db64077c7d63b4e00cd074f4c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/persistence.hpp"
+          },
+          "hashes": {
+            "md5": "7b95dc3dfe89f00212fcd8c34ff5f394"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/cvstd.inl.hpp"
+          },
+          "hashes": {
+            "md5": "f44d99e263eddadf4621fca75b8a27f0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/optim.hpp"
+          },
+          "hashes": {
+            "md5": "613dcd568b9e96aa0622e22ce3da0082"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/ovx.hpp"
+          },
+          "hashes": {
+            "md5": "de5d36902ab0e7343ef21fd301be27c0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/imgproc/imgproc_c.h"
+          },
+          "hashes": {
+            "md5": "e73ef3600d6a0ef16ed96f747285c961"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/imgproc/types_c.h"
+          },
+          "hashes": {
+            "md5": "04492057be827989a90d4a92393b9a7b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv/highgui.h"
+          },
+          "hashes": {
+            "md5": "f7d91ecec832d866c57ddbcf08c61e68"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/highgui/highgui_c.h"
+          },
+          "hashes": {
+            "md5": "d70da512dfe8b43c71cbed211324540b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/opencv.hpp"
+          },
+          "hashes": {
+            "md5": "3dd03c6465a0193b6093de038cec422b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/calib3d.hpp"
+          },
+          "hashes": {
+            "md5": "6eefdc9b03027335eaad315e8d203c94"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/features2d.hpp"
+          },
+          "hashes": {
+            "md5": "f17f0fdc72d32f4b11d6b524cf080e93"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/miniflann.hpp"
+          },
+          "hashes": {
+            "md5": "6de390d8aabcbacc3cbf7caab96c68bf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/defines.h"
+          },
+          "hashes": {
+            "md5": "6bf30d5bbb3cbca9db73bd1708f42626"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/config.h"
+          },
+          "hashes": {
+            "md5": "190bb541a8a4b0dece61796840af93df"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/affine.hpp"
+          },
+          "hashes": {
+            "md5": "7e4730977355147b2b49012d30782b06"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/dnn.hpp"
+          },
+          "hashes": {
+            "md5": "f8f05c11b78eabc0317030c4a0943d84"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/dnn/dnn.hpp"
+          },
+          "hashes": {
+            "md5": "9c6d5a31f43a0f1c5e64bde8110b64ed"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/dnn/version.hpp"
+          },
+          "hashes": {
+            "md5": "bdd4c9b78d3b5b53dbe77bb8eb836d7e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/dnn/dict.hpp"
+          },
+          "hashes": {
+            "md5": "56bc6cc2008a74c88d345ae16afb4bfc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/dnn/layer.hpp"
+          },
+          "hashes": {
+            "md5": "12019f6ee34a639d76cdd6581f8c3f63"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/dnn/dnn.inl.hpp"
+          },
+          "hashes": {
+            "md5": "806e7f09784988752411fbafbff23fd8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/dnn/utils/inference_engine.hpp"
+          },
+          "hashes": {
+            "md5": "cd6993ab47996cb9cebc747b83131e94"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann.hpp"
+          },
+          "hashes": {
+            "md5": "304ef5d7c6db3e58751d438461341564"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/flann_base.hpp"
+          },
+          "hashes": {
+            "md5": "7abea76b274a9be6704335bbc29c4f55"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/general.h"
+          },
+          "hashes": {
+            "md5": "2a8634afb9588bcbb1ad056c59c6144c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/params.h"
+          },
+          "hashes": {
+            "md5": "cc36fc9c06e95bdd53135be0f70a4fdd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/nn_index.h"
+          },
+          "hashes": {
+            "md5": "10ebc7f88a73d4eeffc3d0a28e40a810"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/result_set.h"
+          },
+          "hashes": {
+            "md5": "5412a5859c0056f016f0429a7622e089"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/all_indices.h"
+          },
+          "hashes": {
+            "md5": "a7c19202df495c03aaa720307b519992"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/dynamic_bitset.h"
+          },
+          "hashes": {
+            "md5": "68d5ca4fa7fa1fd3a4da12f53735c4da"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/heap.h"
+          },
+          "hashes": {
+            "md5": "e36d0d6ca4808647ff0a0f4b6fe979cf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/allocator.h"
+          },
+          "hashes": {
+            "md5": "66426bb3e8934f65e340e4cba1934304"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/random.h"
+          },
+          "hashes": {
+            "md5": "84fa4c0287f39be772309eccde483b23"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/kdtree_single_index.h"
+          },
+          "hashes": {
+            "md5": "765d0f881acc8aef9588acbe1c75ebe2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/logger.h"
+          },
+          "hashes": {
+            "md5": "2a64a001b933d38b638481c25d694679"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/composite_index.h"
+          },
+          "hashes": {
+            "md5": "44aa06f2129eb28dcf1486466c1d3697"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/linear_index.h"
+          },
+          "hashes": {
+            "md5": "c7101db8ed740b1c51b4d58037731e2b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/hierarchical_clustering_index.h"
+          },
+          "hashes": {
+            "md5": "701759dc94f5792d8247ae9bf4f2eefb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/lsh_index.h"
+          },
+          "hashes": {
+            "md5": "154ead67e11c84926b3aafc8280f3c52"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/autotuned_index.h"
+          },
+          "hashes": {
+            "md5": "cc9799dc35924f94c156c0c3d4ff7896"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/ground_truth.h"
+          },
+          "hashes": {
+            "md5": "201d932a051325c1f472656135af7c48"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/index_testing.h"
+          },
+          "hashes": {
+            "md5": "6f08d53b39cc743407b5195fa96adb19"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/timer.h"
+          },
+          "hashes": {
+            "md5": "ad3e89bed11b551b36bc1df9a74a7f38"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/flann/sampling.h"
+          },
+          "hashes": {
+            "md5": "23a621c8f9074243222166916d82e675"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/highgui.hpp"
+          },
+          "hashes": {
+            "md5": "c4ca216e439174d63e578f5887ef4957"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/imgcodecs.hpp"
+          },
+          "hashes": {
+            "md5": "90781781093427f0a179f8d2a3ed605f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/videoio.hpp"
+          },
+          "hashes": {
+            "md5": "9738b25abc5dabf9337315f9bbdba7f1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/imgproc/segmentation.hpp"
+          },
+          "hashes": {
+            "md5": "7f05527058c67fae38c76eb3e6269f0a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/ml.hpp"
+          },
+          "hashes": {
+            "md5": "060567a2bd19cf90154a14ed8cd29580"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/ml/ml.inl.hpp"
+          },
+          "hashes": {
+            "md5": "145a51bf1bc10b61a6ae11fe8139a7e5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/objdetect/face.hpp"
+          },
+          "hashes": {
+            "md5": "f46897da2a1b5520aed3503b8c3d7b5d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/objdetect/aruco_dictionary.hpp"
+          },
+          "hashes": {
+            "md5": "f4da044c0fa27c7de720a62332cc2961"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/objdetect/aruco_board.hpp"
+          },
+          "hashes": {
+            "md5": "9b9ec73ae20bf1375e9aac31bd1f52b2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/objdetect/charuco_detector.hpp"
+          },
+          "hashes": {
+            "md5": "34cd6bd6566c1e514e23c50be95957cc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/photo.hpp"
+          },
+          "hashes": {
+            "md5": "88124f600be1a4ce750736a931888329"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/warpers.hpp"
+          },
+          "hashes": {
+            "md5": "6798bcead8bbb70df709f70bd4d1fce6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/core/cuda_types.hpp"
+          },
+          "hashes": {
+            "md5": "2e951760992dad8029da1f1dddb6df27"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/detail/warpers_inl.hpp"
+          },
+          "hashes": {
+            "md5": "44f5ce51a31f6b7faf56ca02811bcd41"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/detail/matchers.hpp"
+          },
+          "hashes": {
+            "md5": "7561325d6e1e0bc9a96bc3c5eaa7c04c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/detail/motion_estimators.hpp"
+          },
+          "hashes": {
+            "md5": "4bda415184612f44bec33a7dc2615110"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/detail/util.hpp"
+          },
+          "hashes": {
+            "md5": "600be43ffcd7e78bf215e17353b197dc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/detail/util_inl.hpp"
+          },
+          "hashes": {
+            "md5": "8652594f22295705e949adbffe208569"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/detail/camera.hpp"
+          },
+          "hashes": {
+            "md5": "d44fa8180dbc0e63d8003f9c414cb297"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/detail/exposure_compensate.hpp"
+          },
+          "hashes": {
+            "md5": "6bf507adfb3bd44f25fd40babc6ea813"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/stitching/detail/blenders.hpp"
+          },
+          "hashes": {
+            "md5": "3cd0cc5210b69576d9b09d6a2678b90b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/video.hpp"
+          },
+          "hashes": {
+            "md5": "47daef9841e65177eda6488b20b94ecc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/video/tracking.hpp"
+          },
+          "hashes": {
+            "md5": "b1220e2dc703017a23ed7946efc11eb5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/libraries/opencv4.7/include/opencv2/video/background_segm.hpp"
+          },
+          "hashes": {
+            "md5": "9298a5a3c38f3d9c67d123a76f30e4ef"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/Includes/PvSampleUtils.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "34400a240f8dc3bd3dab84728d162495"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/skinbutton.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "888233539a29ce3f2f30e8494c79f1a3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/skinbutton.h"
+          },
+          "hashes": {
+            "md5": "2b3e78bf73a095752bdb863fd3845f06"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/mds_e-bus_sampledlg.h"
+          },
+          "hashes": {
+            "md5": "38f3632ddf3813c68d3522d25fef54c3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/global.h"
+          },
+          "hashes": {
+            "md5": "654277094b15d9723581764f91bcddd6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/resource.h"
+          },
+          "hashes": {
+            "md5": "fd1f527fac1da3931e1f3aef11b9c879"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/common.h"
+          },
+          "hashes": {
+            "md5": "5d058dc6ad9c91711ad4812bce7619f0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvtypes.h"
+          },
+          "hashes": {
+            "md5": "7c9b6d908fc7ae0b02d763649195d7d9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdevice.h"
+          },
+          "hashes": {
+            "md5": "41f9fccfb2f84a4c667726900cdcebb0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdevicelib.h"
+          },
+          "hashes": {
+            "md5": "d7f69bc5289de0fe9029c27825f363bb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvstring.h"
+          },
+          "hashes": {
+            "md5": "b9d4de50fa03e64e64178ea99056252a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvbaselib.h"
+          },
+          "hashes": {
+            "md5": "e3e5a0f0dc9c3cfd5be03b5485a666e4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvresult.h"
+          },
+          "hashes": {
+            "md5": "533bac3a3f0243b8256614aca885de37"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdeviceeventsink.h"
+          },
+          "hashes": {
+            "md5": "03328ec34dbff3bce16be833f7d2e7f3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenparameterlist.h"
+          },
+          "hashes": {
+            "md5": "54fd470823d50eb495092dc62eeb0f58"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenicamlib.h"
+          },
+          "hashes": {
+            "md5": "ffec4605b0213d761c56eb9bef6e49ab"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenparameter.h"
+          },
+          "hashes": {
+            "md5": "b2c4bd9032f6e525a75c5da18f8e9a51"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgentypes.h"
+          },
+          "hashes": {
+            "md5": "23cf291616fc481ef46e287d740fdead"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdeviceinfo.h"
+          },
+          "hashes": {
+            "md5": "e06aa41d56d26b174c84436891a3435d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdeviceenums.h"
+          },
+          "hashes": {
+            "md5": "028ea266449de202b90eb91622fa2ae3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenparameterarray.h"
+          },
+          "hashes": {
+            "md5": "f76470c9a75c5c4d6e275f00a018fd20"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenstring.h"
+          },
+          "hashes": {
+            "md5": "4bb876c33872c5913e0e4da0535805b8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgeninteger.h"
+          },
+          "hashes": {
+            "md5": "383fef76527fe011e6b01036a35aba76"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenenum.h"
+          },
+          "hashes": {
+            "md5": "e9a885f0e440a57e3a500b0adcce4061"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenenumentry.h"
+          },
+          "hashes": {
+            "md5": "a5230eee6dae01e96077ede9e1033d06"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenfloat.h"
+          },
+          "hashes": {
+            "md5": "8fb618f5c4d5ba09ee9fbb5304d0f9ae"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgencommand.h"
+          },
+          "hashes": {
+            "md5": "98b25fa1ad77155864dc0185cc171e75"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenboolean.h"
+          },
+          "hashes": {
+            "md5": "06f13aa082bc9c1e9fe9d1280bd1f1b1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenregister.h"
+          },
+          "hashes": {
+            "md5": "0b91445c158e2ea72882c9dd1fe1ee6b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgencategory.h"
+          },
+          "hashes": {
+            "md5": "e05bee91c5a2df1f0b6876f03c1318d0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvsystem.h"
+          },
+          "hashes": {
+            "md5": "f83f8b3c5404c960720a45faf42a00de"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvsystemeventsink.h"
+          },
+          "hashes": {
+            "md5": "68031ca5cc2da689c4791913973fcf22"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvnetworkadapter.h"
+          },
+          "hashes": {
+            "md5": "f72c6713fa70ee6aa595f3012d2d9fa4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvinterface.h"
+          },
+          "hashes": {
+            "md5": "e64dfdcd4de755fe3bae49e9d65a0e5f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdeviceinfogev.h"
+          },
+          "hashes": {
+            "md5": "9ea22dbc6b5ea874e589c59d8dd1a388"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdeviceinfopleoraprotocol.h"
+          },
+          "hashes": {
+            "md5": "1bed6b5b842dc0bceb6e16a8370d3de5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvusbhostcontroller.h"
+          },
+          "hashes": {
+            "md5": "3658afa739c3d47e0beb913ad313f594"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdeviceinfou3v.h"
+          },
+          "hashes": {
+            "md5": "e72281e5d39a86a6623a0e96399f5f41"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdeviceinfousb.h"
+          },
+          "hashes": {
+            "md5": "743b0bff5ae7ac063dd0fc0ee30f9e6b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdevicegev.h"
+          },
+          "hashes": {
+            "md5": "edf06f376b19d0a0a54cc7f625d7bf4d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvdevicefinderwnd.h"
+          },
+          "hashes": {
+            "md5": "8ff3df55adbfd969987160cc14f94081"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvguilib.h"
+          },
+          "hashes": {
+            "md5": "6a53b4668658cdca0fdfbb0ac4f6ce81"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvwnd.h"
+          },
+          "hashes": {
+            "md5": "0dc3a68b2ac6e4f1c439d79db1d48dab"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenbrowserwnd.h"
+          },
+          "hashes": {
+            "md5": "128dc0e42a8f1896e2cc281257d48766"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvpropertylist.h"
+          },
+          "hashes": {
+            "md5": "0c4a11fa6f81b0c83c73737b3252766b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvpersistencelib.h"
+          },
+          "hashes": {
+            "md5": "4c6cc6017ceb41ff1d1e95a854c834ed"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvproperty.h"
+          },
+          "hashes": {
+            "md5": "757889b5d86bb3e48a26c436630de189"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvbuffer.h"
+          },
+          "hashes": {
+            "md5": "8ae6e2d4b60095809e45ecc80dcfed44"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvbufferlib.h"
+          },
+          "hashes": {
+            "md5": "f159c214103321f951b0ada94a4be594"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvpixeltype.h"
+          },
+          "hashes": {
+            "md5": "b76c79a6a7f76026da4f9ca0635a176e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvpayloadtype.h"
+          },
+          "hashes": {
+            "md5": "118a36bd3e18ffa464a8227ddb256a7b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvimage.h"
+          },
+          "hashes": {
+            "md5": "fa5c1d75acf2bf03e18a80e3b7d131e5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvrawdata.h"
+          },
+          "hashes": {
+            "md5": "f617ee042ab6a1b7493a89d8f8c76125"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvstream.h"
+          },
+          "hashes": {
+            "md5": "1f40c11d2cfdb944bdac72f4359f986a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvstreameventsink.h"
+          },
+          "hashes": {
+            "md5": "3899543370b2d2593450ba3c7b751f5a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvstreamlib.h"
+          },
+          "hashes": {
+            "md5": "018c215d8eed50e12fd0c9c4c835737b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvpipeline.h"
+          },
+          "hashes": {
+            "md5": "9dca0a9e80d7357d0d79cfab57fcfccf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvpipelineeventsink.h"
+          },
+          "hashes": {
+            "md5": "70e40ea57b4e7fa0a3d3b7ed6cd91b29"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvgenstatestack.h"
+          },
+          "hashes": {
+            "md5": "e1042ad74b3c5d59a3e580cfac9440ac"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/includes/pvstreamgev.h"
+          },
+          "hashes": {
+            "md5": "2f1a00ad39f7d981aa0e17b4cfa01424"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/mdscolorpalette.h"
+          },
+          "hashes": {
+            "md5": "b52d81d8d5ccbe769074aa8ca2b4205a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/judgestatusdlg.h"
+          },
+          "hashes": {
+            "md5": "64d493986b8c3efcfbf950df981153ea"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/share/Test_Version/FLIR_CamSDKforCpp/MDS_E-bus_Sample/MDS_E-bus_SampleDlg.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "md5": "310a4b085d930703a0e00a35f3ef1aba"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/mds_e-bus_sample.h"
+          },
+          "hashes": {
+            "md5": "6d8c044addced6ba1e7b4f3bb748d9b6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/cameramanager.h"
+          },
+          "hashes": {
+            "md5": "5976939ff4b6896853ee5ccafa61a3be"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/share/test_version/flir_camsdkforcpp/mds_e-bus_sample/cameracontrol_rev.h"
+          },
+          "hashes": {
+            "md5": "2a380d576ea60aa830d74f89d48b4315"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -6,8 +6,8 @@
 #define IDD_ABOUTBOX                    100
 #define IDD_MDS_MAIN_DLG                102
 #define IDR_MAINFRAME                   128
-#define IDB_LOGO                        130
 #define IDD_DLG_JUDGE                   142
+#define IDB_LOGO                        146
 #define IDC_DISPLAYPOS                  1000
 #define IDC_BTN_STOP                    1001
 #define IDC_BTN_START                   1002
@@ -66,11 +66,43 @@
 #define IDC_EDIT_SCALE                  1055
 #define IDC_EDIT_SCALE2                 1056
 #define IDC_EDIT_SCALE3                 1057
+#define IDC_BTN_OPEN_DATA_FOLDER        1059
 #define IDC_CAM1_RECORDING              1060
 #define IDC_CAM2_RECORDING              1061
 #define IDC_CAM3_RECORDING              1062
 #define IDC_CAM4_RECORDING              1063
-#define IDC_BTN_OPEN_DATA_FOLDER        1064
+#define IDC_STATIC1                     1064
+#define IDC_STATIC2                     1065
+#define IDC_STATIC3                     1066
+#define IDC_STATIC4                     1067
+#define IDC_STATIC5                     1068
+#define IDC_STATIC6                     1069
+#define IDC_STATIC7                     1070
+#define IDC_STATIC8                     1071
+#define IDC_STATIC9                     1072
+#define IDC_STATIC10                    1073
+#define IDC_STATIC11                    1074
+#define IDC_STATIC12                    1075
+#define IDC_STATIC13                    1076
+#define IDC_STATIC14                    1077
+#define IDC_STATIC15                    1078
+#define IDC_STATIC16                    1079
+#define IDC_STATIC17                    1080
+#define IDC_STATIC18                    1081
+#define IDC_STATIC19                    1082
+#define IDC_STATIC20                    1083
+#define IDC_STATIC21                    1084
+#define IDC_STATIC22                    1085
+#define IDC_STATIC23                    1086
+#define IDC_STATIC24                    1087
+#define IDC_STATIC25                    1088
+#define IDC_STATIC26                    1089
+#define IDC_STATIC27                    1090
+#define IDC_STATIC28                    1091
+#define IDC_STATIC29                    1092
+#define IDC_STATIC30                    1093
+#define IDC_STATIC31                    1095
+#define IDC_STATIC32                    1096
 #define IDC_RADIO_CAM1                  1100
 #define IDC_RADIO_CAM2                  1101
 #define IDC_RADIO_CAM3                  1102
@@ -85,9 +117,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_RESOURCE_VALUE        147
 #define _APS_NEXT_COMMAND_VALUE         32772
-#define _APS_NEXT_CONTROL_VALUE         1059
+#define _APS_NEXT_CONTROL_VALUE         1097
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

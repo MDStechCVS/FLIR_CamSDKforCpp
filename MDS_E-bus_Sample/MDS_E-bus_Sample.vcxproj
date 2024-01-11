@@ -360,6 +360,7 @@
     <ClInclude Include="SkinButton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TransparentStatic.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraManager.cpp" />
@@ -372,6 +373,7 @@
     <ClCompile Include="MDS_E-bus_SampleDlg.cpp" />
     <ClCompile Include="SkinButton.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="TransparentStatic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MDS_E-bus_Sample.rc" />

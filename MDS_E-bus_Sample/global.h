@@ -35,6 +35,7 @@
 #include <PvStreamGEV.h>
 #include <algorithm>
 #include "MDSColorpalette.h"
+#include "TransparentStatic.h"
 
 
 /*----------메모리 누수 검사--------------*/
@@ -53,8 +54,8 @@
 #define GREEN      RGB(  0,127,  0)
 #define BLUE       RGB(  0,  0,127)
 #define LIGHTRED   RGB(255,  0,  0)
-#define LIGHTGREEN RGB(  0,255,  0)
-#define LIGHTBLUE  RGB(  0,  0,255)
+#define LIGHTGREEN RGB(  51,255,  51)
+#define LIGHTBLUE  RGB(  70,  163,210)
 #define BLACK      RGB(  0,  0,  0)
 #define WHITE      RGB(255,255,255)
 #define GRAY       RGB(192,192,192)
@@ -107,6 +108,9 @@
 
 #define FAHRENHEIT 273.15f
 
+
+const UINT_PTR TIMER_ID_GUI_UPDATE = 1000;
+const UINT_PTR TIMER_ID_OTHER_TASK = 2000;
 
 // 색상을 RGBA 형식으로 표현하기 위한 구조체
 typedef struct RGBA 

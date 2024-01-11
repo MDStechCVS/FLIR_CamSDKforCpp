@@ -123,8 +123,7 @@ bool CameraControl_rev::Camera_destroy()
 // =============================================================================
 void CameraControl_rev::CameraDisconnect()
 {
-    //녹화 중지
-    StopRecording();
+
     // 카메라 정지
     CameraStop(GetCamIndex());
 
@@ -394,7 +393,7 @@ bool CameraControl_rev::AcquireParameter(PvDevice* aDevice, PvStream* aStream, P
     else
     {
         // 설정 성공 처리
-        strLog.Format(_T("Streaming Camera Parameters Set Success "));
+        strLog.Format(_T("[Camera[%d]] Streaming Parameters Set Success "), nIndex+1);
         Common::GetInstance()->AddLog(0, strLog);
     }
 
@@ -616,6 +615,7 @@ void CameraControl_rev::ImageProcessing(PvBuffer* aBuffer, int nIndex)
         // ROI 이미지를 cv::Mat으로 변환
 
     }
+
     if (roiData != nullptr)
     {
         cv::Mat roiMat(roi.height, roi.width, dataType, roiData.get());
@@ -651,7 +651,6 @@ void CameraControl_rev::ImageProcessing(PvBuffer* aBuffer, int nIndex)
 
     // 일정 간격으로 이미지, 로우데이터 자동 저장 
     SaveFilePeriodically(m_TempData, processedImageMat);
-
 
     //녹화 대기 함수
     ProcessAndRecordFrame(processedImageMat, nWidth, nHeight);
@@ -894,12 +893,12 @@ UINT CameraControl_rev::ThreadCam(LPVOID _mothod)
     PvResult lOperationResult = -1; // 작업 결과 변수 초기화
     CMDS_Ebus_SampleDlg* MainDlg = (CMDS_Ebus_SampleDlg*)item->param; // 메인 대화상자 인스턴스
     
-    bool bFlag = false; // 쓰레드 실행 플래그 초기화
+    bool bThreadFlag = false; // 쓰레드 실행 플래그 초기화
 
     while (CamClass->m_TStatus == THREAD_RUNNING) // 쓰레드가 실행 중인 동안 반복
     {
-        bFlag = CamClass->m_bThreadFlag; // 쓰레드 플래그 값 가져오기
-        if (bFlag)
+        bThreadFlag = CamClass->m_bThreadFlag; // 쓰레드 플래그 값 가져오기
+        if (bThreadFlag)
         {
             if (!CamClass->GetReStartFlag()) // 재시작 플래그 확인
             {
@@ -930,12 +929,13 @@ UINT CameraControl_rev::ThreadCam(LPVOID _mothod)
                         CamClass->SetCameraFPS(lFrameRateVal);
 
                         CamClass->m_Pipeline->ReleaseBuffer(lBuffer);
-
-                        if (CamClass->GetRunningFlag() && CamClass->m_TStatus == THREAD_RUNNING)
+                        // 러닝 플래그와 쓰레드 플레그를 중복 체크하여 이미지 처리 함수를 호출한다
+                        if (CamClass->GetRunningFlag() && bThreadFlag == TRUE)
+                        {
                             CamClass->ImageProcessing(lBuffer, nIndex);
-
-                        CamClass->SetReStartFlag(false);
-                        CamClass->SetRunningFlag(true);
+                            CamClass->SetReStartFlag(false);
+                            CamClass->SetRunningFlag(true);
+                        }                         
                     }
                     else
                     {
@@ -1023,6 +1023,9 @@ bool CameraControl_rev::CameraStop(int nIndex)
         SetRunningFlag(false);
         SetThreadFlag(false);
         SetStartFlag(true);
+        //녹화 중지
+        if (GetStartRecordingFlag())
+            StopRecording();
     }
 
     if (bFlag[1] == true && bFlag[0] == true)
@@ -2362,6 +2365,7 @@ bool CameraControl_rev::SaveImageWithTimestamp(const cv::Mat& image)
     return true;
 }
 
+// =============================================================================
 bool CameraControl_rev::SaveRawDataWithTimestamp(const cv::Mat& rawData)
 {
     std::string basePath = GetRawSavePath(); // Raw 데이터 저장 경로
@@ -2413,7 +2417,7 @@ void CameraControl_rev::SaveFilePeriodically(cv::Mat& rawdata, cv::Mat& imagedat
 
     int seconds = m_nSaveInterval * 60;
 
-    if (elapsedSeconds >= seconds) // 300초 = 5분
+    if (elapsedSeconds >= seconds) //
     {
         // 추가: Mat 객체를 JPEG, tmp 파일로 저장
 

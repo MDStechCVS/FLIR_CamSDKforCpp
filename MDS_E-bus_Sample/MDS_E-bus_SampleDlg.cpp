@@ -9,7 +9,7 @@
 #include "CameraManager.h"
 #include "CameraControl_rev.h"
 
-JudgeStatusDlg* dlg;
+JudgeStatusDlg* Judgedlg;
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -17,8 +17,6 @@ static char THIS_FILE[] = __FILE__;
 #endif
 // END
 ////////////////////////////////////
-
-
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
@@ -37,6 +35,7 @@ public:
 // 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -49,21 +48,29 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+    ON_WM_DRAWITEM()
 END_MESSAGE_MAP()
 
 
 // CMDS_Ebus_SampleDlg 대화 상자
-
-
 // =============================================================================
+// 라벨 변수초기화 추가
 CMDS_Ebus_SampleDlg::CMDS_Ebus_SampleDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_MDS_MAIN_DLG, pParent)
-	, m_NeedInit(TRUE)
-	, m_DeviceWnd(NULL)
-	, m_CommunicationWnd(NULL)
-	, m_StreamParametersWnd(NULL)
+    : CDialogEx(IDD_MDS_MAIN_DLG, pParent)
+    , m_NeedInit(TRUE)
+    , m_DeviceWnd(NULL)
+    , m_CommunicationWnd(NULL)
+    , m_StreamParametersWnd(NULL)
+    , m_LbCamInfo{
+        { m_LbCam1fps, m_LbCam1min, m_LbCam1max, m_LbCam1ROI, m_LbCam1ConnectStatus, m_LbCam1RecordingStatus },
+        { m_LbCam2fps, m_LbCam2min, m_LbCam2max, m_LbCam2ROI, m_LbCam2ConnectStatus, m_LbCam2RecordingStatus },
+        { m_LbCam3fps, m_LbCam3min, m_LbCam3max, m_LbCam3ROI, m_LbCam3ConnectStatus, m_LbCam3RecordingStatus },
+        { m_LbCam4fps, m_LbCam4min, m_LbCam4max, m_LbCam4ROI, m_LbCam4ConnectStatus, m_LbCam4RecordingStatus }
+}
 
 {
+
+
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -116,14 +123,14 @@ void CMDS_Ebus_SampleDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_STATIC_CAM2_ROI, m_LbCam2ROI);
     DDX_Control(pDX, IDC_STATIC_CAM3_ROI, m_LbCam3ROI);
     DDX_Control(pDX, IDC_STATIC_CAM4_ROI, m_LbCam4ROI);
-    DDX_Control(pDX, IDC_CAM1_IS_CONNECT, m_Cam1ConnectStatus);
-    DDX_Control(pDX, IDC_CAM2_IS_CONNECT, m_Cam2ConnectStatus);
-    DDX_Control(pDX, IDC_CAM3_IS_CONNECT, m_Cam3ConnectStatus);
-    DDX_Control(pDX, IDC_CAM4_IS_CONNECT, m_Cam4ConnectStatus);
-    DDX_Control(pDX, IDC_CAM1_RECORDING, m_Cam1RecordingStatus);
-    DDX_Control(pDX, IDC_CAM2_RECORDING, m_Cam2RecordingStatus);
-    DDX_Control(pDX, IDC_CAM3_RECORDING, m_Cam3RecordingStatus);
-    DDX_Control(pDX, IDC_CAM4_RECORDING, m_Cam4RecordingStatus);
+    DDX_Control(pDX, IDC_CAM1_IS_CONNECT, m_LbCam1ConnectStatus);
+    DDX_Control(pDX, IDC_CAM2_IS_CONNECT, m_LbCam2ConnectStatus);
+    DDX_Control(pDX, IDC_CAM3_IS_CONNECT, m_LbCam3ConnectStatus);
+    DDX_Control(pDX, IDC_CAM4_IS_CONNECT, m_LbCam4ConnectStatus);
+    DDX_Control(pDX, IDC_CAM1_RECORDING, m_LbCam1RecordingStatus);
+    DDX_Control(pDX, IDC_CAM2_RECORDING, m_LbCam2RecordingStatus);
+    DDX_Control(pDX, IDC_CAM3_RECORDING, m_LbCam3RecordingStatus);
+    DDX_Control(pDX, IDC_CAM4_RECORDING, m_LbCam4RecordingStatus);
     DDX_Control(pDX, IDC_LOGO, m_logo);
     DDX_Control(pDX, IDC_PROGRESS1, m_progress);
     DDX_Control(pDX, IDC_RADIO_CAM1, m_radio);
@@ -181,9 +188,10 @@ BEGIN_MESSAGE_MAP(CMDS_Ebus_SampleDlg, CDialogEx)
     ON_CONTROL(STN_CLICKED, IDC_CAM2_RECORDING, &CMDS_Ebus_SampleDlg::OnStnClickedCam1Recording)
     ON_CONTROL(STN_CLICKED, IDC_CAM3_RECORDING, &CMDS_Ebus_SampleDlg::OnStnClickedCam1Recording)
     ON_CONTROL(STN_CLICKED, IDC_CAM4_RECORDING, &CMDS_Ebus_SampleDlg::OnStnClickedCam1Recording)
-
     ON_BN_CLICKED(IDC_BTN_IMG_SNAP, &CMDS_Ebus_SampleDlg::OnBnClickedBtnImgSnap)
     ON_BN_CLICKED(IDC_BTN_IMG_RECORDING, &CMDS_Ebus_SampleDlg::OnBnClickedBtnImgRecording)
+    ON_WM_DRAWITEM()
+    ON_CBN_DROPDOWN(IDC_CB_CAM1_COLORMAP, &CMDS_Ebus_SampleDlg::OnCbnDropdownCbCam1Colormap)
 END_MESSAGE_MAP()
 
 
@@ -199,15 +207,12 @@ BOOL CMDS_Ebus_SampleDlg::OnInitDialog()
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
-
 	// 이 대화 상자의 아이콘을 설정합니다.  응용 프로그램의 주 창이 대화 상자가 아닐 경우에는
 	//  프레임워크가 이 작업을 자동으로 수행합니다.
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-    
     
     //시스템 파라미터 설정
     InitSystemParam();
@@ -222,13 +227,17 @@ BOOL CMDS_Ebus_SampleDlg::OnInitDialog()
     // 이니셜 대기 창 활성화
     ShowJudgeDlg();
 
-    gui_status = (GUI_STATUS)GUI_STEP_IDLE;
+    gui_status = GUI_STATUS::GUI_STEP_IDLE;
 
     m_radio.SetCheck(true);
     m_ch_Cam1_ROI_CheckBox.SetCheck(true);
+    SetTransparentStatic_ControlsFont();
 
     // GUI타이머 시작
-    SetTimer(1000, 500, NULL);
+    SetTimer(TIMER_ID_GUI_UPDATE, 500, NULL);
+
+    //gui 타이머를 감시하는 타이머로 설정
+    SetTimer(TIMER_ID_OTHER_TASK, 2000, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -245,7 +254,6 @@ void CMDS_Ebus_SampleDlg::InitSystemParam()
     m_brush = new CBrush(WHITE);
     m_brush2 = new CBrush(BLACK);
 
-    SetWindowTheme(GetDlgItem(IDC_STATIC)->m_hWnd, _T(""), _T(""));
     ShowWindow(SW_SHOWMAXIMIZED);
     Common::GetInstance()->CreateLog(&m_List_Log);
 
@@ -256,28 +264,13 @@ void CMDS_Ebus_SampleDlg::InitSystemParam()
     m_bGreen.CreateSolidBrush(m_Color2);
     m_bYellow.CreateSolidBrush(m_Color3);
 
-
-    //m_basefont.CreateFont(25, 0, 0, 0, FW_BOLD,
-    //    FALSE, FALSE, FALSE,
-    //    DEFAULT_CHARSET,
-    //    OUT_DEFAULT_PRECIS,
-    //    CLIP_DEFAULT_PRECIS,
-    //    DEFAULT_QUALITY,
-    //    FF_DONTCARE,
-    //    _T("맑은고딕"));
-
-    //m_Btnfont.CreateFont(16, 0, 0, 0, FW_BOLD,
-    //    FALSE, FALSE, FALSE,
-    //    DEFAULT_CHARSET,
-    //    OUT_DEFAULT_PRECIS,
-    //    CLIP_DEFAULT_PRECIS,
-    //    DEFAULT_QUALITY,
-    //    FF_DONTCARE,
-    //    _T("맑은고딕"));
-
+    SetTransparentStatic_ControlsFont();
     Btn_Interface_setting();
 
     RadioCtrl(IDC_RADIO_CAM1);
+
+    // GUI 타이머 동작 상애 체크변수 초기화
+    m_bGUITimerActive = false;
 
 }
 
@@ -365,19 +358,19 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnStart()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
-    if (m_CamManager != NULL)
+    if (m_CamManager != nullptr)
     {
         int nIndex = GetSelectCamIndex();
-        m_CamManager->m_Cam[nIndex]->CameraStart(nIndex);
+        if (m_CamManager->m_Cam[nIndex]->GetRunningFlag() == FALSE)
+        {
+            m_CamManager->m_Cam[nIndex]->CameraStart(nIndex);
+            this->EnableWindow(TRUE);
+            this->SetFocus();
+
+            UpdateWindow();
+        }
+
     }
- 
-  /*  SetBtnEnabled(true, &m_BtnStop);
-    SetBtnEnabled(false, &m_BtnStart);*/
-
-    this->EnableWindow(TRUE);
-    this->SetFocus();
-
-    UpdateWindow();
 }
 
 // =============================================================================
@@ -393,11 +386,11 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnStop()
         if (m_CamManager->m_Cam[nIndex] != NULL)
         {
             m_CamManager->m_Cam[nIndex]->CameraStop(nIndex);
+
         }
     }
 
-    Common::GetInstance()->AddLog(0, _T("All Camera Streaming Stop"));
-
+    Common::GetInstance()->AddLog(0, _T("Camera[%d] Streaming Stop"), nIndex +1);
 
     //SetBtnEnabled(false, &m_BtnStop);
     //SetBtnEnabled(true, &m_BtnStart);
@@ -454,10 +447,10 @@ void CMDS_Ebus_SampleDlg::OnDestroy()
     m_bGreen.DeleteObject();
     m_bYellow.DeleteObject();
 
-    if (dlg != NULL)
+    if (Judgedlg != NULL)
     {
-        delete dlg;
-        dlg = NULL;
+        delete Judgedlg;
+        Judgedlg = NULL;
     }
     
     Common::GetInstance()->AddLog(1, _T("Program Destroy"));
@@ -630,49 +623,10 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnDisconnect()
         Common::GetInstance()->AddLog(0, _T("------------------------------------"));
     }
     
-
     this->EnableWindow(TRUE);
     this->SetFocus();
 
     UpdateWindow();
-}
-
-// =============================================================================
-void CMDS_Ebus_SampleDlg::UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFps, CStatic& lbMin, CStatic& lbMax, CStatic& lbROI, CStatic& lbConnectStatus, CStatic& lbRecordingStatus)
-{
-    if (cam != nullptr) 
-    {
-        CString strResult;
-
-        strResult.Format(_T("%.2f"), cam->GetCameraFPS());
-        lbFps.SetWindowText(strResult);
-
-        strResult.Format(_T("[%d]"), cam->m_MinSpot.tempValue);
-        lbMin.SetWindowText(strResult);
-
-        strResult.Format(_T("[%d]"), cam->m_MaxSpot.tempValue);
-        lbMax.SetWindowText(strResult);
-
-        cv::Rect rt = cam->m_Select_rect;
-        strResult.Format(_T("X = [%d] Y = [%d] W = [%d] H = [%d], pixel size = [%d]"),
-            rt.x, rt.y, rt.width, rt.height, rt.width * rt.height);
-        lbROI.SetWindowText(strResult);
-        
-        if (cam != nullptr)
-        {
-            if (cam->GetStartRecordingFlag())
-            {
-                m_blink[cam->GetCamIndex()] = !m_blink[cam->GetCamIndex()];
-            }             
-        }
-            
-
-        lbConnectStatus.Invalidate();
-        lbConnectStatus.UpdateWindow();
-
-        lbRecordingStatus.Invalidate();
-        lbRecordingStatus.UpdateWindow();
-    }
 }
 
 // =============================================================================
@@ -682,54 +636,50 @@ void CMDS_Ebus_SampleDlg::OnTimer(UINT_PTR nIDEvent)
 
     CDialogEx::OnTimer(nIDEvent);
 
-    if (gui_status == GUI_STEP_IDLE && m_CamManager != nullptr)
+    if (nIDEvent == TIMER_ID_OTHER_TASK)
     {
-        int nDeviceCnt = m_CamManager->GetDeviceCount();
-
-        if (Common::GetInstance()->GetAutoStartFlag())
+        if (m_bGUITimerActive)
         {
-            if (nDeviceCnt > 0)
-            {
-                m_CamManager->CameraAllStart(this);
-            }
+            // 1번 타이머가 동작 중인 경우
+            // 필요한 작업 수행
         }
         else
         {
-            for (int i = 0; i < nDeviceCnt; i++)
-            {
-                m_CamManager->CreateCamera(i);
-            }
+            SetTimer(TIMER_ID_GUI_UPDATE, 500, NULL);
         }
     }
-
-    if (m_CamManager->GetDeviceCount() > 0) 
+    else if (nIDEvent == TIMER_ID_GUI_UPDATE)
     {
-        CString strCnt;
-        strCnt.Format(_T("%d"), m_CamManager->GetDeviceCount());
-        m_LbCamCount.SetWindowText(strCnt);
+        try 
+        {
+            // Check if the camera manager is available
+            if (m_CamManager == nullptr) return;
 
-        UpdateCameraInfo(m_CamManager->m_Cam[CAM_1], m_LbCam1fps, m_LbCam1min, m_LbCam1max, m_LbCam1ROI, m_Cam1ConnectStatus, m_Cam1RecordingStatus);
-        UpdateCameraInfo(m_CamManager->m_Cam[CAM_2], m_LbCam2fps, m_LbCam2min, m_LbCam2max, m_LbCam2ROI, m_Cam2ConnectStatus, m_Cam2RecordingStatus);
-        UpdateCameraInfo(m_CamManager->m_Cam[CAM_3], m_LbCam3fps, m_LbCam3min, m_LbCam3max, m_LbCam3ROI, m_Cam3ConnectStatus, m_Cam3RecordingStatus);
-        UpdateCameraInfo(m_CamManager->m_Cam[CAM_4], m_LbCam4fps, m_LbCam4min, m_LbCam4max, m_LbCam4ROI, m_Cam4ConnectStatus, m_Cam4RecordingStatus);
- 
-    }
+            // 연결된 장치 수 확인 및 카메라 자동 시작
+            int nDeviceCnt = m_CamManager->GetDeviceCount();
+            CameraAutoStart(nDeviceCnt);
 
-    static int progressValue = 0;
-    if (gui_status == GUI_STEP_RUN)
-    {
-        CloseJudgeDlg();
+            // 각 카메라의 정보 업데이트
+            for (int i = 0; i < nDeviceCnt; i++)
+            {
+                UpdateCameraInfo(m_CamManager->m_Cam[i], m_LbCamInfo[i]);
+                m_LbCamInfo[i].lbConnectStatus.SetWindowTextW(m_CamManager->m_strSetModelName.at(i));
+                InvalidateLabels(m_LbCamInfo[i]);
+            }
 
-         // 정적 변수로 현재 진행 상태를 유지
-        progressValue = (progressValue + 1) % 101; // 0에서 100까지 순환
-        m_progress.SetPos(progressValue);
+            // dlg 업데이트
+            UpdateWindow();
 
-    }
-    else if(gui_status == GUI_STATUS::GUI_STEP_STOP || gui_status == GUI_STATUS::GUI_STEP_DISCONNECT
-        || gui_status == GUI_STATUS::GUI_STEP_ERROR)
-    {
-        m_progress.SetPos(0);
-        progressValue = 0;
+            // Progress 진행 상태 업데이트
+            UpdateProgressValue();
+
+            m_bGUITimerActive = true;
+        }
+        catch (const std::exception& e) 
+        {
+            // 예외 처리
+        }
+
     }
 }
 
@@ -770,22 +720,34 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
     // TODO:  여기서 DC의 특성을 변경합니다.
 
-
     // TODO:  기본값이 적당하지 않으면 다른 브러시를 반환합니다.
     UINT nID = pWnd->GetDlgCtrlID();
 
     switch (nCtlColor)
     {
-       
+    case CTLCOLOR_DLG:
+        pDC->SetTextColor(BLACK);
+        pDC->SelectStockObject(BLACK);
+        //pDC->SetBkColor(WHITE);
+        hbr = (HBRUSH)GetStockObject(NULL_BRUSH);
+        return (HBRUSH)(m_brush2->GetSafeHandle());
+
     case CTLCOLOR_BTN:
-    case CTLCOLOR_EDIT:
-    case CTLCOLOR_LISTBOX:
         switch (nID)
         {
+        }
+
+    case CTLCOLOR_EDIT:
+    case CTLCOLOR_LISTBOX:
+
+        switch (nID)
+        {
+
         case IDC_LIST_LOG:
             pDC->SetTextColor(WHITE);
             pDC->SelectStockObject(WHITE_PEN);
             pDC->SetBkColor(BLACK);
+            pDC->SetBkMode(TRANSPARENT);
             return (HBRUSH)(m_brush2->GetSafeHandle());
 
         }
@@ -793,6 +755,7 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
     case CTLCOLOR_STATIC:
         switch (nID) 
         {
+       
         case IDC_CAM1_IS_CONNECT:
             if(m_CamManager->m_Cam[CAM_1] != nullptr)
                 return SetCameraFlagStatus(CAM_1, m_CamManager, m_CamManager->m_Cam[CAM_1]->GetRunningFlag(), pDC, m_bGreen, m_bRed);
@@ -813,15 +776,85 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
             return HandleCameraRecordingStatus(CAM_3, pDC);
         case IDC_CAM4_RECORDING:
             return HandleCameraRecordingStatus(CAM_4, pDC);
-        }
-    case CTLCOLOR_DLG:
-        pDC->SetTextColor(BLACK);
-        pDC->SelectStockObject(BLACK_PEN);
-        pDC->SetBkColor(WHITE);
-        hbr = (HBRUSH)GetStockObject(WHITE_BRUSH);
-        return (HBRUSH)(m_brush->GetSafeHandle());
-    }
+        
+        case IDC_RADIO_CAM1:
+        case IDC_RADIO_CAM2:
+        case IDC_RADIO_CAM3:
+        case IDC_RADIO_CAM4:
+        case IDC_CK_UYVY:
+        case IDC_CK_COLORMAP:
+        case IDC_CK_MESSAGE:
+        case IDC_CK_MONO:
+        case IDC_CK_CAM1_ROI:
+        case IDC_STATIC1:
+        case IDC_STATIC2:
+        case IDC_STATIC3:
+        case IDC_STATIC4:
+        case IDC_STATIC5:
+        case IDC_STATIC6:
+        case IDC_STATIC7:
+        case IDC_STATIC8:
+        case IDC_STATIC9:
+        case IDC_STATIC10:
+        case IDC_STATIC11:
+        case IDC_STATIC12:
+        case IDC_STATIC13:
+        case IDC_STATIC14:
+        case IDC_STATIC15:
+        case IDC_STATIC16:
+        case IDC_STATIC17:
+        case IDC_STATIC18:
+        case IDC_STATIC19:
+        case IDC_STATIC20:
+        case IDC_STATIC21:
+        case IDC_STATIC22:
+        case IDC_STATIC23:
+        case IDC_STATIC24:
+        case IDC_STATIC25:
+        case IDC_STATIC26:
+        case IDC_STATIC27:
+        case IDC_STATIC28:
+        case IDC_STATIC29:
+        case IDC_STATIC30:
+        case IDC_STATIC31:
+        case IDC_STATIC32:
+            pDC->SetTextColor(LIGHTBLUE);
+            pDC->SetBkMode(TRANSPARENT);
+            return (HBRUSH)::GetStockObject(NULL_BRUSH);       
 
+        case IDC_STATIC_CAM1_ROI:
+        case IDC_STATIC_CAM2_ROI:
+        case IDC_STATIC_CAM3_ROI:
+        case IDC_STATIC_CAM4_ROI:
+        case IDC_STATIC_CAM1_Min:
+        case IDC_STATIC_CAM1_Max:
+        case IDC_STATIC_CAM2_Min:
+        case IDC_STATIC_CAM2_Max:
+        case IDC_STATIC_CAM3_Min:
+        case IDC_STATIC_CAM3_Max:
+        case IDC_STATIC_CAM4_Min:
+        case IDC_STATIC_CAM4_Max:
+        case IDC_STATIC_CAM1_FPS:
+        case IDC_STATIC_CAM2_FPS:
+        case IDC_STATIC_CAM3_FPS:
+        case IDC_STATIC_CAM4_FPS:
+        case IDCLOSE:
+        case IDC_STATIC_CAMCOUNT:
+        case IDC_STATIC:
+            pDC->SetTextColor(LIGHTGREEN);
+            pDC->SetBkMode(TRANSPARENT);
+            return (HBRUSH)::GetStockObject(NULL_BRUSH); 
+
+        case IDC_CB_CAM1_COLORMAP:
+        case IDC_CB_CAM2_COLORMAP:
+        case IDC_CB_CAM3_COLORMAP:
+        case IDC_CB_CAM4_COLORMAP:
+            pDC->SetTextColor(LIGHTGREEN);           
+            pDC->SetBkColor(BLACK);
+            pDC->SetBkMode(TRANSPARENT);
+            return (HBRUSH)(m_brush2->GetSafeHandle());
+        }
+    }
     return hbr;
 }
 
@@ -905,6 +938,57 @@ void CMDS_Ebus_SampleDlg::OnBnClickedCkParam()
 void CMDS_Ebus_SampleDlg::Btn_Interface_setting()
 {
     /*m_BtnDeviceCtrl.SetFont(&m_basefont, true);*/
+
+
+    SetWindowTheme(this->GetDlgItem(IDC_RADIO_CAM1)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_RADIO_CAM2)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_RADIO_CAM3)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_RADIO_CAM4)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CK_UYVY)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CK_COLORMAP)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CK_MESSAGE)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CK_MONO)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CK_CAM1_ROI)->GetSafeHwnd(), L"", L"");
+
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM1_ROI)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM2_ROI)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM3_ROI)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_ROI)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM1_Min)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM1_Max)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM2_Min)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM2_Max)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM3_Min)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM3_Max)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_Min)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_Max)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_ROI)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM1_FPS)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM2_FPS)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM3_FPS)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_FPS)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM3_Max)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_Min)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_Max)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_ROI)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM1_FPS)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM2_FPS)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM3_FPS)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAM4_FPS)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC_CAMCOUNT)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDCLOSE)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CAM1_RECORDING)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CAM2_RECORDING)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CAM3_RECORDING)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CAM4_RECORDING)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CB_CAM1_COLORMAP)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CB_CAM2_COLORMAP)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CB_CAM3_COLORMAP)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_CB_CAM4_COLORMAP)->GetSafeHwnd(), L"", L"");
+    
+
+
+    
 
     m_BtnDeviceCtrl.SetText(_T("Device"));
     m_BtnCommunicationCtrl.SetText(_T("Comm"));
@@ -1531,6 +1615,9 @@ void CMDS_Ebus_SampleDlg::OnCbnSelchangeCam4()
 // =============================================================================
 void CMDS_Ebus_SampleDlg::HandleComboChange(int controlId)
 {
+
+
+    
     int comboIndex = -1; // 초기화
     switch (controlId)
     {
@@ -1560,13 +1647,16 @@ void CMDS_Ebus_SampleDlg::HandleComboChange(int controlId)
     {
         PaletteTypes selectedMap = GetSelectedColormap(*pComboBox);
         ApplyColorSettings(selectedMap, comboIndex);
+        pComboBox->RedrawWindow();
+        pComboBox->Invalidate();
+        pComboBox->UpdateData();
     }
 }
 
 // =============================================================================
 void CMDS_Ebus_SampleDlg::ApplyColorSettings(PaletteTypes selectedMap, int comboIndex)
 {
-    if (comboIndex > -1 && m_CamManager->GetDeviceCount() > 0)
+    if (comboIndex > -1 && m_CamManager->m_Cam[comboIndex] != nullptr)
     {
         m_CamManager->m_Cam[comboIndex]->SetPaletteType(selectedMap);
     }
@@ -1587,12 +1677,18 @@ void CMDS_Ebus_SampleDlg::PopulateComboBoxes()
     for (int i = 0; i < sizeof(comboBoxes) / sizeof(comboBoxes[0]); ++i)
     {
         CComboBox* combo = comboBoxes[i];
+        combo->ModifyStyle(0, CBS_OWNERDRAWFIXED);
         for (int j = 0; j < arrayLength; ++j)
         {
+            
             combo->AddString(ColormapArray::colormapStrings[j]);
+            combo->SetItemData(j, LIGHTGREEN);
         }
         // 초기 선택값을 설정 (예: 첫 번째 항목을 선택)
         combo->SetCurSel(0); // 초기값 Iron color 
+
+        combo->Invalidate();
+        combo->UpdateData();
     }
 }
 
@@ -1627,9 +1723,9 @@ void CMDS_Ebus_SampleDlg::ShowJudgeDlg()
 {
     if (m_CamManager->GetDeviceCount() > 0)
     {
-        dlg = new JudgeStatusDlg(this);
-        dlg->Create(IDD_DLG_JUDGE, this);
-        dlg->ShowWindow(SW_SHOW);
+        Judgedlg = new JudgeStatusDlg(this);
+        Judgedlg->Create(IDD_DLG_JUDGE, this);
+        Judgedlg->ShowWindow(SW_SHOW);
     }
 
 }
@@ -1637,20 +1733,22 @@ void CMDS_Ebus_SampleDlg::ShowJudgeDlg()
 // =============================================================================
 void CMDS_Ebus_SampleDlg::CloseJudgeDlg()
 {
-    if (dlg->isCancleStatus())
+    if (Judgedlg->isCancleStatus())
         return;
 
-    if (dlg != nullptr && dlg->GetSafeHwnd() != nullptr)
+    if (Judgedlg != nullptr && Judgedlg->GetSafeHwnd() != nullptr)
     {
         if (IsWindowVisible()) 
         {
-            dlg->OnCancel();
+            Judgedlg->OnCancel();
         }
-        else {
+        else 
+        {
             // 윈도우가 숨겨져 있을 때 수행할 작업
         }
     }
-    else {
+    else 
+    {
         // dlg 객체가 유효하지 않거나 윈도우 핸들을 얻을 수 없는 경우 처리
     }
 }
@@ -1764,6 +1862,7 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnImgSnap()
     }
 }
 
+// =============================================================================
 void CMDS_Ebus_SampleDlg::OnBnClickedBtnImgRecording()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -1779,5 +1878,260 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnImgRecording()
         {
             m_CamManager->m_Cam[GetSelectCamIndex()]->StopRecording();
         }
+    }
+}
+
+void CMDS_Ebus_SampleDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
+{
+    // TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+    CDialogEx::OnDrawItem(nIDCtl, lpDrawItemStruct);
+
+    switch (nIDCtl)
+    {
+    case IDC_CB_CAM1_COLORMAP:
+    case IDC_CB_CAM2_COLORMAP:
+    case IDC_CB_CAM3_COLORMAP:
+    case IDC_CB_CAM4_COLORMAP:
+        CDC dc;
+        dc.Attach(lpDrawItemStruct->hDC);
+
+        int nIndex = lpDrawItemStruct->itemID;
+        if (nIndex >= 0) {
+            CComboBox* pComboBox = (CComboBox*)GetDlgItem(nIDCtl);
+            CString strItemText;
+            pComboBox->GetLBText(nIndex, strItemText);
+            COLORREF textColor = pComboBox->GetItemData(nIndex);
+
+            dc.SetTextColor(textColor); // 아이템의 데이터로부터 텍스트 색상 설정
+            dc.SetBkColor(::GetSysColor(COLOR_WINDOW)); // 배경 색상 설정
+
+            dc.TextOut(lpDrawItemStruct->rcItem.left, lpDrawItemStruct->rcItem.top, strItemText);
+        }
+
+        dc.Detach();
+    }
+
+    CDialog::OnDrawItem(nIDCtl, lpDrawItemStruct);
+
+}
+
+// =============================================================================
+void CMDS_Ebus_SampleDlg::RedrawComboBox(int controlId)
+{
+    int comboIndex = -1; // 초기화
+    switch (controlId)
+    {
+    case IDC_CB_CAM1_COLORMAP:
+        comboIndex = CAM_1;
+        break;
+
+    case IDC_CB_CAM2_COLORMAP:
+        comboIndex = CAM_2;
+        break;
+
+    case IDC_CB_CAM3_COLORMAP:
+        comboIndex = CAM_3;
+        break;
+
+    case IDC_CB_CAM4_COLORMAP:
+        comboIndex = CAM_4;
+        break;
+
+    default:
+        comboIndex = CAM_1;
+        break;
+    }
+
+    CComboBox* pComboBox = (CComboBox*)GetDlgItem(controlId);
+    if (pComboBox)
+    {
+        pComboBox->RedrawWindow();
+        pComboBox->Invalidate();
+        pComboBox->UpdateData();
+    }
+}
+
+void CMDS_Ebus_SampleDlg::OnCbnDropdownCbCam1Colormap()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    RedrawComboBox(IDC_CB_CAM1_COLORMAP);
+}
+
+void CMDS_Ebus_SampleDlg::UpdateCameraInfo(CameraControl_rev* cam, CameraInfoLabels& labels)
+{
+    if (cam == nullptr) return;
+
+
+    UpdateLabel(cam->GetCameraFPS(), labels.lbFps);
+    UpdateLabel(cam->m_MinSpot.tempValue, labels.lbMin);
+    UpdateLabel(cam->m_MaxSpot.tempValue, labels.lbMax);
+    UpdateROIInfo(cam, labels.lbROI);
+    
+
+    // 녹화상태 깜빡임 변수
+    if (cam->GetRunningFlag() && cam->GetStartRecordingFlag()) 
+    {
+        m_blink[cam->GetCamIndex()] = !m_blink[cam->GetCamIndex()];
+    }
+
+    
+}
+
+void CMDS_Ebus_SampleDlg::UpdateLabel(double value, CTransparentStatic& label)
+{
+    CString currentText, newText;
+    label.GetText(currentText);
+    newText.Format(_T("%.2f"), value);
+
+    // 텍스트가 변경된 경우에만 업데이트
+    if (currentText != newText)
+    {
+        label.SetText(newText);
+    }
+}
+
+void CMDS_Ebus_SampleDlg::UpdateLabel(int value, CTransparentStatic& label)
+{
+    CString currentText, newText;
+    label.GetText(currentText);
+    newText.Format(_T("[%d]"), value);
+
+    // 텍스트가 변경된 경우에만 업데이트
+    if (currentText != newText)
+    {
+        label.SetText(newText);
+    }
+}
+
+void CMDS_Ebus_SampleDlg::UpdateROIInfo(CameraControl_rev* cam, CTransparentStatic& label)
+{
+    cv::Rect rt = cam->m_Select_rect;
+    CString currentText, newText;
+    label.GetText(currentText);
+    newText.Format(_T("[Position] X [%d] Y [%d] W [%d] H [%d] Pixel Count [%d]"),
+        rt.x, rt.y, rt.width, rt.height, rt.width * rt.height);
+
+    // 텍스트가 변경된 경우에만 업데이트
+    if (currentText != newText)
+    {
+        label.SetText(newText);
+    }
+}
+
+void CMDS_Ebus_SampleDlg::InvalidateLabels(CameraInfoLabels& labels) 
+{
+    labels.lbFps.Invalidate();
+    labels.lbMin.Invalidate();
+    labels.lbMax.Invalidate();
+    labels.lbROI.Invalidate();
+    labels.lbConnectStatus.Invalidate();
+    labels.lbRecordingStatus.Invalidate();
+
+    labels.lbROI.UpdateWindow();
+    labels.lbFps.UpdateWindow();
+    labels.lbMax.UpdateWindow();
+    labels.lbMin.UpdateWindow();
+    labels.lbConnectStatus.UpdateWindow();
+    labels.lbRecordingStatus.UpdateWindow();
+}
+
+void CMDS_Ebus_SampleDlg::CameraAutoStart(int deviceCount)
+{
+    if (gui_status == GUI_STEP_IDLE && deviceCount > 0)
+    {
+        if (Common::GetInstance()->GetAutoStartFlag())
+        {
+            m_CamManager->CameraAllStart(this);
+        }
+        else 
+        {
+            for (int i = 0; i < deviceCount; i++) 
+            {
+                m_CamManager->CreateCamera(i);
+            }
+        }
+    }
+
+    // Update camera count display
+    UpdateLabel(deviceCount, m_LbCamCount);
+
+}
+
+void CMDS_Ebus_SampleDlg::UpdateProgressValue() 
+{
+    static int progressValue = 0;
+
+    if (gui_status == GUI_STEP_RUN) 
+    {
+        CloseJudgeDlg();
+        progressValue = (progressValue + 1) % 101; // 0에서 100까지 순환
+        m_progress.SetPos(progressValue);
+    }
+    else if (gui_status == GUI_STATUS::GUI_STEP_STOP || gui_status == GUI_STATUS::GUI_STEP_DISCONNECT
+        || gui_status == GUI_STATUS::GUI_STEP_ERROR) 
+    {
+        m_progress.SetPos(0);
+        progressValue = 0;
+    }
+}
+
+void CMDS_Ebus_SampleDlg::SetControlsFont()
+{
+
+    m_StaticFont.DeleteObject();
+
+    int nFontHeight = 16;
+    m_StaticFont.CreateFont(
+        nFontHeight,  // 높이
+        0,   // 너비
+        0,   // 이스케이프먼트
+        0,   // 오리엔테이션
+        FW_BOLD,  // 두께
+        FALSE,    // 이탤릭
+        FALSE,    // 밑줄
+        0,        // 취소선
+        ANSI_CHARSET,  // 문자셋
+        OUT_DEFAULT_PRECIS,  // 출력 정밀도
+        CLIP_DEFAULT_PRECIS, // 클리핑 정밀도
+        DEFAULT_QUALITY,  // 품질
+        DEFAULT_PITCH | FF_SWISS,  // 피치와 패밀리
+        _T("Arial"));  // 폰트 이름
+
+
+
+    const int staticControlIDs[] = {
+      IDC_STATIC_CAMCOUNT, IDC_CK_UYVY, IDC_CK_MESSAGE, IDC_CK_MONO, IDC_CK_CAM1_ROI, IDC_CK_COLORMAP,
+      IDC_RADIO_CAM1, IDC_RADIO_CAM2, IDC_RADIO_CAM3, IDC_RADIO_CAM4,
+      IDC_STATIC1, IDC_STATIC2, IDC_STATIC3, IDC_STATIC4, IDC_STATIC5,
+      IDC_STATIC6, IDC_STATIC7, IDC_STATIC8, IDC_STATIC9, IDC_STATIC10,
+      IDC_STATIC11, IDC_STATIC12, IDC_STATIC13, IDC_STATIC14, IDC_STATIC15,
+      IDC_STATIC16, IDC_STATIC17, IDC_STATIC18, IDC_STATIC19, IDC_STATIC20,
+      IDC_STATIC21, IDC_STATIC22, IDC_STATIC23, IDC_STATIC24, IDC_STATIC25,
+      IDC_STATIC26, IDC_STATIC27, IDC_STATIC28, IDC_STATIC29, IDC_STATIC30,
+      IDC_STATIC31, IDC_STATIC32
+    };
+
+    for (int id : staticControlIDs)
+    {
+        CStatic* pStatic = (CStatic*)GetDlgItem(id);
+        if (pStatic != nullptr)
+        {
+            pStatic->SetFont(&m_StaticFont);
+        }
+    }
+}
+
+void CMDS_Ebus_SampleDlg::SetTransparentStatic_ControlsFont()
+{
+    SetControlsFont();
+
+    for (auto& labels : m_LbCamInfo)
+    {
+        labels.lbFps.SetFont(16, TRUE); // 예시로 모든 fps 레이블에 대해 폰트 설정
+        labels.lbMin.SetFont(16, TRUE); // 다른 레이블에 대해서도 동일하게 설정
+        labels.lbMax.SetFont(16, TRUE); // 다른 레이블에 대해서도 동일하게 설정
+        labels.lbROI.SetFont(16, TRUE); // 다른 레이블에 대해서도 동일하게 설정
+        // 이하 동일
     }
 }

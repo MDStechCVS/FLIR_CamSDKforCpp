@@ -164,7 +164,7 @@ void Common::AddLog(int verbosity, LPCTSTR lpszFormat, ...)
 	CString strDate; // 시간 정보를 포맷팅하여 저장할 문자열
 
 	GetLocalTime(&cur_time); // 현재 시간 정보를 가져옴
-	strDate.Format(_T("%02d:%02d:%02d:%03ld"), cur_time.wHour, cur_time.wMinute, cur_time.wSecond, cur_time.wMilliseconds);
+	strDate.Format(_T("%02d:%02d:%02d"), cur_time.wHour, cur_time.wMinute, cur_time.wSecond);
 
 	if (m_csLock.LockCount > -1) // 잠금 횟수를 확인하여 잠겨있지 않은 경우 반환
 		return;
@@ -187,16 +187,16 @@ void Common::AddLog(int verbosity, LPCTSTR lpszFormat, ...)
 		m_fWriteFile.Flush(); // 파일 쓰기 버퍼 비우기
 	}
 
-
 	LPTSTR  lpBuffer = strWriteData.GetBuffer(); // 문자열을 TCHAR 형태로 변환하여 버퍼 얻음
 	strWriteData.ReleaseBuffer();
 
 	HWND listHWnd = ::GetDlgItem(AfxGetMainWnd()->m_hWnd, IDC_LIST_LOG); // 리스트 박스의 핸들을 얻음
 
-	Sleep(1); // 잠시 대기
+	int itemCount = SendMessage(listHWnd, LB_GETCOUNT, 0, 0); // 현재 리스트 박스의 항목 수 얻음
 
-	SendMessage(listHWnd, LB_ADDSTRING, 0, (LPARAM)lpBuffer); // 리스트 박스에 문자열 추가
-	m_logHandle->SetTopIndex(m_logHandle->GetCount() - 1); // 리스트 박스 스크롤을 가장 아래로 이동
+	// 리스트 박스에 마지막 줄부터 추가
+	SendMessage(listHWnd, LB_INSERTSTRING, itemCount, (LPARAM)lpBuffer); // 리스트 박스에 문자열 추가
+	m_logHandle->SetTopIndex(itemCount); // 리스트 박스 스크롤을 마지막 줄로 이동
 	CreateHorizontalScroll(); // 가로 스크롤 생성
 
 	LeaveCriticalSection(&m_csLock); // 임계 영역 빠져나옴

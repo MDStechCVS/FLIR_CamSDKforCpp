@@ -9,6 +9,9 @@
 
 class CameraManager;
 class CameraControl_rev;
+class CTransparentStatic;
+
+
 // CMDS_Ebus_SampleDlg 대화 상자
 class CMDS_Ebus_SampleDlg : public CDialogEx
 {
@@ -38,7 +41,20 @@ protected:
 
 private:
 
-	
+	struct CameraInfoLabels
+	{
+		CTransparentStatic& lbFps;           // FPS를 표시할 레이블
+		CTransparentStatic& lbMin;           // 최소 온도 값을 표시할 레이블
+		CTransparentStatic& lbMax;           // 최대 온도 값을 표시할 레이블
+		CTransparentStatic& lbROI;           // 관심 영역(ROI) 정보를 표시할 레이블
+		CStatic& lbConnectStatus;			 // 카메라 연결 상태를 표시할 레이블
+		CStatic& lbRecordingStatus;			 // 녹화 상태를 표시할 레이블
+
+		CameraInfoLabels(CTransparentStatic& fps, CTransparentStatic& min, CTransparentStatic& max, CTransparentStatic& roi, CStatic& connectStatus, CStatic& recordingStatus)
+			: lbFps(fps), lbMin(min), lbMax(max), lbROI(roi), lbConnectStatus(connectStatus), lbRecordingStatus(recordingStatus) {}
+	};
+	std::mutex Guimtx; // 뮤텍스 객체 생성
+
 	cv::Point m_StartPos;
 	cv::Point m_EndPos;
 	CListBox m_List_Log;
@@ -66,32 +82,37 @@ private:
 	CSkinButton m_BtnImageRecording;
 
 	CStatic m_logo;
-	CStatic m_LbCamCount;
-	CStatic m_LbCam1fps;
-	CStatic m_LbCam1min;
-	CStatic m_LbCam1max;
-	CStatic m_LbCam1ROI;
-	CStatic m_Cam1ConnectStatus;
-	CStatic m_LbCam2fps;
-	CStatic m_LbCam2min;
-	CStatic m_LbCam2max;
-	CStatic m_LbCam2ROI;
-	CStatic m_Cam2ConnectStatus;
-	CStatic m_LbCam3fps;
-	CStatic m_LbCam3min;
-	CStatic m_LbCam3max;
-	CStatic m_LbCam3ROI;
-	CStatic m_Cam3ConnectStatus;
-	CStatic m_LbCam4fps;
-	CStatic m_LbCam4min;
-	CStatic m_LbCam4max;
-	CStatic m_LbCam4ROI;
-	CStatic m_Cam4ConnectStatus;
+	CTransparentStatic m_LbCamCount;
 
-	CStatic m_Cam1RecordingStatus;
-	CStatic m_Cam2RecordingStatus;
-	CStatic m_Cam3RecordingStatus;
-	CStatic m_Cam4RecordingStatus;
+	CTransparentStatic m_LbCam1fps;
+	CTransparentStatic m_LbCam1min;
+	CTransparentStatic m_LbCam1max;
+	CTransparentStatic m_LbCam1ROI;
+	
+	CTransparentStatic m_LbCam2fps;
+	CTransparentStatic m_LbCam2min;
+	CTransparentStatic m_LbCam2max;
+	CTransparentStatic m_LbCam2ROI;
+	
+	CTransparentStatic m_LbCam3fps;
+	CTransparentStatic m_LbCam3min;
+	CTransparentStatic m_LbCam3max;
+	CTransparentStatic m_LbCam3ROI;
+	
+	CTransparentStatic m_LbCam4fps;
+	CTransparentStatic m_LbCam4min;
+	CTransparentStatic m_LbCam4max;
+	CTransparentStatic m_LbCam4ROI;
+
+	CStatic m_LbCam1ConnectStatus;
+	CStatic m_LbCam2ConnectStatus;
+	CStatic m_LbCam3ConnectStatus;
+	CStatic m_LbCam4ConnectStatus;
+
+	CStatic m_LbCam1RecordingStatus;
+	CStatic m_LbCam2RecordingStatus;
+	CStatic m_LbCam3RecordingStatus;
+	CStatic m_LbCam4RecordingStatus;
 
 	CBrush* m_brush;
 	CBrush* m_brush2;
@@ -99,14 +120,12 @@ private:
 	CBrush m_bGreen;
 	CBrush m_bYellow;
 	COLORREF m_Color1, m_Color2, m_Color3;
-	CFont m_basefont, m_Btnfont;
+	CFont m_basefont, m_Btnfont, m_StaticFont;
 
 	CComboBox m_Cam1_Colormap;
 	CComboBox m_Cam2_Colormap;
 	CComboBox m_Cam3_Colormap;
 	CComboBox m_Cam4_Colormap;
-
-	
 
 public:
 	//공용변수
@@ -124,10 +143,13 @@ public:
 	CEdit m_Color_Scale;
 	CEdit m_Color_Scale2;
 	CEdit m_Color_Scale3;
-private:
 
+private:
+	bool m_bGUITimerActive;
 	int m_nSelectCamIndex;
-	bool m_blink[4];
+	bool m_blink[CAMERA_COUNT];
+	CameraInfoLabels m_LbCamInfo[CAMERA_COUNT];
+
 public:
 
 	bool m_Cam_selecting_roi;
@@ -157,7 +179,7 @@ public:
 	int GetSelectCamIndex();
 	HBRUSH SetCameraFlagStatus(int camIndex, CameraManager* camManager, bool bFlag, CDC* pDC, HBRUSH greenBrush, HBRUSH redBrush);
 	HBRUSH HandleCameraRecordingStatus(int camIndex, CDC* pDC);
-	void UpdateCameraInfo(CameraControl_rev* cam, CStatic& lbFps, CStatic& lbMin, CStatic& lbMax, CStatic& lbROI, CStatic& lbConnectStatus, CStatic& lbRecordingStatus);
+	
 	PaletteTypes GetSelectedColormap(CComboBox& comboControl);
 	void ApplyColorSettings(PaletteTypes selectedMap, int comboIndex);
 	void PopulateComboBoxes();
@@ -166,6 +188,17 @@ public:
 	void ShowJudgeDlg();
 	void CloseJudgeDlg();
 	void UpdateCheckBoxes(int camIndex);
+	void RedrawComboBox(int controlId);
+
+	void UpdateCameraInfo(CameraControl_rev* cam, CameraInfoLabels& labels);
+	void UpdateLabel(double value, CTransparentStatic& label);
+	void UpdateLabel(int value, CTransparentStatic& label);
+	void UpdateROIInfo(CameraControl_rev* cam, CTransparentStatic& label);
+	void InvalidateLabels(CameraInfoLabels& labels);
+	void CameraAutoStart(int deviceCount);
+	void UpdateProgressValue();
+	void SetTransparentStatic_ControlsFont();
+	void SetControlsFont();
 
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -202,4 +235,6 @@ public:
 	afx_msg void OnStnClickedCam1Recording();
 	afx_msg void OnBnClickedBtnImgSnap();
 	afx_msg void OnBnClickedBtnImgRecording();
+	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
+	afx_msg void OnCbnDropdownCbCam1Colormap();
 };

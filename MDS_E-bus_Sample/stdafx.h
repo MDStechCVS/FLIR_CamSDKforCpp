@@ -52,6 +52,7 @@
 
 #include <GdiPlus.h> 
 using namespace Gdiplus;
+#pragma comment(lib, "UxTheme.lib")
 #pragma comment(lib, "gdiplus.lib") 
 
 #include <stdio.h>
