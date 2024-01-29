@@ -4,8 +4,6 @@
 
 #include "resource.h"
 #include "stdafx.h"
-
-
 #include <iomanip>
 #include <list>
 #include <set>
@@ -18,8 +16,8 @@
 #include <string>
 #include <chrono>
 #include <ctime>
-#include "Common.h"
-#include "SkinButton.h"
+#include <cmath>
+#include <cstdio>
 #include <immintrin.h>
 #include <PvSampleUtils.h>
 #include <PvDeviceFinderWnd.h>
@@ -34,8 +32,15 @@
 #include <PvDeviceInfoGEV.h>
 #include <PvStreamGEV.h>
 #include <algorithm>
+#include "Common.h"
+#include "SkinButton.h"
 #include "MDSColorpalette.h"
 #include "TransparentStatic.h"
+
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 
 /*----------메모리 누수 검사--------------*/

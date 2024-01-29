@@ -4,6 +4,11 @@
 
 CameraManager::CameraManager()
 {
+    InitData();
+}
+
+void CameraManager::InitData()
+{
     m_nDeviceCnt = 0;
 
     for (int i = 0; i < CAMERA_COUNT; i++)
@@ -11,17 +16,35 @@ CameraManager::CameraManager()
         m_Cam[i] = NULL;
     }
 
-    m_nDeviceCnt = 0;
-
     ClearAddressdata();
-
 }
 
 // =============================================================================
 CameraManager::~CameraManager()
 {
     ClearAddressdata();
+    ManagerDestroy();
 }
+
+void CameraManager::ManagerDestroy()
+{
+    if (GetDeviceCount() < 0)
+        return;
+
+    for (int i = 0; i < GetDeviceCount(); i++)
+    {
+        if (m_Cam[i] != nullptr)
+        {
+            m_Cam[i]->SetCamRunningFlag(false);
+            m_Cam[i]->DestroyThread();
+            m_Cam[i]->Camera_destroy();
+
+            delete m_Cam[i];
+            m_Cam[i] = nullptr;
+        }
+    }
+}
+
 void CameraManager::ClearAddressdata()
 {
     lDIVector.clear();
@@ -98,7 +121,7 @@ void CameraManager::CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg)
         CString strModelName = m_strSetModelName[i]; // 모델 이름 가져오기
 
         CString strLog;
-        strLog.Format(_T("[Camera[%d]] IP Address[%s], Model Name[%s]"), i + 1, static_cast<LPCTSTR>(strValue), static_cast<LPCTSTR>(strModelName));
+        strLog.Format(_T("[Camera[%d]] IP Address[%s] | Model Name[%s]"), i + 1, static_cast<LPCTSTR>(strValue), static_cast<LPCTSTR>(strModelName));
         Common::GetInstance()->AddLog(0, strLog);
 
         Common::GetInstance()->AddLog(0, _T("------------------------------------"));
@@ -152,8 +175,10 @@ bool CameraManager::CreateCamera(int cameraIndex)
     {
         if (m_Cam[cameraIndex] == nullptr)
         {
-            m_Cam[cameraIndex] = new CameraControl_rev(cameraIndex);
+            m_Cam[cameraIndex] = new CameraControl_rev(cameraIndex); // CameraControl_rev Class 생성
             m_Cam[cameraIndex]->CameraManagerLink(MainDlg->m_CamManager);
+            m_Cam[cameraIndex]->CreateImageProcessor(cameraIndex);
+
             return true;
         }
     }
@@ -181,7 +206,7 @@ bool CameraManager::CameraAllStart(CMDS_Ebus_SampleDlg* MainDlg)
     {
         for (int i = 0; i < nCameraCnt; i++)
         {
-            if (m_Cam[i] == NULL)
+            if (m_Cam[i] == nullptr)
             {
                 CreateCamera(i);
                 m_Cam[i]->CameraSequence(i);
@@ -214,8 +239,7 @@ bool CameraManager::CameraAllStop(CMDS_Ebus_SampleDlg* MainDlg)
     {
         
         bFlag = m_Cam[i]->CameraStop(i);
-        m_Cam[i]->SetRunningFlag(false);
-        Sleep(1);
+        m_Cam[i]->SetCamRunningFlag(false);
         MainDlg->gui_status = GUI_STATUS::GUI_STEP_STOP;
         Common::GetInstance()->AddLog(0, _T("Camera[%d] Streaming Stop"), i+1);
     }
@@ -231,8 +255,8 @@ bool CameraManager::CameraAllDisConnect(CMDS_Ebus_SampleDlg* MainDlg)
     int nCnt = GetDeviceCount();
     for (int i = 0; i < nCnt; i++)
     {
-        m_Cam[i]->m_bThreadFlag = false;
-        m_Cam[i]->SetRunningFlag(false);
+        m_Cam[i]->SetThreadFlag(false);
+        m_Cam[i]->SetCamRunningFlag(false);
         strLog.Format(_T("[Camera[%d]],Thread Stop"), i + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
@@ -242,7 +266,7 @@ bool CameraManager::CameraAllDisConnect(CMDS_Ebus_SampleDlg* MainDlg)
     for (int i = 0; i < nCnt; i++)
     {
         bFlag = m_Cam[i]->CameraStop(i);
-        Sleep(100);
+        Sleep(50);
         m_Cam[i]->CameraDisconnect();
 
         strLog.Format(_T("[Camera[%d]] CameraStop & Disconnect"), i + 1);

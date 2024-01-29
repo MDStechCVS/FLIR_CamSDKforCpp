@@ -3,7 +3,6 @@
 #include "global.h"
 #include "MDS_E-bus_SampleDlg.h"
 
-class CMDS_Ebus_SampleDlg;
 class CameraControl_rev;
 
 class CameraManager
@@ -11,15 +10,15 @@ class CameraManager
 public:
 
 	CameraManager();
-	~CameraManager();
-	CameraManager* m_CamManager;
+	virtual ~CameraManager();
 
 private:
 
 	int m_nDeviceCnt;
-
 public:
 
+	void ManagerDestroy();
+	void InitData();
 	int  GetDeviceCount();
 	void SetDeviceCount(int nCnt);
 	void CameraDeviceFind(CMDS_Ebus_SampleDlg* MainDlg);

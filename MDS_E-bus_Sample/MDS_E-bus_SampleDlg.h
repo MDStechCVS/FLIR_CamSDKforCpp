@@ -7,8 +7,11 @@
 #include "global.h"
 #include "JudgeStatusDlg.h"
 
+
 class CameraManager;
 class CameraControl_rev;
+class ImageProcessor;
+class CSkinButton;
 class CTransparentStatic;
 
 

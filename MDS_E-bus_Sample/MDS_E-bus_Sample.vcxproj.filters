@@ -513,6 +513,9 @@
     <ClInclude Include="TransparentStatic.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ImageProcessor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MDS_E-bus_Sample.cpp">
@@ -546,6 +549,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TransparentStatic.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageProcessor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

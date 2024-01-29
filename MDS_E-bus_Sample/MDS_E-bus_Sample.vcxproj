@@ -201,6 +201,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="FlirHeader.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="ImageProcessor.h" />
     <ClInclude Include="Includes\BMPSaver.h" />
     <ClInclude Include="Includes\cppturbo.hpp" />
     <ClInclude Include="Includes\EbDriver.h" />
@@ -367,6 +368,7 @@
     <ClCompile Include="CameraControl_rev.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="FlirHeader.cpp" />
+    <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="JudgeStatusDlg.cpp" />
     <ClCompile Include="MDSColorpalette.cpp" />
     <ClCompile Include="MDS_E-bus_Sample.cpp" />

@@ -2,6 +2,107 @@
 
 // 컬러맵 초기 데이터
 
+// 외부에서 접근할 수 있는 팔레트들 정의
+std::vector<std::string> iron_palette;
+std::vector<std::string> Rainbow_palette;
+std::vector<std::string> Arctic_palette;
+std::vector<std::string> Jet_palette;
+std::vector<std::string> Infer_palette;
+std::vector<std::string> Plasma_palette;
+std::vector<std::string> Red_gray_palette;
+std::vector<std::string> Viridis_palette;
+std::vector<std::string> Magma_palette;
+std::vector<std::string> Cividis_palette;
+std::vector<std::string> Coolwarm_palette;
+std::vector<std::string> Spring_palette;
+std::vector<std::string> Summer_palette;
+
+MDSColorPalette::MDSColorPalette()
+{
+}
+MDSColorPalette::~MDSColorPalette()
+{
+
+}
+
+
+void MDSColorPalette::SortPalettes()
+{
+}
+
+void MDSColorPalette::SetPalette(const std::string& name, const std::vector<std::string>& colors)
+{
+    palettes_[name] = colors;
+}
+
+std::vector<std::string> MDSColorPalette::GetPalette(const std::string& name) 
+{
+    if (palettes_.find(name) != palettes_.end()) 
+    {
+        return palettes_[name];
+    }
+    else {
+        std::cerr << "팔레트를 찾을 수 없습니다: " << name << std::endl;
+        return std::vector<std::string>();
+    }
+}
+
+void MDSColorPalette::PrintPalette(const std::string& name) 
+{
+    std::vector<std::string> palette = GetPalette(name);
+    if (!palette.empty()) 
+    {
+        for (const std::string& color : palette) 
+        {
+            std::cout << color << std::endl;
+        }
+    }
+}
+
+void MDSColorPalette::SavePaletteToFile(const std::string& name, const std::string& filename)
+{
+    std::vector<std::string> palette = GetPalette(name);
+    if (!palette.empty()) 
+    {
+        std::ofstream file(filename);
+        if (file.is_open()) {
+            for (const std::string& color : palette) 
+            {
+                file << color << "\n";
+            }
+            file.close();
+            std::cout << "팔레트가 파일에 저장되었습니다: " << filename << std::endl;
+        }
+        else {
+            std::cerr << "팔레트 파일을 열 수 없습니다: " << filename << std::endl;
+        }
+    }
+}
+
+void MDSColorPalette::LoadPaletteFromFile(const std::string& paletteName, const std::string& filename)
+{
+    std::ifstream file(filename);
+    if (!file.is_open()) 
+    {
+        // 파일 열기 실패 처리
+        return;
+    }
+
+    std::vector<std::string> paletteData;
+    std::string line;
+
+    while (std::getline(file, line)) 
+    {
+        // 파일에서 한 줄씩 읽어와서 벡터에 추가
+        paletteData.push_back(line);
+    }
+
+    // 읽어온 팔레트 데이터를 해당 팔레트 배열에 할당
+    palettes_[paletteName] = paletteData;
+
+    file.close();
+}
+
 const TCHAR* ColormapArray::colormapStrings[] =
 {
     _T("Iron"),
@@ -21,6 +122,7 @@ const TCHAR* ColormapArray::colormapStrings[] =
 
 #define PALETTESIZE 1024 
 std::vector<std::string> Rainbow_palette;
+
 std::vector<std::string> Arctic_palette =
 {
     "#0000FF","#0004FB", "#0008F7", "#000CF3", "#0010EF",
