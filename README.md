@@ -4,13 +4,15 @@
 
 # FLIR_CamSDKforCpp
 
+## <div align="left">blog</div>
+https://blog.naver.com/mdstec_flir
+
 ## SDK caution
 This program can run on Windows 10 or 11.<br>
 SDK : ebus_sdk_64-bit.4.1.6.3809
 
 ## <div align="left">Manual</div>
-reference : [e-bus_Ver4.1 Starter Manual](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/blob/main/e-bus_Ver4.1%20Starter%20Manual.pdf)
-
+reference : [MDS Version Framework Manual v0.1.pdf](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/files/14188077/MDS.Version.Framework.Manual.v0.1.pdf)
 
 ## Development environment:</div>
 
@@ -22,7 +24,6 @@ Win SDK 10.0.2<br>
 ### [Pleora SDK 4.1.6 Download site (FLIR Site (Login Only))](https://flir.custhelp.com/app/account/fl_download_software)
 e-bus sdk 4.1.6.3809<br> 
 <img width="581" alt="Pleora SDK 다운로드" src="https://github.com/MDStechCVS/FLIR_IR_SampleforCsharp2/assets/142575573/d008e8b1-df57-4d4f-a0e3-53fca10f3052">
-
 
 
 ## ebus SDK Window GUI
