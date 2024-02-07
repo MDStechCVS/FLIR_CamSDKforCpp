@@ -16,7 +16,7 @@ This program can run on Windows 10 or 11.<br>
 SDK : ebus_sdk_64-bit.4.1.6.3809
 
 ## <div align="left">Manual</div>
-reference : [MDS Version Framework Manual v0.1.pdf](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/files/14188077/MDS.Version.Framework.Manual.v0.1.pdf)
+reference : [MDS Vision Framework Manual v0.1 Framework Manual v0.1.pdf](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/files/14188077/MDS.Version.Framework.Manual.v0.1.pdf)
 
 ## Development environment:</div>
 
