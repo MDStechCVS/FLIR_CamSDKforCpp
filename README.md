@@ -4,6 +4,10 @@
 
 # FLIR_CamSDKforCpp
 
+## GUI
+
+![GUI](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/5bbd1982-d759-40d8-8941-75c9f1e6bdb8)
+
 ## <div align="left">blog</div>
 https://blog.naver.com/mdstec_flir
 
@@ -24,11 +28,6 @@ Win SDK 10.0.2<br>
 ### [Pleora SDK 4.1.6 Download site (FLIR Site (Login Only))](https://flir.custhelp.com/app/account/fl_download_software)
 e-bus sdk 4.1.6.3809<br> 
 <img width="581" alt="Pleora SDK 다운로드" src="https://github.com/MDStechCVS/FLIR_IR_SampleforCsharp2/assets/142575573/d008e8b1-df57-4d4f-a0e3-53fca10f3052">
-
-
-## ebus SDK Window GUI
-
-![GUI](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/5bbd1982-d759-40d8-8941-75c9f1e6bdb8)
 
 ## <div align="left">Contact</div>
 For bugs and inquiries, please contact us through GitHub Issues or team email.<br>
