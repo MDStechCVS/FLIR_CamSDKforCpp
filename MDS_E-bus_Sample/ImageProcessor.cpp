@@ -816,8 +816,6 @@ bool ImageProcessor::StartRecording(int frameWidth, int frameHeight, double fram
         SetColorPaletteType(TRUE);
     }
     
-
-
     m_isRecording = true;
 
     // 녹화 이미지 생성을 위한 쓰레드 시작
@@ -2516,10 +2514,21 @@ void ImageProcessor::ConfirmCreatingROI(const cv::Point& startPos, const cv::Poi
 void ImageProcessor::StartDraggingROI(const CPoint& clientPoint, const CRect& rect, const cv::Size& imageSize, cv::Point& dragStartPos, int& selectedROIIndex, bool& isDraggingROI)
 {
     cv::Point imagePoint = mapPointToImage(clientPoint, imageSize, rect);
-    for (int i = 0; i < m_roiResults.size(); i++) 
+    const int clickMargin = 10; // 클릭 인식 범위를 10픽셀만큼 확대
+
+    for (int i = 0; i < m_roiResults.size(); i++)
     {
         auto& roi = m_roiResults[i]->roi;
-        if (roi.contains(imagePoint)) {
+
+        // 확장된 ROI 영역 생성
+        cv::Rect expandedROI = roi;
+        expandedROI.x -= clickMargin;
+        expandedROI.y -= clickMargin;
+        expandedROI.width += clickMargin * 2;
+        expandedROI.height += clickMargin * 2;
+
+        if (expandedROI.contains(imagePoint)) 
+        {
             selectedROIIndex = i;
             isDraggingROI = true;
             dragStartPos = cv::Point(imagePoint.x - roi.x, imagePoint.y - roi.y);

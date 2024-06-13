@@ -165,4 +165,5 @@ public:
     int GetQueueBufferCount();
     PvBuffer* CopyBuffer(PvBuffer* originalBuffer);
     void SomeFunctionThatModifiesBuffer(PvBuffer* buffer);
+    void LogIRFormat(int nIndex, PvGenParameterArray* lDeviceParams);
 };

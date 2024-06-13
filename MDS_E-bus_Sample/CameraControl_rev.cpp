@@ -279,7 +279,7 @@ PvStream* CameraControl_rev::OpenStream(int nIndex)
     int nRtyCnt = 0;
 
     // 재시도 횟수를 5번으로 제한
-    const int maxRetries = 5;
+    const int maxRetries = 3;
 
     // 재시도 루프
     while (nRtyCnt <= maxRetries)
@@ -393,7 +393,7 @@ bool CameraControl_rev::AcquireParameter(PvDevice* aDevice, PvStream* aStream, P
     PvGenParameterArray* lDeviceParams = aDevice->GetParameters();
     CString strLog = _T("");
     PvResult result = -1;
-    
+
     // 카메라 매개변수 설정
     CameraParamSetting(nIndex, aDevice);
 
@@ -451,10 +451,10 @@ bool CameraControl_rev::AcquireParameter(PvDevice* aDevice, PvStream* aStream, P
     else
     {
         // 설정 성공 처리
-        strLog.Format(_T("[Camera[%d]] Streaming Parameters Set Success "), nIndex+1);
+        strLog.Format(_T("[Camera[%d]] Streaming Parameters Set Success "), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
     }
-    
+
     TempRangeSearch(nIndex, lDeviceParams);
 
     if (bFlag[0] && bFlag[1] && bFlag[2])
@@ -474,11 +474,25 @@ bool CameraControl_rev::AcquireParameter(PvDevice* aDevice, PvStream* aStream, P
             }
 
             return true;
-        }    
+        }
     }
 
     return false;
-    
+
+}
+
+// =============================================================================
+// IR 포맷 로깅을 위한 함수
+void CameraControl_rev::LogIRFormat(int nIndex, PvGenParameterArray* lDeviceParams)
+{
+    if (m_Camlist != CAM_MODEL::BlackFly)
+    {
+        int64_t nValue = 0;
+        lDeviceParams->GetEnumValue("IRFormat", nValue);
+        CString strLog;
+        strLog.Format(_T("[Camera[%d]] Get IRFormat = %d"), nIndex + 1, nValue);
+        Common::GetInstance()->AddLog(0, strLog);
+    }
 }
 
 // =============================================================================

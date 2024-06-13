@@ -36,6 +36,8 @@ public:
 	CString GetProgramDirectory();
 	bool OpenFolder(const std::string& folderPath);
 	bool CreateDirectoryRecursively(const std::string& path);
+	void LogAndFlagSet(bool& flag, const CString& message, bool condition, int logLevel = 0);
+	
 public:
 
 	CString uni_char_to_CString_Convert(char* data);
@@ -43,7 +45,6 @@ public:
 	CString str2CString(const char* _str);
 	std::string CString2str(CString _str);
 	LPCSTR CString_to_LPCSTR_Convert(CString data);
-	uint32_t rgbPalette(double ratio);
 public:
 	bool m_bBufferCheck;
 	bool m_bPointerCheck;
@@ -51,15 +52,12 @@ public:
 
 private:
 	bool m_bAutoStart;
-
-private:
-	static CString getPathCanonicalize(LPCTSTR path);
-
-private:
 	CRITICAL_SECTION m_csLock;
 	CFile m_fWriteFile;
 	CListBox* m_logHandle;
-
 	CString m_SettingFilePath;
+
+private:
+	static CString getPathCanonicalize(LPCTSTR path);
 };
 

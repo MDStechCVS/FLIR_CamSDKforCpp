@@ -362,18 +362,19 @@ LPCSTR Common::CString_to_LPCSTR_Convert(CString data)
 	return ptr;
 }
 
-
-
+// =============================================================================
 void Common::SetAutoStartFlag(bool bFlag)
 {
 	m_bAutoStart = bFlag;
 }
 
+// =============================================================================
 bool Common::GetAutoStartFlag()
 {
 	return m_bAutoStart;
 }
 
+// =============================================================================
 bool Common::OpenFolder(const std::string& folderPath)
 {
 	// 지정된 경로가 폴더인지 확인
@@ -424,4 +425,19 @@ bool Common::CreateDirectoryRecursively(const std::string& path)
 	}
 
 	return false;
+}
+
+// =============================================================================
+// 로그 기록과 에러 처리를 담당하는 함수
+void Common::LogAndFlagSet(bool& flag, const CString& message, bool condition, int logLevel)
+{
+	if (condition) 
+	{
+		flag = true;
+		AddLog(logLevel, message);
+	}
+	else 
+	{
+		AddLog(logLevel, message + _T(" failed"));
+	}
 }
