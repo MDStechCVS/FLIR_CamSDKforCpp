@@ -92,6 +92,9 @@ int main()
     bool bFlag = false;
     CString strAddress = "";
 
+    printf("MDS Camera Sample\n");
+    printf("-------------------------------------------\n");
+
     // 사용자로부터 카메라 IP 입력 받기
     std::wcout << L"IP Address : ";
     std::wstring input;
@@ -103,41 +106,36 @@ int main()
     // 카메라 장치에 연결
     Device = ConnectToDevice(Device, strAddress);
     if (Device != nullptr)
-<<<<<<< HEAD
+    {
         printf("Device Connect = [success]\n");
-=======
-        printf("Device Connect success\n");
->>>>>>> ff5e4371d9bb5c97b31d822f085c5646a9e2a616
+    }
+
 
     // 카메라 스트림 오픈
     Stream = OpenStream(Stream, strAddress);
     if (Stream != nullptr)
-<<<<<<< HEAD
+    {
         printf("Stream Open = [success]\n");
-=======
-        printf("OpenStream success\n");
->>>>>>> ff5e4371d9bb5c97b31d822f085c5646a9e2a616
+    }
+
 
     // 카메라 스트림 설정
     ConfigureStream(Device, Stream);
 
     if (Stream != nullptr && Device != nullptr)
-<<<<<<< HEAD
+    {
         printf("Stream Configure = [success]\n");
-=======
-        printf("ConfigureStream success\n");
->>>>>>> ff5e4371d9bb5c97b31d822f085c5646a9e2a616
+    }
+
 
     if (Stream != nullptr && Device != nullptr)
     {
         // 카메라 파이프라인 생성
         Pipeline = CreatePipeline(Pipeline, Device, Stream);
-        if(Pipeline != nullptr)
-<<<<<<< HEAD
+        if (Pipeline != nullptr)
+        {
             printf("Pipeline Create = [success]\n");
-=======
-            printf("CreatePipeline success\n");
->>>>>>> ff5e4371d9bb5c97b31d822f085c5646a9e2a616
+        }
     }
 
     delete Pipeline;

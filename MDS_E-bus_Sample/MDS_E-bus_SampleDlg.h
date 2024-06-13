@@ -23,8 +23,9 @@ public:
 	CMDS_Ebus_SampleDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 
 // 대화 상자 데이터입니다.
+	//더블클릭 생성 안될때..
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_MDSTESTPGM_DIALOG };
+	enum { IDD = IDD_MDS_MAIN_DLG };
 #endif
 
 	protected:
@@ -43,7 +44,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-
 	struct CameraInfoLabels
 	{
 		CTransparentStatic& lbFps;           // FPS를 표시할 레이블
@@ -130,6 +130,9 @@ private:
 	CComboBox m_Cam3_Colormap;
 	CComboBox m_Cam4_Colormap;
 
+	CComboBox m_cbIRFormat;
+	CComboBox m_cbTempRange;
+
 public:
 	//공용변수
 	CButton m_chGenICam_checkBox;
@@ -141,27 +144,38 @@ public:
 
 	CButton m_chMarkerCheckBox;
 	CButton m_ch_Cam1_ROI_CheckBox;
+	CButton m_ch_Cam1_ROI_Create;
 	CProgressCtrl m_progress;
 	CButton m_radio;
+	CButton m_radioshape;
 	CEdit m_Color_Scale;
 	CEdit m_Color_Scale2;
 	CEdit m_Color_Scale3;
 
+	CEdit m_edExtOptTemp;
+
 private:
 	bool m_bGUITimerActive;
 	int m_nSelectCamIndex;
+	int m_nSelectedRoiIndex;
+	bool m_isRoiModeEnabled;
 	bool m_blink[CAMERA_COUNT];
 	CameraInfoLabels m_LbCamInfo[CAMERA_COUNT];
+
+	cv::Point m_dragStartPos;  // 드래그 시작 위치
+	bool m_isDraggingROI;      // ROI 드래그 중인지 여부
+	int m_selectedROIIndex;    // 선택된 ROI의 인덱스
 
 public:
 
 	bool m_Cam_selecting_roi;
-	GUI_STATUS gui_status;
+	bool m_SetROI;
+	GUI_STATUS gui_status = GUI_STATUS::GUI_STEP_IDLE;
 	BOOL m_NeedInit;
 	PvGenBrowserWnd* m_DeviceWnd;
 	PvGenBrowserWnd* m_CommunicationWnd;
 	PvGenBrowserWnd* m_StreamParametersWnd;
-	CameraManager* m_CamManager;
+	CameraManager* m_CamManager = nullptr;
 
 public:
 	void ShowGenWindow(PvGenBrowserWnd** aWnd, PvGenParameterArray* aParams, const CString& aTitle);
@@ -173,7 +187,6 @@ public:
 	void CameraParamsFileOpen();
 	void InitSystemParam();
 	void UpdateButtonStyle(CSkinButton* pbutton, const CPoint& cursorPos);
-	cv::Rect mapRectToImage(const cv::Rect& rect, const cv::Size& imageSize, const cv::Size& dialogSize);
 	void UpdateCameraROI(CStatic* displayControl, const CRect& controlRect, CameraManager* camManager,
 		int cameraIndex, bool& selectingROI, cv::Point& startPos, cv::Point& endPos, UINT message);
 	void Interface_state(bool bSeleted = false);
@@ -184,8 +197,12 @@ public:
 	HBRUSH HandleCameraRecordingStatus(int camIndex, CDC* pDC);
 	
 	PaletteTypes GetSelectedColormap(CComboBox& comboControl);
+	CameraIRFormat GetSelectedTempType(CComboBox& comboControl);
 	void ApplyColorSettings(PaletteTypes selectedMap, int comboIndex);
+	void ApplyIRformatSettings(CameraIRFormat selectedIR);
+	void ApplyTempRange(int nRangeIndex);
 	void PopulateComboBoxes();
+	void PopulateComboBoxes_Range();
 	void HandleComboChange(int controlId);
 	bool IsMouseEventCheck(UINT message);
 	void ShowJudgeDlg();
@@ -202,10 +219,11 @@ public:
 	void UpdateProgressValue();
 	void SetTransparentStatic_ControlsFont();
 	void SetControlsFont();
+	void ShowPopupMenu(CPoint point, int roiIndex);
 
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-
+	afx_msg LRESULT CMDS_Ebus_SampleDlg::OnAddLog(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnBnClickedBtnStart();
 	afx_msg void OnBnClickedBtnStop();
 	afx_msg void OnDestroy();
@@ -225,6 +243,7 @@ public:
 	afx_msg void OnBnClickedCkMarker();
 	afx_msg void OnBnClickedBtnDeviceFind();
 	afx_msg void RadioCtrl(UINT radio_Index);
+	afx_msg void ShapeTypeRadioCtrl(UINT radio_Index);
 	afx_msg void OnBnClickedBtnLoadIniFile();
 	afx_msg void OnBnClickedBtnIniApply();
 	afx_msg void OnCbnSelchangeCam1();
@@ -240,4 +259,11 @@ public:
 	afx_msg void OnBnClickedBtnImgRecording();
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 	afx_msg void OnCbnDropdownCbCam1Colormap();
+	afx_msg void OnBnClickedBtnParamSet();
+	afx_msg void OnCbnSelchangeCbIrFormat();
+	afx_msg void OnCbnSelchangeCbTempRange();
+	afx_msg void OnPopupMenuSave();
+	afx_msg void OnPopupMenuDelete();
+	afx_msg void OnPopupMenuAllDelete();
+	afx_msg void OnBnClickedCkCam1Roi();
 };

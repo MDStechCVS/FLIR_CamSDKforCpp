@@ -1,6 +1,6 @@
-Ôªø//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ÏóêÏÑú ÏÉùÏÑ±Ìïú Ìè¨Ìï® ÌååÏùºÏûÖÎãàÎã§.
-// MDS_E-bus_Sample.rcÏóêÏÑú ÏÇ¨Ïö©ÎêòÍ≥† ÏûàÏäµÎãàÎã§.
+//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ø°º≠ ª˝º∫«— ∆˜«‘ ∆ƒ¿œ¿‘¥œ¥Ÿ.
+// MDS_E-bus_Sample.rcø°º≠ ªÁøÎµ«∞Ì ¿÷Ω¿¥œ¥Ÿ.
 //
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
@@ -15,6 +15,7 @@
 #define IDC_LIST_LOG                    1004
 #define IDC_BTN_FPS30                   1005
 #define IDC_MODE                        1006
+#define IDC_BTN_PARAM_SET               1006
 #define IDC_BTN_COMMUNICATION           1007
 #define IDC_BTN_DEVICE                  1008
 #define IDC_BTN_DISCONNECT              1010
@@ -66,6 +67,7 @@
 #define IDC_EDIT_SCALE                  1055
 #define IDC_EDIT_SCALE2                 1056
 #define IDC_EDIT_SCALE3                 1057
+#define IDC_EDIT_OPTTRANSM              1058
 #define IDC_BTN_OPEN_DATA_FOLDER        1059
 #define IDC_CAM1_RECORDING              1060
 #define IDC_CAM2_RECORDING              1061
@@ -101,8 +103,12 @@
 #define IDC_STATIC28                    1091
 #define IDC_STATIC29                    1092
 #define IDC_STATIC30                    1093
+#define IDC_STATIC33                    1094
 #define IDC_STATIC31                    1095
 #define IDC_STATIC32                    1096
+#define IDC_STATIC34                    1097
+#define IDC_STATIC35                    1098
+#define IDC_CK_CAM1_ROI2                1099
 #define IDC_RADIO_CAM1                  1100
 #define IDC_RADIO_CAM2                  1101
 #define IDC_RADIO_CAM3                  1102
@@ -111,7 +117,16 @@
 #define IDC_CB_CAM2_COLORMAP            1105
 #define IDC_CB_CAM3_COLORMAP            1106
 #define IDC_CB_CAM4_COLORMAP            1107
+#define IDC_CB_IR_FORMAT                1108
+#define IDC_CB_TEMP_RANGE               1109
 #define IDC_STATIC_DLG_JUDGE            1110
+#define IDC_RADIO_RECT                  1110
+#define IDC_RADIO_CIRCLE                1111
+#define IDC_RADIO_ELLIPSE               1112
+#define IDC_RADIO_LINE                  1114
+#define ID_POPUP_MENUITEM1              32111
+#define ID_POPUP_MENUITEM2              32112
+#define ID_POPUP_MENUITEM3              32113
 
 // Next default values for new objects
 // 
@@ -119,7 +134,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        147
 #define _APS_NEXT_COMMAND_VALUE         32772
-#define _APS_NEXT_CONTROL_VALUE         1097
+#define _APS_NEXT_CONTROL_VALUE         1098
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

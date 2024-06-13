@@ -67,6 +67,7 @@ using namespace Gdiplus;
 #include <opencv2/opencv.hpp>
 #include <opencv2\core.hpp>
 #include <opencv2/ImgProc.hpp>
+#include <opencv2/objdetect.hpp>
 
 using namespace cv;
 using namespace std;

@@ -199,7 +199,7 @@ bool CameraManager::CameraAllStart(CMDS_Ebus_SampleDlg* MainDlg)
     int npercent = 100 / nCameraCnt;
     if (nCameraCnt < 0)
     {
-        MainDlg->gui_status = (GUI_STATUS)GUI_STEP_IDLE;
+        MainDlg->gui_status = GUI_STATUS::GUI_STEP_IDLE;
         return bFlag;
     }
     else if (nCameraCnt >= 1)

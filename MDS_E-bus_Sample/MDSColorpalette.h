@@ -6,9 +6,11 @@ struct ColormapArray
 	static const TCHAR* colormapStrings[];
 };
 
-enum PaletteTypes
+enum class PaletteTypes
 {
     PALETTE_IRON = 0,
+    PALETTE_BOARDDETECTION,
+    PALETTE_MDS,
     PALETTE_RAINBOW,
     PALETTE_ARCTIC,
     PALETTE_JET,
@@ -19,23 +21,28 @@ enum PaletteTypes
     PALETTE_MAGMA,
     PALETTE_CIVIDIS,
     PALETTE_COOLWARM,
-    PALETTE_SPRING,
-    PALETTE_SUMMER
+    PALETTE_COOLDEPTH,
+    PALETTE_HIGHCONTRASTJET,
+    PALETTE_AUTUMNFIRE
+};
+using PALETTE_TYPE = PaletteTypes;
+
+
+class PaletteManager
+{
+public:
+    PaletteManager();
+    void init(const std::string& baseDir);
+    std::vector<cv::Vec3b> GetPalette(PALETTE_TYPE paletteType);
+
+private:
+    std::unordered_map<PALETTE_TYPE, std::vector<std::string>> palettes;
+    void initPalettes(const std::string& baseDir);
+    std::vector<std::string> loadPaletteFromFile(const std::string& baseDir, const std::string& filename);
+    std::vector<cv::Vec3b> loadPaletteFromStrings(const std::vector<std::string>& paletteStrings);
 };
 
-extern std::vector<std::string> iron_palette;
-extern std::vector<std::string> Rainbow_palette;
-extern std::vector<std::string> Arctic_palette;
-extern std::vector<std::string> Jet_palette;
-extern std::vector<std::string> Infer_palette;
-extern std::vector<std::string> Plasma_palette;
-extern std::vector<std::string> Red_gray_palette;
-extern std::vector<std::string> Viridis_palette;
-extern std::vector<std::string> Magma_palette;
-extern std::vector<std::string> Cividis_palette;
-extern std::vector<std::string> Coolwarm_palette;
-extern std::vector<std::string> Spring_palette;
-extern std::vector<std::string> Summer_palette;
+
 
 
 

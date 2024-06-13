@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\1. Project\1. PLIR\MDS_E-bus_Sample\FLIR_CamSDKforCpp\x64\Debug\MDS_E-bus_Sample.exe</FullPath>
+      <FullPath>D:\1. Project\1. PLIR\MDS_E-bus_Sample\FLIR_CamSDKforCpp_radiometric\x64\Debug\MDS_E-bus_Sample.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

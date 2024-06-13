@@ -1,14 +1,16 @@
 #pragma once
 
 #pragma warning(disable: 4800) // 비표준 경고 비활성화
+#pragma warning(disable: 4244)
 
 #include "resource.h"
 #include "stdafx.h"
+#include <windows.h>
 #include <iomanip>
 #include <list>
 #include <set>
 #include <memory>
-#include<vector>
+#include <vector>
 #include <thread>
 #include <unordered_map>
 #include <map>
@@ -19,6 +21,9 @@
 #include <cmath>
 #include <cstdio>
 #include <immintrin.h>
+#include "mmsystem.h"
+#include <sys/timeb.h>
+#include <future>
 #include <PvSampleUtils.h>
 #include <PvDeviceFinderWnd.h>
 #include <PvDevice.h>
@@ -35,12 +40,19 @@
 #include "Common.h"
 #include "SkinButton.h"
 #include "MDSColorpalette.h"
+#include "CMMTiming.h"
+#include "temperature.hpp"
 #include "TransparentStatic.h"
+#include "fff.h"
+#include <condition_variable>
 
-
+#define WM_ADDLOG (WM_APP + 1)
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
+
+#define ASY_SAFEGUARD 1.0002
+#define EXP_SAFEGUARD 709.78
 
 
 /*----------메모리 누수 검사--------------*/
@@ -113,6 +125,23 @@
 
 #define FAHRENHEIT 273.15f
 
+#define CAM_TYPE_A3XX 0
+#define CAM_TYPE_A6XX 1
+#define CAM_TYPE_ATAU 2
+#define CAM_TYPE_T1K  3
+
+#define PRES_SIGNAL     0
+#define PRES_CELSIUS    1
+#define PRES_FAHRENHEIT 2
+#define PRES_KELVIN     3
+
+#define QUERYCOUNT		12
+
+#define CAM_1			0
+#define CAM_2			1
+#define CAM_3			2
+#define CAM_4			3
+
 
 const UINT_PTR TIMER_ID_GUI_UPDATE = 1000;
 const UINT_PTR TIMER_ID_OTHER_TASK = 2000;
@@ -126,46 +155,51 @@ typedef struct RGBA
 	BYTE A;
 } rgba;
 
-
 const RGBA WhiteColor = { 255, 255, 255, 255 };
 const RGBA YellowText = { 255, 255, 0, 0 };
 const RGBA GrayBackground = { 255, 64, 64, 64 };
 const RGBA WhiteText = { 255, 255, 255, 255 };
 
-enum CAM_INDEX {
-	CAM_1 = 0,	// 첫 번째 카메라
-	CAM_2,		// 두 번째 카메라
-	CAM_3,		// 세 번째 카메라
-	CAM_4		// 네 번째 카메라
+enum ERRORCODE
+{
+	OK,
+	RESPONSE_FAIL,
+	TIMEOUT,
 };
 
-enum ThreadStatus
+enum class ThreadStatus
 {
 	THREAD_STOP = 0,
 	THREAD_RUNNING = 1,
 	THREAD_PAUSE = 2
 };
+using THREAD_STATUS = ThreadStatus;
 
-enum CameraModelList
+
+enum class CameraModelList
 {
 	None	 = 0,
 	A50,
-	A70,
-	Ax5,				
+	Ax5,
+	A70,	
+	A300,
 	A400,
 	A500,
-	A600,
-	A700,
 	A615,
+	A700,
 	FT1000,
+	XSC,
 	BlackFly
 };
-enum CameraIRFormat
+using CAM_MODEL = CameraModelList;
+
+enum class CameraIRFormat
 {
-	RADIOMETRIC,
+	RADIOMETRIC = 0,
 	TEMPERATURELINEAR100MK,
 	TEMPERATURELINEAR10MK,
 };
+using Camera_IRFormat = CameraIRFormat;
 
 typedef struct CAMERA_PARAMETER
 
@@ -174,10 +208,56 @@ typedef struct CAMERA_PARAMETER
 	CString strPixelFormat = _T("");
 
 	HANDLE param;
+	
+	int nCurrentCase[QUERYCOUNT] = { 0 };
+	
+	double dQueryCaseLowLimit[QUERYCOUNT] = { 0 };
+	double dQueryCaseHighLimit[QUERYCOUNT] = { 0 };
+	int nQueryCnt = 0;
+	int nSelectCase = 0;
+
+	int64_t nHeight = 0;
+	int64_t nWidth = 0;
 
 }Camera_Parameter;
 
-enum GUI_STATUS
+typedef struct TauPlanckConstants
+{
+	int R;
+	double B;
+	double F;
+	double O;
+	double WT;
+	double W4WT;
+	ULONG J0; // Global offset
+	double J1; // Global gain
+	double K1;
+	double K2;
+}TPConstants;
+
+typedef struct ObjectParams
+{
+	double Emissivity;
+	double ObjectDistance;
+	double AtmTemp;
+	double AmbTemp;
+	double AtmTao;
+	double ExtOptTransm;
+	double ExtOptTemp;
+	double RelHum;
+}ObjParams;
+
+typedef struct SpectralResponseParams
+{
+	double X;
+	double alpha1;
+	double alpha2;
+	double beta1;
+	double beta2;
+}stRParams;
+
+
+enum class guistatus
 {
 	GUI_STEP_IDLE = 0,
 	GUI_STEP_RUN,
@@ -185,7 +265,50 @@ enum GUI_STATUS
 	GUI_STEP_DISCONNECT,
 	GUI_STEP_ERROR
 };
+using GUI_STATUS = guistatus;
 
+static double quicklog(double dbl_val)
+{
+#define sqr2div2 0.7071067811865476
+#define ln2 0.6931471805599453
+#define C1 2.88539129   
+#define C3 0.961470632
+#define C5 0.598978649
+
+#ifdef _WIN32
+	/* Little endian machine assumed */
+#define DBL_2EXP_ADDR(dbl) ((unsigned short int*)&dbl+3)
+#define TRUE_DBL_2EXP(dbl) (((*DBL_2EXP_ADDR(dbl)&0x7ff0)>>4)-0x3ff)
+#define SET_DBL_2EXP(dbl) *DBL_2EXP_ADDR(dbl)&=~0x7ff0,\
+                          *DBL_2EXP_ADDR(dbl)|= 0x3fe0
+#else
+	/* Big endian machine assumed */
+#define DBL_2EXP_ADDR(dbl) ((unsigned long int*)&dbl)
+#define TRUE_DBL_2EXP(dbl) (((*DBL_2EXP_ADDR(dbl)&0x7ff00000)>>20)-0x3ff)
+#define SET_DBL_2EXP(dbl) *DBL_2EXP_ADDR(dbl)&=~0x7ff00000,\
+                          *DBL_2EXP_ADDR(dbl)|= 0x3fe00000
+#endif
+
+
+	double Z, Z2;
+	int times_2;
+
+	times_2 = TRUE_DBL_2EXP(dbl_val) + 1;
+	SET_DBL_2EXP(dbl_val); /* to -1 */
+
+	Z = (dbl_val - sqr2div2) / (dbl_val + sqr2div2);
+	Z2 = Z * Z;
+	return (times_2 + (((C5 * Z2 + C3) * Z2 + C1) * Z - 0.5)) * ln2;
+
+#undef sqr2div2
+#undef ln2
+#undef C1
+#undef C3
+#undef C5
+#undef DBL_2EXP_ADDR
+#undef TRUE_DBL_2EXP
+#undef SET_DBL_2EXP
+}
 
 
 static BYTE bmiBuf[sizeof(BITMAPINFOHEADER) + 1024];

@@ -160,47 +160,56 @@ void Common::CreateHorizontalScroll()
 // =============================================================================
 void Common::AddLog(int verbosity, LPCTSTR lpszFormat, ...)
 {
-	SYSTEMTIME cur_time; // 현재 시간 정보를 저장할 구조체
-	CString strDate; // 시간 정보를 포맷팅하여 저장할 문자열
+	SYSTEMTIME cur_time;
+	CString strDate;
+	CString formattedMessage;
+	va_list args;
 
-	GetLocalTime(&cur_time); // 현재 시간 정보를 가져옴
+	GetLocalTime(&cur_time);
 	strDate.Format(_T("%02d:%02d:%02d"), cur_time.wHour, cur_time.wMinute, cur_time.wSecond);
 
-	if (m_csLock.LockCount > -1) // 잠금 횟수를 확인하여 잠겨있지 않은 경우 반환
-		return;
+	va_start(args, lpszFormat);
+	formattedMessage.FormatV(lpszFormat, args);
+	va_end(args);
 
-	CString logline; // 로그를 저장할 문자열
+	CString fullLogMessage;
+	fullLogMessage.Format(_T("[%s] %s\r\n"), strDate, formattedMessage);  // 로그 라인에 개행 문자 추가
 
-	// 로그 라인에서 불필요한 문자열 교체
-	logline.Replace(_T(" \""), _T("."));
-
-	EnterCriticalSection(&m_csLock); // 임계 영역 진입
-
-	CString strWriteData; // 로그를 파일에 기록하기 위한 문자열 생성
-	strWriteData.Format(_T("[%s]%s"), (LPCTSTR)strDate, lpszFormat); // 시간과 포맷 문자열을 합쳐서 로그 문자열 생성
-
-	if (m_fWriteFile.m_hFile != CFile::hFileNull) // 파일 핸들이 유효한 경우
-	{
-		m_fWriteFile.SeekToEnd(); // 파일 끝으로 이동
-		strWriteData = strWriteData + _T("\r\n"); // 로그 문자열에 개행 문자 추가
-		m_fWriteFile.Write(strWriteData, strWriteData.GetLength() * 2); // 로그 문자열을 파일에 쓰기
-		m_fWriteFile.Flush(); // 파일 쓰기 버퍼 비우기
+	if (m_fWriteFile.m_hFile != CFile::hFileNull) {
+		// CString의 내용을 ANSI 문자열로 변환하여 파일에 쓰기
+		CStringA strAnsi(fullLogMessage); // Unicode CString을 ANSI CStringA로 변환
+		m_fWriteFile.Write(strAnsi.GetBuffer(), strAnsi.GetLength());
+		m_fWriteFile.Flush(); // 파일 버퍼를 비움
 	}
 
-	LPTSTR  lpBuffer = strWriteData.GetBuffer(); // 문자열을 TCHAR 형태로 변환하여 버퍼 얻음
-	strWriteData.ReleaseBuffer();
+	// 로그 메시지 포스트
+	const int maxRetries = 3;
+	int retryCount = 0;
+	bool messagePosted = false;
 
-	HWND listHWnd = ::GetDlgItem(AfxGetMainWnd()->m_hWnd, IDC_LIST_LOG); // 리스트 박스의 핸들을 얻음
-
-	int itemCount = SendMessage(listHWnd, LB_GETCOUNT, 0, 0); // 현재 리스트 박스의 항목 수 얻음
-
-	// 리스트 박스에 마지막 줄부터 추가
-	SendMessage(listHWnd, LB_INSERTSTRING, itemCount, (LPARAM)lpBuffer); // 리스트 박스에 문자열 추가
-	m_logHandle->SetTopIndex(itemCount); // 리스트 박스 스크롤을 마지막 줄로 이동
-	CreateHorizontalScroll(); // 가로 스크롤 생성
-
-	LeaveCriticalSection(&m_csLock); // 임계 영역 빠져나옴
+	if (CWnd* pMainWnd = AfxGetMainWnd()) 
+	{  // 주 윈도우가 유효한지 확인
+		CString* pStr = new CString(fullLogMessage);
+		while (retryCount < maxRetries && !messagePosted) 
+		{
+			if (pMainWnd->PostMessage(WM_ADDLOG, reinterpret_cast<WPARAM>(pStr), 0)) 
+			{
+				messagePosted = true;
+			}
+			else {
+				retryCount++;
+				Sleep(100); // 100ms 대기 후 재시도
+			}
+		}
+		if (!messagePosted) 
+		{
+			// 메시지 전송 실패시 처리
+			Common::GetInstance()->AddLog(0, _T("Failed to post message to main window after %d retries"), maxRetries);
+			delete pStr; // 메모리 누수를 방지하기 위해 pStr 삭제
+		}
+	}
 }
+
 
 // =============================================================================
 void Common::CreateFolder(CString csPath)
@@ -294,6 +303,8 @@ std::string Common::GetRootPathA()
 	return std::string(path).substr(0, pos);
 }
 
+
+
 // =============================================================================
 // Unicode char* -> CString 변환 과정 
 // char* -> wchar* -> CString 순서로 변환 되어야 함
@@ -351,31 +362,7 @@ LPCSTR Common::CString_to_LPCSTR_Convert(CString data)
 	return ptr;
 }
 
-// =============================================================================
-uint32_t Common::rgbPalette(double ratio)
-{
-	// 비율을 정규화하여 6개의 영역에 맞게 조정.
-	// 각 영역은 256 단위 길이다.
-	int normalized = int(ratio * 256 * 6);
 
-	// 위치에 대한 영역 검색.
-	int region = normalized / 256;
-
-	// 가장 가까운 영역의 시작 지점까지의 거리 검색.
-	int x = normalized % 256;
-
-	uint8_t r = 0, g = 0, b = 0;
-	switch (region)
-	{
-		case 0: r = 255; g = 0;   b = 0;   g += x; break;
-		case 1: r = 255; g = 255; b = 0;   r -= x; break;
-		case 2: r = 0;   g = 255; b = 0;   b += x; break;
-		case 3: r = 0;   g = 255; b = 255; g -= x; break;
-		case 4: r = 0;   g = 0;   b = 255; r += x; break;
-		case 5: r = 255; g = 0;   b = 255; b -= x; break;
-	}
-	return 0;
-}
 
 void Common::SetAutoStartFlag(bool bFlag)
 {
