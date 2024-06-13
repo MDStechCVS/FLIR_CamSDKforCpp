@@ -6,7 +6,7 @@
 
 ## GUI
 
-![GUI](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/f276ab07-a6dd-4d88-a60f-0e5af18e6a26)
+![GUI](https://github.com/MDStechCVS/FLIR_CamSDKforCpp/assets/142575573/d75ad4fc-be0f-4f6c-b20d-f23d4bdf405f)
 
 ## <div align="left">blog</div>
 https://blog.naver.com/mdstec_flir
