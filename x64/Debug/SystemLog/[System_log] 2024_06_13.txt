@@ -1,0 +1,320 @@
+[14:08:50] Create Log
+[14:08:50] Log System initialize start
+[14:08:52] [Camera[1]] IP Address[192.168.0.20] | Model Name[FLIR A50]
+[14:08:52] ------------------------------------
+[14:08:52] -----------Camera Start------------
+[14:08:52] ---------Camera[1] CameraParams Variable Initialize 
+[14:08:52] Shape type changed to: 0
+[14:08:52] Folder already exists in the path 
+[D:\1. Project\1. PLIR\MDS_E-bus_Sample\FLIR_CamSDKforCpp\x64\Debug\Thermaldata\Camera_1\]
+[14:08:52] Folder already exists in the path 
+[D:\1. Project\1. PLIR\MDS_E-bus_Sample\FLIR_CamSDKforCpp\x64\Debug\Thermaldata\Camera_1\Image\]
+[14:08:52] Folder already exists in the path 
+[D:\1. Project\1. PLIR\MDS_E-bus_Sample\FLIR_CamSDKforCpp\x64\Debug\Thermaldata\Camera_1\raw\]
+[14:08:52] Folder already exists in the path 
+[D:\1. Project\1. PLIR\MDS_E-bus_Sample\FLIR_CamSDKforCpp\x64\Debug\Thermaldata\Camera_1\recording\]
+[14:08:52] ---------Camera[1] ImageParams Variable Initialize 
+[14:08:52] ------------------------------------
+[14:08:52] [Camera[1]] Connecting.. to device
+[14:08:52] [Camera[1]] Model = [FLIR A50]
+[14:08:52] [Camera[1]] IP Address = [192.168.0.20]
+[14:08:54] ------------------------------------
+[14:08:54] Opening stream from device
+[14:08:54] [Camera[1]] Stream opened successfully.
+[14:08:54] ------------------------------------
+[14:08:55] [Camera[1]] Negotiate packet size
+[14:08:55] [Camera[1]] Configure device streaming destination
+[14:08:55] ------------------------------------
+[14:08:55] [Camera[1]] Pipeline Create Success
+[14:08:55] ------------------------------------
+[14:08:55] [Camera[1]] FFF_HeightSummary = 351
+[14:08:55] [Camera[1]] Camera Model = FLIR A50
+[14:08:55] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:08:55] [Cam1] Pipeline start
+[14:08:55] [Cam1] Device StreamEnable
+[14:08:55] [Camera[1]] Set IRFormat = Radiometric
+[14:08:55] [Camera[1]] Get IRFormat = 0
+[14:08:55] [Cam1] Streaming Parameters Set
+[14:08:55] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:08:55] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:08:55] [Camera[1]] Get IRFormat = 0
+[14:08:55] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:08:56] CamIndex[1] ReStart Sequence
+[14:08:56] ------------------------------------
+[14:08:56] [Camera[1]] Camera Stop success
+[14:08:56] ---------Camera[1] destroy---------
+[14:08:56] ------------------------------------
+[14:08:56] [Camera[1]][RC]Disconnect.
+[14:08:56] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:08:56] -----------Camera Start------------
+[14:08:58] Camera[0] Thread Status = THREAD_STOP
+[14:08:58] ---------Camera[1] destroy---------
+[14:08:58] ------------------------------------
+[14:08:58] ---------Camera[1] destroy---------
+[14:08:58] ------------------------------------
+[14:08:58] Program Destroy
+ing destination
+[14:06:05] ------------------------------------
+[14:06:05] [Camera[1]] Pipeline Create Success
+[14:06:05] ------------------------------------
+[14:06:05] [Camera[1]] FFF_HeightSummary = 351
+[14:06:05] [Camera[1]] Camera Model = FLIR A50
+[14:06:05] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:06:05] [Cam1] Pipeline start
+[14:06:05] [Cam1] Device StreamEnable
+[14:06:05] [Camera[1]] Set IRFormat = Radiometric
+[14:06:05] [Camera[1]] Get IRFormat = 0
+[14:06:05] [Cam1] Streaming Parameters Set
+[14:06:05] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:06:05] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:06:05] [Camera[1]] Get IRFormat = 0
+[14:06:05] Cam[1][RC] AcquireImages
+[14:06:05] Cam[1] ReStartSequence success
+[14:06:05] Cam[1] [RC]m_bThreadFlag = true
+[14:06:05] ------------------------------------
+[14:06:05] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:06:06] CamIndex[1] ReStart Sequence
+[14:06:06] ------------------------------------
+[14:06:06] [Camera[1]] Camera Stop success
+[14:06:06] ---------Camera[1] destroy---------
+[14:06:06] ------------------------------------
+[14:06:06] [Camera[1]][RC]Disconnect.
+[14:06:06] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:06:06] -----------Camera Start------------
+[14:06:08] [Camera[1]] Connect Success
+[14:06:08] Opening stream from device
+[14:06:08] [Camera[1]] Stream opened successfully.
+[14:06:08] ------------------------------------
+[14:06:09] [Camera[1]] Negotiate packet size
+[14:06:09] [Camera[1]] Configure device streaming destination
+[14:06:09] ------------------------------------
+[14:06:09] [Camera[1]] Pipeline Create Success
+[14:06:09] ------------------------------------
+[14:06:09] [Camera[1]] FFF_HeightSummary = 351
+[14:06:09] [Camera[1]] Camera Model = FLIR A50
+[14:06:09] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:06:09] [Cam1] Pipeline start
+[14:06:09] [Cam1] Device StreamEnable
+[14:06:09] [Camera[1]] Set IRFormat = Radiometric
+[14:06:09] [Camera[1]] Get IRFormat = 0
+[14:06:09] [Cam1] Streaming Parameters Set
+[14:06:09] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:06:09] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:06:09] [Camera[1]] Get IRFormat = 0
+[14:06:09] Cam[1][RC] AcquireImages
+[14:06:09] Cam[1] ReStartSequence success
+[14:06:09] Cam[1] [RC]m_bThreadFlag = true
+[14:06:09] ------------------------------------
+[14:06:09] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:06:09] CamIndex[1] ReStart Sequence
+[14:06:09] ------------------------------------
+[14:06:09] [Camera[1]] Camera Stop success
+[14:06:09] ---------Camera[1] destroy---------
+[14:06:09] ------------------------------------
+[14:06:09] [Camera[1]][RC]Disconnect.
+[14:06:09] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:06:10] -----------Camera Start------------
+[14:06:11] [Camera[1]] Connect Success
+[14:06:11] Opening stream from device
+[14:06:11] [Camera[1]] Stream opened successfully.
+[14:06:11] ------------------------------------
+[14:06:13] [Camera[1]] Negotiate packet size
+[14:06:13] [Camera[1]] Configure device streaming destination
+[14:06:13] ------------------------------------
+[14:06:13] [Camera[1]] Pipeline Create Success
+[14:06:13] ------------------------------------
+[14:06:13] [Camera[1]] FFF_HeightSummary = 351
+[14:06:13] [Camera[1]] Camera Model = FLIR A50
+[14:06:13] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:06:13] [Cam1] Pipeline start
+[14:06:13] [Cam1] Device StreamEnable
+[14:06:13] [Camera[1]] Set IRFormat = Radiometric
+[14:06:13] [Camera[1]] Get IRFormat = 0
+[14:06:13] [Cam1] Streaming Parameters Set
+[14:06:13] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:06:13] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:06:13] [Camera[1]] Get IRFormat = 0
+[14:06:13] Cam[1][RC] AcquireImages
+[14:06:13] Cam[1] ReStartSequence success
+[14:06:13] Cam[1] [RC]m_bThreadFlag = true
+[14:06:13] ------------------------------------
+[14:06:13] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:06:13] CamIndex[1] ReStart Sequence
+[14:06:13] ------------------------------------
+[14:06:13] [Camera[1]] Camera Stop success
+[14:06:13] ---------Camera[1] destroy---------
+[14:06:13] ------------------------------------
+[14:06:13] [Camera[1]][RC]Disconnect.
+[14:06:13] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:06:14] -----------Camera Start------------
+[14:06:15] [Camera[1]] Connect Success
+[14:06:15] Opening stream from device
+[14:06:15] [Camera[1]] Stream opened successfully.
+[14:06:15] ------------------------------------
+[14:06:16] [Camera[1]] Negotiate packet size
+[14:06:16] [Camera[1]] Configure device streaming destination
+[14:06:16] ------------------------------------
+[14:06:16] [Camera[1]] Pipeline Create Success
+[14:06:16] ------------------------------------
+[14:06:16] [Camera[1]] FFF_HeightSummary = 351
+[14:06:16] [Camera[1]] Camera Model = FLIR A50
+[14:06:16] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:06:16] [Cam1] Pipeline start
+[14:06:16] [Cam1] Device StreamEnable
+[14:06:16] [Camera[1]] Set IRFormat = Radiometric
+[14:06:16] [Camera[1]] Get IRFormat = 0
+[14:06:16] [Cam1] Streaming Parameters Set
+[14:06:16] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:06:16] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:06:16] [Camera[1]] Get IRFormat = 0
+[14:06:16] Cam[1][RC] AcquireImages
+[14:06:16] Cam[1] ReStartSequence success
+[14:06:16] Cam[1] [RC]m_bThreadFlag = true
+[14:06:16] ------------------------------------
+[14:06:16] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:06:17] CamIndex[1] ReStart Sequence
+[14:06:17] ------------------------------------
+[14:06:17] [Camera[1]] Camera Stop success
+[14:06:17] ---------Camera[1] destroy---------
+[14:06:17] ------------------------------------
+[14:06:17] [Camera[1]][RC]Disconnect.
+[14:06:17] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:06:17] -----------Camera Start------------
+[14:06:19] [Camera[1]] Connect Success
+[14:06:19] Opening stream from device
+[14:06:19] [Camera[1]] Stream opened successfully.
+[14:06:19] ------------------------------------
+[14:06:20] [Camera[1]] Negotiate packet size
+[14:06:20] [Camera[1]] Configure device streaming destination
+[14:06:20] ------------------------------------
+[14:06:20] [Camera[1]] Pipeline Create Success
+[14:06:20] ------------------------------------
+[14:06:20] [Camera[1]] FFF_HeightSummary = 351
+[14:06:20] [Camera[1]] Camera Model = FLIR A50
+[14:06:20] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:06:20] [Cam1] Pipeline start
+[14:06:20] [Cam1] Device StreamEnable
+[14:06:20] [Camera[1]] Set IRFormat = Radiometric
+[14:06:20] [Camera[1]] Get IRFormat = 0
+[14:06:20] [Cam1] Streaming Parameters Set
+[14:06:20] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:06:20] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:06:20] [Camera[1]] Get IRFormat = 0
+[14:06:20] Cam[1][RC] AcquireImages
+[14:06:20] Cam[1] ReStartSequence success
+[14:06:20] Cam[1] [RC]m_bThreadFlag = true
+[14:06:20] ------------------------------------
+[14:06:20] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:06:21] CamIndex[1] ReStart Sequence
+[14:06:21] ------------------------------------
+[14:06:21] [Camera[1]] Camera Stop success
+[14:06:21] ---------Camera[1] destroy---------
+[14:06:21] ------------------------------------
+[14:06:21] [Camera[1]][RC]Disconnect.
+[14:06:21] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:06:21] -----------Camera Start------------
+[14:06:23] [Camera[1]] Connect Success
+[14:06:23] Opening stream from device
+[14:06:23] [Camera[1]] Stream opened successfully.
+[14:06:23] ------------------------------------
+[14:06:24] [Camera[1]] Negotiate packet size
+[14:06:24] [Camera[1]] Configure device streaming destination
+[14:06:24] ------------------------------------
+[14:06:24] [Camera[1]] Pipeline Create Success
+[14:06:24] ------------------------------------
+[14:06:24] [Camera[1]] FFF_HeightSummary = 351
+[14:06:24] [Camera[1]] Camera Model = FLIR A50
+[14:06:24] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:06:24] [Cam1] Pipeline start
+[14:06:24] [Cam1] Device StreamEnable
+[14:06:24] [Camera[1]] Set IRFormat = Radiometric
+[14:06:24] [Camera[1]] Get IRFormat = 0
+[14:06:24] [Cam1] Streaming Parameters Set
+[14:06:24] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:06:24] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:06:24] [Camera[1]] Get IRFormat = 0
+[14:06:24] Cam[1][RC] AcquireImages
+[14:06:24] Cam[1] ReStartSequence success
+[14:06:24] Cam[1] [RC]m_bThreadFlag = true
+[14:06:24] ------------------------------------
+[14:06:24] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:06:25] CamIndex[1] ReStart Sequence
+[14:06:25] ------------------------------------
+[14:06:25] [Camera[1]] Camera Stop success
+[14:06:25] ---------Camera[1] destroy---------
+[14:06:25] ------------------------------------
+[14:06:25] [Camera[1]][RC]Disconnect.
+[14:06:25] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:06:25] -----------Camera Start------------
+[14:06:27] [Camera[1]] Connect Success
+[14:06:27] Opening stream from device
+[14:06:27] [Camera[1]] Stream opened successfully.
+[14:06:27] ------------------------------------
+[14:06:28] [Camera[1]] Negotiate packet size
+[14:06:28] [Camera[1]] Configure device streaming destination
+[14:06:28] ------------------------------------
+[14:06:28] [Camera[1]] Pipeline Create Success
+[14:06:28] ------------------------------------
+[14:06:28] [Camera[1]] FFF_HeightSummary = 351
+[14:06:28] [Camera[1]] Camera Model = FLIR A50
+[14:06:28] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:06:28] [Cam1] Pipeline start
+[14:06:28] [Cam1] Device StreamEnable
+[14:06:28] [Camera[1]] Set IRFormat = Radiometric
+[14:06:28] [Camera[1]] Get IRFormat = 0
+[14:06:28] [Cam1] Streaming Parameters Set
+[14:06:28] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:06:28] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:06:28] [Camera[1]] Get IRFormat = 0
+[14:06:28] Cam[1][RC] AcquireImages
+[14:06:28] Cam[1] ReStartSequence success
+[14:06:28] Cam[1] [RC]m_bThreadFlag = true
+[14:06:28] ------------------------------------
+[14:06:28] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:06:28] CamIndex[1] ReStart Sequence
+[14:06:28] ------------------------------------
+[14:06:28] [Camera[1]] Camera Stop success
+[14:06:28] ---------Camera[1] destroy---------
+[14:06:28] ------------------------------------
+[14:06:28] [Camera[1]][RC]Disconnect.
+[14:06:28] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:06:29] -----------Camera Start------------
+[14:06:30] [Camera[1]] Connect Success
+[14:06:30] Opening stream from device
+[14:06:30] [Camera[1]] Stream opened successfully.
+[14:06:30] ------------------------------------
+[14:06:31] [Camera[1]] Negotiate packet size
+[14:06:31] [Camera[1]] Configure device streaming destination
+[14:06:31] ------------------------------------
+[14:06:31] [Camera[1]] Pipeline Create Success
+[14:06:31] ------------------------------------
+[14:06:31] [Camera[1]] FFF_HeightSummary = 351
+[14:06:31] [Camera[1]] Camera Model = FLIR A50
+[14:06:32] [Camera[1]] Set PixelFormat [Mono16] 0x1100007
+[14:06:32] [Cam1] Pipeline start
+[14:06:32] [Cam1] Device StreamEnable
+[14:06:32] [Camera[1]] Set IRFormat = Radiometric
+[14:06:32] [Camera[1]] Get IRFormat = 0
+[14:06:32] [Cam1] Streaming Parameters Set
+[14:06:32] [Camera[1]] QueryCase Value =  [0] QueryCase LowLimit = 253.15 QueryCase HighLimit = 448.15
+[14:06:32] [Camera[1]] QueryCase Value =  [1] QueryCase LowLimit = 448.15 QueryCase HighLimit = 1273.15
+[14:06:32] [Camera[1]] Get IRFormat = 0
+[14:06:32] Cam[1][RC] AcquireImages
+[14:06:32] Cam[1] ReStartSequence success
+[14:06:32] Cam[1] [RC]m_bThreadFlag = true
+[14:06:32] ------------------------------------
+[14:06:32] CamIndex[1] Retrieve buffer Fail code = [23]
+[14:06:32] CamIndex[1] ReStart Sequence
+[14:06:32] ------------------------------------
+[14:06:32] [Camera[1]] Camera Stop success
+[14:06:32] ---------Camera[1] destroy---------
+[14:06:32] ------------------------------------
+[14:06:32] [Camera[1]][RC]Disconnect.
+[14:06:32] [Camera[1]][RC]IP Address = [192.168.0.20]
+[14:06:33] -----------Camera Start------------
+[14:06:33] Camera[0] Thread Status = THREAD_STOP
+[14:06:33] ---------Camera[1] destroy---------
+[14:06:33] ------------------------------------
+[14:06:33] ---------Camera[1] destroy---------
+[14:06:33] ------------------------------------
+[14:06:33] Program Destroy
