@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 <img width="320" alt="CI수정_가로형_영문_색상" src="https://github.com/MDStechCVS/FLIR_BosonSDKforPython/assets/142575573/b941d3e6-3dd8-46f7-9336-3f9ed4eaed77">
 
@@ -33,6 +32,3 @@ e-bus sdk 4.1.6.3809<br>
 ## <div align="left">Contact</div>
 For bugs and inquiries, please contact us through GitHub Issues or team email.<br>
 team email : cvs_team@mdstech.co.kr
-===================================================
-
->>>>>>> debb75155402f4ec02a866c5f4552766560ea588
