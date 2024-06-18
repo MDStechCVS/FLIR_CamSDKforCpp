@@ -74,7 +74,7 @@ private:
 	//CSkinButton m_BtnConnect;
 	CSkinButton m_BtnDisconnect;
 	CSkinButton m_BtnFPS30;
-	CSkinButton m_BtnFPS60;
+	CSkinButton m_BtnAF;
 	CSkinButton m_BtnDeviceFind;
 	CSkinButton m_BtnLoadiniFile;
 	CSkinButton m_BtniniApply;
@@ -235,10 +235,9 @@ public:
 	afx_msg void OnBnClickedBtnImgStream();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnBnClickedBtnFps60();
+	afx_msg void OnBnClickedBtnAF();
 	afx_msg void OnBnClickedBtnFps30();
 	afx_msg void OnBnClickedCkParam();
-	afx_msg void OnBnClickedBtnConnected();
 	afx_msg void OnBnClickedCkPointer();
 	afx_msg void OnBnClickedCkMarker();
 	afx_msg void OnBnClickedBtnDeviceFind();

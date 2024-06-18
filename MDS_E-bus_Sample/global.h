@@ -267,6 +267,69 @@ enum class guistatus
 };
 using GUI_STATUS = guistatus;
 
+// 최대 및 최소 스팟 값을 저장하기 위한 구조체
+struct MDSMeasureMaxSpotValue
+{
+	int x; // x 좌표
+	int y; // y 좌표
+	int pointIdx; // 포인트 인덱스
+	ushort tempValue; // 온도 값
+	bool updated;
+
+	MDSMeasureMaxSpotValue() : x(0), y(0), pointIdx(0), tempValue(std::numeric_limits<ushort>::min()), updated(false) {}
+};
+
+struct MDSMeasureMinSpotValue
+{
+	int x; // x 좌표
+	int y; // y 좌표
+	int pointIdx; // 포인트 인덱스
+	ushort tempValue; // 온도 값
+	bool updated;
+
+	MDSMeasureMinSpotValue() : x(0), y(0), pointIdx(0), tempValue(std::numeric_limits<ushort>::max()), updated(false) {}
+};
+
+// ROI (관심 영역) 유형을 정의하는 열거형
+enum class ShapeType
+{
+	None = -1,
+	Rectangle = 0,
+	Circle,
+	Ellipse,
+	Line
+};
+
+// 각 ROI의 결과를 저장하는 구조체
+struct ROIResults
+{
+	cv::Rect roi; // ROI 영역
+	int max_x, max_y, min_x, min_y; // 최대/최소 x, y 좌표
+	ushort max_temp, min_temp; // 최대/최소 온도
+	ShapeType shapeType; // 도형
+	MDSMeasureMaxSpotValue maxSpot; // 최대 스팟 값
+	MDSMeasureMinSpotValue minSpot; // 최소 스팟 값
+
+	MDSMeasureMaxSpotValue lastMaxSpot; // 마지막으로 업데이트된 최대 스팟 위치
+	MDSMeasureMinSpotValue lastMinSpot; // 마지막으로 업데이트된 최소 스팟 위치
+
+	int span; // 스팬 값
+	int level; // 레벨 값
+	int nIndex;
+	bool needsRedraw; // 다시 그릴 필요 여부
+	cv::Scalar color;
+
+	ROIResults() : max_x(0), max_y(0), min_x(0), min_y(0),
+		max_temp(0), min_temp(65535),
+		shapeType(ShapeType::None),
+		span(0), level(0), nIndex(-1),
+		needsRedraw(true),
+		color(cv::Scalar(51, 255, 51)) {
+		lastMaxSpot = maxSpot; // 초기화 시 현재 스팟 값으로 설정
+		lastMinSpot = minSpot; // 초기화 시 현재 스팟 값으로 설정
+	}
+};
+
 static double quicklog(double dbl_val)
 {
 #define sqr2div2 0.7071067811865476

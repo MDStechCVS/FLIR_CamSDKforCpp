@@ -110,13 +110,6 @@ void ImageProcessor::RenderDataSequence(PvImage* lImage, PvBuffer* aBuffer, byte
     // 이미지 노멀라이즈
     cv::Mat processedImageMat = ProcessImageBasedOnSettings(imageDataPtr, nHeight, nWidth, MainDlg);
 
-    //ROI 객체 이미지 사이즈 저장
-    SetImageSize(processedImageMat);
-
-    //ROI 사각형 영역이 생겼을 경우에만 그린다
-    //if(GetROIEnabled())
-    //    DrawAllRoiRectangles(processedImageMat);
-
     // 카메라 모델명 좌상단에 그리기
     //putTextOnCamModel(processedImageMat);
     
@@ -171,7 +164,7 @@ void ImageProcessor::Initvariable_ImageParams()
     Common::GetInstance()->CreateDirectoryRecursively(GetRawSavePath());
     Common::GetInstance()->CreateDirectoryRecursively(GetRecordingPath());
 
-    strLog.Format(_T("---------Camera[%d] ImageParams Variable Initialize "), GetCam()->GetCamIndex() + 1);
+    strLog.Format(_T("Camera[%d] ImageParams Variable Initialize "), GetCam()->GetCamIndex() + 1);
     Common::GetInstance()->AddLog(0, strLog);
 }
 
@@ -469,8 +462,6 @@ void ImageProcessor::ProcessAndRecordFrame(cv::Mat& processedImageMat, int nWidt
 {
     CString strLog = _T("");
 
-
-
     // ROI 처리 완료 대기
     std::unique_lock<std::mutex> lock(m_roiMutex);
     roiProcessedCond.wait(lock, [this]() { return !isProcessingROIs.load(); }); // ROI 처리가 완료될 때까지 대기
@@ -502,7 +493,7 @@ void ImageProcessor::ProcessAndRecordFrame(cv::Mat& processedImageMat, int nWidt
         else
         {
             // 이미지 프레임을 녹화 전용 데이터로 복사
-            UpdateFrame(processedImageMat);
+            //UpdateFrame(processedImageMat);
         }
     }
     else
@@ -1162,10 +1153,12 @@ cv::Mat ImageProcessor::NormalizeAndProcessImage(const T* data, int height, int 
     cv::minMaxLoc(imageMat, &min_val, &max_val);
 
     int range = static_cast<int>(max_val) - static_cast<int>(min_val);
+
     if (range == 0)
         range = 1;
 
-    //imageMat.convertTo(imageMat, cvType, std::numeric_limits<T>::max() / range, -(min_val)* std::numeric_limits<T>::max() / range);
+    //ROI 객체 이미지 사이즈 저장
+    SetImageSize(imageMat);
 
     return imageMat;
 }
@@ -1193,7 +1186,7 @@ void ImageProcessor::DrawMinMarkerAndText(cv::Mat& imageMat, const MDSMeasureMin
     if (center.x >= 0 && center.x < imageMat.cols && center.y >= 0 && center.y < imageMat.rows)
     {
         // 텍스트 그리기
-        cv::putText(imageMat, text, centerText, cv::FONT_HERSHEY_PLAIN, 1.5, TextColor, 1, cv::LINE_AA);
+        cv::putText(imageMat, text, centerText, cv::FONT_HERSHEY_PLAIN, 1, TextColor, 1, cv::LINE_AA);
         // 마커 그리기
         cv::drawMarker(imageMat, center, color, cv::MARKER_TRIANGLE_DOWN, markerSize, 2);
     }
@@ -1213,7 +1206,7 @@ void ImageProcessor::DrawMaxMarkerAndText(cv::Mat& imageMat, const MDSMeasureMax
     if (center.x >= 0 && center.x < imageMat.cols && center.y >= 0 && center.y < imageMat.rows)
     {
         // 텍스트 그리기
-        cv::putText(imageMat, text, center, cv::FONT_HERSHEY_PLAIN, 1.5, TextColor, 1, cv::LINE_AA);
+        cv::putText(imageMat, text, center, cv::FONT_HERSHEY_PLAIN, 1, TextColor, 1, cv::LINE_AA);
         // 마커 그리기
         cv::drawMarker(imageMat, center, color, cv::MARKER_TRIANGLE_UP, markerSize, 2);
     }
@@ -1231,24 +1224,30 @@ void ImageProcessor::DrawAllRoiRectangles(cv::Mat& image)
         std::lock_guard<std::mutex> roiLock(m_roiMutex);  // 확정된 ROI 데이터를 보호하기 위해 뮤텍스를 사용합니다.
         cv::Scalar MinColor(255, 0, 0); // 흰색 (BGR 순서로 지정)
         cv::Scalar MaxColor(0, 0, 255); // 흰색 (BGR 순서로 지정)
-        int markerSize = 20; // 마커의 크기 설정
+        int markerSize = 15; // 마커의 크기 설정
 
         for (const auto& roiResult : m_roiResults)
-        {
+        {  
             if (roiResult->needsRedraw)
-            {              
+            {
                 DrawRoiShape(image, *roiResult, num_channels, roiResult->shapeType);
                 roiResult->needsRedraw = false;
             }
 
-            if (roiResult->minSpot.updated || roiResult->maxSpot.updated)
+            if (m_FrameCount % 100 == 0) // 10 프레임마다 실행
             {
-                DrawMinMarkerAndText(image, roiResult->minSpot, "Min", MinColor, markerSize);
-                DrawMaxMarkerAndText(image, roiResult->maxSpot, "Max", MaxColor, markerSize);
+                if (roiResult->minSpot.updated || roiResult->maxSpot.updated)
+                {
+                    roiResult->minSpot.updated = false;
+                    roiResult->maxSpot.updated = false;
 
-                roiResult->minSpot.updated = false;
-                roiResult->maxSpot.updated = false;
-            }           
+                    roiResult->lastMinSpot = roiResult->minSpot;
+                    roiResult->lastMaxSpot = roiResult->maxSpot;
+                }
+            }
+
+            DrawMinMarkerAndText(image, roiResult->lastMinSpot, "", MinColor, markerSize);
+            DrawMaxMarkerAndText(image, roiResult->lastMaxSpot, "", MaxColor, markerSize);
         }    
     }
 
@@ -1442,6 +1441,8 @@ void ImageProcessor::InitializeSingleRoiResult(ROIResults& roiResult)
     roiResult.maxSpot = MDSMeasureMaxSpotValue();
     roiResult.minSpot = MDSMeasureMinSpotValue();
 
+    roiResult.lastMaxSpot = roiResult.maxSpot;  
+    roiResult.lastMinSpot = roiResult.minSpot;  
 
     roiResult.span = 0;
     roiResult.level = 0;
@@ -1532,7 +1533,7 @@ void ImageProcessor::ROIXYinBox(ushort uTempValue, double dScale, int nCurrentX,
         roiResult.minSpot.y = roiResult.min_y;  // 스팟의 Y 좌표 업데이트
         roiResult.minSpot.pointIdx = nPointIdx; // 포인트 인덱스 저장
         roiResult.minSpot.updated = true;
-
+        roiResult.lastMinSpot = roiResult.minSpot;
         if (GetCam()->GetIRFormat() != Camera_IRFormat::RADIOMETRIC)
             roiResult.minSpot.tempValue = static_cast<float>(uTempValue) * dScale - FAHRENHEIT;
         else
@@ -1553,6 +1554,7 @@ void ImageProcessor::ROIXYinBox(ushort uTempValue, double dScale, int nCurrentX,
         roiResult.maxSpot.y = roiResult.max_y;  // 스팟의 Y 좌표 업데이트
         roiResult.maxSpot.pointIdx = nPointIdx; // 포인트 인덱스 저장
         roiResult.maxSpot.updated = true;
+        roiResult.lastMaxSpot = roiResult.maxSpot;
 
         if (GetCam()->GetIRFormat() != Camera_IRFormat::RADIOMETRIC)
             roiResult.maxSpot.tempValue = static_cast<float>(uTempValue) * dScale - FAHRENHEIT;
@@ -1567,8 +1569,6 @@ void ImageProcessor::ROIXYinBox(ushort uTempValue, double dScale, int nCurrentX,
     roiResult.span = roiResult.max_temp - roiResult.min_temp;
     roiResult.level = (roiResult.max_temp + roiResult.min_temp) / 2.0;
 }
-
-
 
 // =============================================================================
 // 16비트 데이터 최소,최대값 산출
@@ -2149,7 +2149,7 @@ void ImageProcessor::DetectAndDisplayPeople(cv::Mat& image, int& personCount, do
     std::vector<cv::Rect> detections;
     fullbody_cascade.detectMultiScale(image, detections);
 
-    personCount = detections.size();
+    personCount = (int)detections.size();
     detectionRate = (double)personCount / (image.rows * image.cols) * 100;
 
     for (const auto& detection : detections)
@@ -2167,22 +2167,6 @@ void ImageProcessor::DisplayPersonCountAndRate(cv::Mat& image, int personCount, 
 {
     std::string text = "Count: " + std::to_string(personCount) + " Rate: " + std::to_string(detectionRate) + "%";
     cv::putText(image, text, cv::Point(0, 200), cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(255, 255, 255), 2, cv::LINE_AA);
-}
-
-//=============================================================================
-void ImageProcessor::addROI(const cv::Rect& roi)
-{
-    //std::lock_guard<std::mutex> lock(m_roiMutex);  // m_roiResults에 대한 변경을 동기화
-    //auto roiResult = std::make_shared<ROIResults>();
-    //roiResult->roi = roi;
-
-    //roiResult->nIndex = m_roiResults.size()+1;  // 인덱스는 추가되는 순서대로 할당
-    //m_roiResults.push_back(roiResult);
-
-
-    //CString strLog;
-    //strLog.Format(_T("Added ROI: %d [%d, %d, %d, %d]"), roiResult->nIndex, roiResult->roi.x, roiResult->roi.y, roiResult->roi.width, roiResult->roi.height);
-    //Common::GetInstance()->AddLog(0, strLog);
 }
 
 //=============================================================================
@@ -2294,7 +2278,7 @@ void ImageProcessor::confirmROI(const cv::Rect& roi, ShapeType shapeType)
     roiResult->shapeType = shapeType;
     roiResult->needsRedraw = true;
     // 인덱스는 추가되는 순서대로 할당
-    roiResult->nIndex = m_roiResults.size()+1;
+    roiResult->nIndex = (int)m_roiResults.size()+1;
     m_roiResults.push_back(roiResult);
 
     CString strLog;
@@ -2408,11 +2392,11 @@ void ImageProcessor::DrawRoiShape(cv::Mat& imageMat, const ROIResults& roiResult
     // 구조체에 있는 색을 기본값으로 
     cv::Scalar drawColor = (color == cv::Scalar(-1, -1, -1)) ? roiResult.color : color;
 
-
+    int ntSize = 1;
     switch (shapeType)
     {
     case ShapeType::Rectangle:
-        cv::rectangle(imageMat, roiResult.roi, drawColor, 2);
+        cv::rectangle(imageMat, roiResult.roi, drawColor, ntSize);
         break;
     case ShapeType::Circle:
     {
@@ -2432,11 +2416,11 @@ void ImageProcessor::DrawRoiShape(cv::Mat& imageMat, const ROIResults& roiResult
     {
         if (abs(roiResult.roi.width) > abs(roiResult.roi.height))
         {
-            cv::line(imageMat, cv::Point(roiResult.roi.x, roiResult.roi.y), cv::Point(roiResult.roi.x + roiResult.roi.width, roiResult.roi.y), drawColor, 2);
+            cv::line(imageMat, cv::Point(roiResult.roi.x, roiResult.roi.y), cv::Point(roiResult.roi.x + roiResult.roi.width, roiResult.roi.y), drawColor, ntSize);
         }
         else
         {
-            cv::line(imageMat, cv::Point(roiResult.roi.x, roiResult.roi.y), cv::Point(roiResult.roi.x, roiResult.roi.y + roiResult.roi.height), drawColor, 2);
+            cv::line(imageMat, cv::Point(roiResult.roi.x, roiResult.roi.y), cv::Point(roiResult.roi.x, roiResult.roi.y + roiResult.roi.height), drawColor, ntSize);
         }
     }
     break;
@@ -2444,6 +2428,18 @@ void ImageProcessor::DrawRoiShape(cv::Mat& imageMat, const ROIResults& roiResult
     default:
         break;
     }
+    // ROI 인덱스를 텍스트로 변환
+    std::string text = "[" + std::to_string(roiResult.nIndex) + "]";
+    int fontFace = cv::FONT_HERSHEY_SIMPLEX;
+    double fontScale = 0.5;
+    int thickness = 2;
+    int baseline = 0;
+    // 텍스트의 크기를 계산하여 텍스트 배치
+    cv::Size textSize = cv::getTextSize(text, fontFace, fontScale, thickness, &baseline);
+    cv::Point textOrg(roiResult.roi.x, roiResult.roi.y - 5); // 도형의 좌상단에 텍스트 위치
+
+    // ROI 인덱스를 좌상단에 표시
+    cv::putText(imageMat, text, textOrg, fontFace, fontScale, drawColor, 1);
 }
 
 //=============================================================================
@@ -2452,7 +2448,7 @@ void ImageProcessor::SetCurrentShapeType(ShapeType type)
     currentShapeType = type;
     // 로그나 상태 업데이트를 위한 추가 처리
     CString logMessage;
-    logMessage.Format(_T("Shape type changed to: %d"), static_cast<int>(type));
+    logMessage.Format(_T("[Camera[%d]] Shape type changed to: %d"), m_nIndex + 1, static_cast<int>(type));
     Common::GetInstance()->AddLog(0, logMessage);
 
     // 도형 유형이 변경되었음을 다른 메소드에 통지할 수 있습니다.

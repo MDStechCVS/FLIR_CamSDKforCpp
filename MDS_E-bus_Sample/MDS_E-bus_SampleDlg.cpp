@@ -89,7 +89,7 @@ void CMDS_Ebus_SampleDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_BTN_STOP, m_BtnStop);
     DDX_Control(pDX, IDC_BTN_DISCONNECT, m_BtnDisconnect);
     DDX_Control(pDX, IDC_BTN_FPS30, m_BtnFPS30);
-    DDX_Control(pDX, IDC_BTN_FPS60, m_BtnFPS60);
+    DDX_Control(pDX, IDC_BTN_AF, m_BtnAF);
     DDX_Control(pDX, IDC_BTN_DEVICEFIND, m_BtnDeviceFind);
     DDX_Control(pDX, IDC_BTN_LOAD_INI_FILE, m_BtnLoadiniFile);
     DDX_Control(pDX, IDC_BTN_INI_APPLY, m_BtniniApply);
@@ -169,7 +169,7 @@ BEGIN_MESSAGE_MAP(CMDS_Ebus_SampleDlg, CDialogEx)
     ON_WM_ERASEBKGND()
     ON_WM_DESTROY()
     ON_WM_CTLCOLOR()
-    ON_BN_CLICKED(IDC_BTN_FPS60, &CMDS_Ebus_SampleDlg::OnBnClickedBtnFps60)
+    ON_BN_CLICKED(IDC_BTN_AF, &CMDS_Ebus_SampleDlg::OnBnClickedBtnAF)
     ON_BN_CLICKED(IDC_BTN_FPS30, &CMDS_Ebus_SampleDlg::OnBnClickedBtnFps30)
     ON_BN_CLICKED(IDC_CK_PARAM, &CMDS_Ebus_SampleDlg::OnBnClickedCkParam)
     ON_BN_CLICKED(IDC_CK_POINTER, &CMDS_Ebus_SampleDlg::OnBnClickedCkPointer)
@@ -379,6 +379,7 @@ HCURSOR CMDS_Ebus_SampleDlg::OnQueryDragIcon()
 void CMDS_Ebus_SampleDlg::OnBnClickedBtnStart()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    CString strLog = _T("");
 
     if (m_CamManager != nullptr)
     {
@@ -388,6 +389,8 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnStart()
             if (m_CamManager->m_Cam[nIndex]->GetCamRunningFlag() == FALSE)
             {
                 m_CamManager->m_Cam[nIndex]->CameraStart(nIndex);
+                strLog.Format(_T("Camera[%d] Streaming Start"), nIndex + 1);
+                Common::GetInstance()->AddLog(0, strLog);
                 this->EnableWindow(TRUE);
                 this->SetFocus();
 
@@ -414,7 +417,7 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnStop()
             {
                 m_CamManager->m_Cam[nIndex]->CameraStop(nIndex);
 
-                strLog.Format(_T("Camera[% d] Streaming Stop"), nIndex + 1);
+                strLog.Format(_T("Camera[%d] Streaming Stop"), nIndex + 1);
                 Common::GetInstance()->AddLog(0, strLog);
 
                 this->EnableWindow(TRUE);
@@ -702,6 +705,9 @@ void CMDS_Ebus_SampleDlg::OnTimer(UINT_PTR nIDEvent)
         catch (const std::exception& e) 
         {
             // 예외 처리
+            CString strError;
+            strError.Format(_T("Error in camera update: %s"), e.what());
+            Common::GetInstance()->AddLog(0, strError);
         }
     }
 }
@@ -772,6 +778,8 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
             pDC->SetBkMode(TRANSPARENT);
             return (HBRUSH)(m_brush2->GetSafeHandle());
 
+        default:
+            break;
         }
 
     case CTLCOLOR_STATIC:
@@ -883,6 +891,9 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
             pDC->SetBkColor(BLACK);
             pDC->SetBkMode(TRANSPARENT);
             return (HBRUSH)(m_brush2->GetSafeHandle());
+
+        default:
+            break;
         }
     }
     return hbr;
@@ -911,8 +922,14 @@ HBRUSH CMDS_Ebus_SampleDlg::HandleCameraRecordingStatus(int camIndex, CDC* pDC)
 }
 
 // =============================================================================
-void CMDS_Ebus_SampleDlg::OnBnClickedBtnFps60()
+void CMDS_Ebus_SampleDlg::OnBnClickedBtnAF()
 {
+    if (m_CamManager->m_Cam[GetSelectCamIndex()] != nullptr)
+    {
+        m_CamManager->m_Cam[GetSelectCamIndex()]->SetAutoFocus();
+    }
+
+
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
     
 
@@ -1076,7 +1093,8 @@ void CMDS_Ebus_SampleDlg::Btn_Interface_setting()
     SetWindowTheme(this->GetDlgItem(IDC_CB_CAM2_COLORMAP)->GetSafeHwnd(), L"", L"");
     SetWindowTheme(this->GetDlgItem(IDC_CB_CAM3_COLORMAP)->GetSafeHwnd(), L"", L"");
     SetWindowTheme(this->GetDlgItem(IDC_CB_CAM4_COLORMAP)->GetSafeHwnd(), L"", L"");
-    
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC27)->GetSafeHwnd(), L"", L"");
+    SetWindowTheme(this->GetDlgItem(IDC_STATIC30)->GetSafeHwnd(), L"", L"");
 
 
     
@@ -1089,7 +1107,7 @@ void CMDS_Ebus_SampleDlg::Btn_Interface_setting()
     /*m_BtnConnect.SetText(_T("Connect / Select"));*/
     m_BtnDisconnect.SetText(_T("Disconnect"));
     m_BtnFPS30.SetText(_T("FPS 30"));
-    m_BtnFPS60.SetText(_T("FPS 60"));
+    m_BtnAF.SetText(_T("AF"));
     m_BtnDeviceFind.SetText(_T("Device Find"));
     m_BtnLoadiniFile.SetText(_T("System Param *.ini"));
     m_BtniniApply.SetText(_T("Apply"));
@@ -1116,7 +1134,7 @@ BOOL CMDS_Ebus_SampleDlg::PreTranslateMessage(MSG* pMsg)
     {
         IDC_BTN_DEVICE, IDC_BTN_COMMUNICATION, IDC_BTN_IMG_STREAM,
         IDC_BTN_START, IDC_BTN_STOP,
-        IDC_BTN_DISCONNECT, IDC_BTN_FPS30, IDC_BTN_FPS60,
+        IDC_BTN_DISCONNECT, IDC_BTN_FPS30, IDC_BTN_AF,
         IDC_BTN_DEVICEFIND, IDC_BTN_LOAD_INI_FILE, IDC_BTN_INI_APPLY, IDC_BTN_CAM_PARAM,
         IDC_BTN_CAM_PARAM_APPLY, IDC_BTN_OPEN_DATA_FOLDER,IDC_BTN_IMG_SNAP, IDC_BTN_IMG_RECORDING,
     };
@@ -1705,6 +1723,8 @@ void CMDS_Ebus_SampleDlg::OnBnClickedBtnIniApply()
         return;
 
     LoadiniFile();
+    m_CamManager->CameraDeviceFind(this);
+
 }
 
 // =============================================================================
@@ -2205,12 +2225,12 @@ void CMDS_Ebus_SampleDlg::UpdateCameraInfo(CameraControl_rev* cam, CameraInfoLab
 
     UpdateLabel(cam->GetCameraFPS(), labels.lbFps);
     
-    //if (cam->m_Camlist != CAM_MODEL::BlackFly)
-    //{
+    if (cam->m_Camlist != CAM_MODEL::BlackFly)
+    {
     //    UpdateLabel(cam->GetImageProcessor()->m_MinSpot.tempValue, labels.lbMin);
     //    UpdateLabel(cam->GetImageProcessor()->m_MaxSpot.tempValue, labels.lbMax);
-    //    UpdateROIInfo(cam, labels.lbROI);
-    //}
+        UpdateROIInfo(cam, labels.lbROI);
+    }
     
     // 녹화상태 깜빡임 변수
     if (cam->GetCamRunningFlag() && cam->GetImageProcessor()->GetStartRecordingFlag())
@@ -2248,8 +2268,9 @@ void CMDS_Ebus_SampleDlg::UpdateLabel(int value, CTransparentStatic& label)
 void CMDS_Ebus_SampleDlg::UpdateROIInfo(CameraControl_rev* cam, CTransparentStatic& label)
 {
     //cv::Rect rt = cam->GetImageProcessor()->m_Select_rect;
-    //CString currentText, newText;
-    //label.GetText(currentText);
+    CString currentText, newText;
+    currentText.Format(_T("ROI Count : [%d]"), cam->GetImageProcessor()->m_roiResults.size());
+    label.SetText(currentText);
     //newText.Format(_T("[Position] X [%d] Y [%d] W [%d] H [%d] Pixel Count [%d]"),
     //    rt.x, rt.y, rt.width, rt.height, rt.width * rt.height);
 

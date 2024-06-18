@@ -12,6 +12,7 @@
 #define IDC_BTN_STOP                    1001
 #define IDC_BTN_START                   1002
 #define IDC_BTN_FPS60                   1003
+#define IDC_BTN_AF                      1003
 #define IDC_LIST_LOG                    1004
 #define IDC_BTN_FPS30                   1005
 #define IDC_MODE                        1006

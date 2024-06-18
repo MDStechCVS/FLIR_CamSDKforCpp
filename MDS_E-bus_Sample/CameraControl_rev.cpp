@@ -109,7 +109,7 @@ void CameraControl_rev::Initvariable()
 
     ClearQueue();
 
-    strLog.Format(_T("---------Camera[%d] CameraParams Variable Initialize "), GetCamIndex() + 1);
+    strLog.Format(_T("Camera[%d] CameraParams Variable Initialize "), GetCamIndex() + 1);
     Common::GetInstance()->AddLog(0, strLog);
 }
 
@@ -284,7 +284,7 @@ PvStream* CameraControl_rev::OpenStream(int nIndex)
     // 재시도 루프
     while (nRtyCnt <= maxRetries)
     {
-        strLog.Format(_T("Opening stream from device"));
+        strLog.Format(_T("[Camera[%d]] Opening stream from device"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
 
         PvString ConnectionID = Manager->m_strSetIPAddress.at(nIndex);
@@ -1005,8 +1005,8 @@ bool CameraControl_rev::CameraStart(int nIndex)
     bool bFlag = false;
     CMDS_Ebus_SampleDlg* MainDlg = ImgProc->GetMainDialog();
     CString strLog = _T("");
-    strLog.Format(_T("---------Camera Start----------"));
-    Common::GetInstance()->AddLog(0, strLog);
+
+    Common::GetInstance()->AddLog(0, _T("------------------------------------"));
     Sleep(500);
     CameraSequence(nIndex);
 
@@ -1024,6 +1024,8 @@ bool CameraControl_rev::CameraStop(int nIndex)
     bool bFlag[3] = { false, };
     bool bRtn = false;
 
+    Common::GetInstance()->AddLog(0, _T("------------------------------------"));
+
     if (m_Device != NULL && m_Stream != NULL && m_Pipeline != NULL)
     {
         bFlag[0] = m_Device->StreamDisable();
@@ -1040,11 +1042,12 @@ bool CameraControl_rev::CameraStop(int nIndex)
             ImgProc->StopRecording();
     }
 
-    if (bFlag[1] == TRUE && bFlag[0] == TRUE)
+    if (bFlag[1] && bFlag[0])
     {
         bRtn = true;
         strLog.Format(_T("[Camera[%d]] Camera Stop success"), nIndex + 1);
         Common::GetInstance()->AddLog(0, strLog);
+        MainDlg->gui_status = GUI_STATUS::GUI_STEP_STOP;
     }
     else
     {
@@ -1053,7 +1056,6 @@ bool CameraControl_rev::CameraStop(int nIndex)
         Common::GetInstance()->AddLog(0, strLog);
     }
 
-    MainDlg->gui_status = GUI_STATUS::GUI_STEP_STOP;
     return bRtn;
 }
 
@@ -2178,4 +2180,33 @@ void CameraControl_rev::StopImageProcessingThread()
     if (imageProcessingThread.joinable()) {
         imageProcessingThread.join();  // 스레드가 종료되길 기다림
     }
+}
+
+bool CameraControl_rev::SetAutoFocus()
+{
+    if (m_Device == nullptr)
+        return false;
+
+    bool bFlag = false;
+    PvGenParameterArray* lDeviceParams = m_Device->GetParameters();
+    PvGenCommand* lAF = dynamic_cast<PvGenCommand*>(lDeviceParams->Get("AutoFocus"));
+    int64_t nFocusPos = 0;
+    PvResult result = lAF->Execute();
+    CString strlog;
+
+    if (result.IsOK())
+    {
+        lDeviceParams->GetIntegerValue("FocusPos", nFocusPos);
+
+        
+        strlog.Format(_T("[Camera[%d]] AutoFocus Success Focus Pos = [%d]"), GetCamIndex() + 1, nFocusPos);
+        Common::GetInstance()->AddLog(0, strlog);
+        bFlag = true;
+    }
+    else
+    {
+        strlog.Format(_T("[Camera[%d]] AutoFocus Fail"), GetCamIndex() + 1);
+    }
+    
+    return bFlag;
 }

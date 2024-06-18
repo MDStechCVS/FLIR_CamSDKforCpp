@@ -4,62 +4,6 @@
 #include "CameraControl_rev.h"
 #include "MDS_E-bus_SampleDlg.h"
 
-// 최대 및 최소 스팟 값을 저장하기 위한 구조체
-struct MDSMeasureMaxSpotValue
-{
-	int x; // x 좌표
-	int y; // y 좌표
-	int pointIdx; // 포인트 인덱스
-	ushort tempValue; // 온도 값
-	bool updated;
-
-	MDSMeasureMaxSpotValue() : x(0), y(0), pointIdx(0), tempValue(std::numeric_limits<ushort>::min()), updated(false) {}
-};
-
-struct MDSMeasureMinSpotValue
-{
-	int x; // x 좌표
-	int y; // y 좌표
-	int pointIdx; // 포인트 인덱스
-	ushort tempValue; // 온도 값
-	bool updated;
-
-	MDSMeasureMinSpotValue() : x(0), y(0), pointIdx(0), tempValue(std::numeric_limits<ushort>::max()), updated(false) {}
-};
-
-// ROI (관심 영역) 유형을 정의하는 열거형
-enum class ShapeType
-{
-	None = -1,
-	Rectangle = 0,
-	Circle,
-	Ellipse,
-	Line
-};
-
-// 각 ROI의 결과를 저장하는 구조체
-struct ROIResults
-{
-	cv::Rect roi; // ROI 영역
-	int max_x, max_y, min_x, min_y; // 최대/최소 x, y 좌표
-	ushort max_temp, min_temp; // 최대/최소 온도
-	ShapeType shapeType; // 도형
-	MDSMeasureMaxSpotValue maxSpot; // 최대 스팟 값
-	MDSMeasureMinSpotValue minSpot; // 최소 스팟 값
-	int span; // 스팬 값
-	int level; // 레벨 값
-	int nIndex; 
-	bool needsRedraw; // 다시 그릴 필요 여부
-	cv::Scalar color; 
-
-	ROIResults() : max_x(0), max_y(0), min_x(0), min_y(0),
-		max_temp(0), min_temp(65535),
-		shapeType(ShapeType::None),
-		span(0), level(0), nIndex(-1),
-		needsRedraw(true),
-		color(cv::Scalar(51, 255, 51)) {}
-};
-
 // ImageProcessor 클래스 정의
 class ImageProcessor
 {
@@ -70,8 +14,7 @@ public:
     CMDS_Ebus_SampleDlg* GetMainDialog();/*Main Dialog */
     CameraControl_rev* GetCam(); // 카메라 제어 객체 반환
     
-    
-
+   
     // 경로 관련 메서드
     std::string GetRawdataPath(); // 원본 데이터 경로 반환
     std::string GetImageSavePath(); // 이미지 저장 경로 반환
@@ -167,7 +110,7 @@ private:
     std::mutex m_bitmapMutex; // 비트맵 동기화
     std::mutex roiDrawMtx; // ROI 그리기 동기화
     ROIResults* roiResult; // ROI 결과
-    cv::VideoWriter videoWriter; 
+    //cv::VideoWriter videoWriter; 
 
     DWORD m_LineState1;
     DWORD m_LineState2;
@@ -262,12 +205,10 @@ private:
     bool IsRoiValid(const uint8_t* imageDataPtr, int imageWidth, int imageHeight, const std::vector<cv::Rect>& rois); // ROI 유효성 검사 (이미지 데이터 포인터 사용)
     void ProcessROIsConcurrently(const byte* imageDataPtr, int imageWidth, int imageHeight);
 
-    void addROI(const cv::Rect& rect); // ROI 추가
     void DrawAllRoiRectangles(cv::Mat& image); // 모든 ROI 사각형 그리기
 
     void temporaryUpdateROI(const cv::Rect& roi, ShapeType shapeType); // 임시 ROI 업데이트
     std::unique_ptr<ROIResults> ProcessSingleROI(std::unique_ptr<uint16_t[]>&& data, const cv::Rect& roi, double dScale, int nIndex); // 단일 ROI 처리
-    void processAllROIs(byte* imageDataPtr, int width, int height); // 모든 ROI 처리
     bool IsValidBitmapInfo(const BITMAPINFO* bitmapInfo); // 비트맵 정보 유효성 검사
     void defalutCheckType(); // 기본 체크 타입
     bool GetROIEnabled(); // ROI 사용 가능 여부 반환

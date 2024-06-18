@@ -89,6 +89,7 @@ private:
     PvPipeline* CreatePipeline(PvDevice* aDevice, PvStream* aStream, int nIndex); // 파이프라인 생성자 함수
 
     CameraModelList FindCameraModel(int nCamIndex, PvGenParameterArray* lDeviceParams); // 카메라 모델 이름 찾기
+   
     bool CameraParamSetting(int nIndex, PvDevice* aDevice); // 카메라 파라미터 설정
     /* Image Func */
     void DataProcessing(PvBuffer* aBuffer, int nIndex); // 이미지 후가공 시퀀스
@@ -99,6 +100,7 @@ private:
     bool IsValidBuffer(PvBuffer* aBuffer);
     bool IsInvalidState(int nIndex, PvBuffer* buffer);
 public:
+    bool SetAutoFocus();
     int SetStreamingCameraParameters(PvGenParameterArray* lDeviceParams, int nIndex, CameraModelList Camlist); // 스트리밍 시 파라미터 설정하는 함수
     void OnParameterUpdate(PvGenParameter* aParameter);
     void UpdateCalcParams();
