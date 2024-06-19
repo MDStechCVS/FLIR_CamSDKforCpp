@@ -124,6 +124,7 @@
 #define IDC_RADIO_RECT                  1110
 #define IDC_RADIO_CIRCLE                1111
 #define IDC_RADIO_ELLIPSE               1112
+#define IDC_STATIC36                    1113
 #define IDC_RADIO_LINE                  1114
 #define ID_POPUP_MENUITEM1              32111
 #define ID_POPUP_MENUITEM2              32112

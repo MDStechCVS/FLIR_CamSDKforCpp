@@ -45,6 +45,7 @@
 #include "TransparentStatic.h"
 #include "fff.h"
 #include <condition_variable>
+#include <Pdh.h>
 
 #define WM_ADDLOG (WM_APP + 1)
 #ifndef M_PI
@@ -145,6 +146,7 @@
 
 const UINT_PTR TIMER_ID_GUI_UPDATE = 1000;
 const UINT_PTR TIMER_ID_OTHER_TASK = 2000;
+const UINT_PTR TIMER_ID_CPU_USAGE  = 3000;
 
 // 색상을 RGBA 형식으로 표현하기 위한 구조체
 typedef struct RGBA 

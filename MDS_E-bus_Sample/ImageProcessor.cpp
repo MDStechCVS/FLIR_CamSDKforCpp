@@ -297,7 +297,9 @@ void ImageProcessor::defalutCheckType()
     else if (GetCam()->m_Cam_Params->strPixelFormat == MONO16 || GetCam()->m_Cam_Params->strPixelFormat == MONO14)
     {
         Set16BitType(TRUE);
-        SetGrayType(TRUE);
+        // default color
+        SetColorPaletteType(TRUE);
+        SetGrayType(FALSE);
         SetYUVYType(FALSE);
         SetRGBType(FALSE);
     }
@@ -1110,8 +1112,19 @@ void ImageProcessor::SetPixelFormatParametertoGUI()
         SetYUVYType(FALSE);
 
         MainDlg->m_chMonoCheckBox.SetCheck(TRUE);
-        MainDlg->m_chEventsCheckBox.SetCheck(TRUE);
+        //MainDlg->m_chColorMapCheckBox.SetCheck(TRUE);
 
+        MainDlg->m_chEventsCheckBox.SetCheck(TRUE);
+        MainDlg->m_chColorMapCheckBox.EnableWindow(TRUE);
+    }
+    else if (GetColorPaletteType() && Get16BitType())
+    {
+        SetYUVYType(FALSE);
+
+        MainDlg->m_chMonoCheckBox.SetCheck(FALSE);
+        MainDlg->m_chColorMapCheckBox.SetCheck(TRUE);
+
+        MainDlg->m_chEventsCheckBox.SetCheck(TRUE);
         MainDlg->m_chColorMapCheckBox.EnableWindow(TRUE);
     }
     // rgb 8

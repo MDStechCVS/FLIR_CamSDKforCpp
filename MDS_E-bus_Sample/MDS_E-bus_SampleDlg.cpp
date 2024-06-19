@@ -11,6 +11,9 @@
 #include "ImageProcessor.h"
 
 JudgeStatusDlg* Judgedlg;
+PDH_HQUERY hQuery = NULL;
+PDH_HCOUNTER hCounterTotal = NULL;
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -251,10 +254,15 @@ BOOL CMDS_Ebus_SampleDlg::OnInitDialog()
     SetTransparentStatic_ControlsFont();
 
     // GUI타이머 시작
-    SetTimer(TIMER_ID_GUI_UPDATE, 500, NULL);
+    SetTimer(TIMER_ID_GUI_UPDATE, 1000, NULL);
 
     //gui 타이머를 감시하는 타이머로 설정
-    SetTimer(TIMER_ID_OTHER_TASK, 2000, NULL);
+    SetTimer(TIMER_ID_OTHER_TASK, 5000, NULL);
+
+
+    InitializePdh();
+    //CPU 사용량
+    SetTimer(TIMER_ID_CPU_USAGE, 1000, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -669,47 +677,55 @@ void CMDS_Ebus_SampleDlg::OnTimer(UINT_PTR nIDEvent)
     }
     else if (nIDEvent == TIMER_ID_GUI_UPDATE)
     {
-        try 
+        try
         {
-            // Check if the camera manager is available
-            if (m_CamManager == nullptr) return;
-
-            // 연결된 장치 수 확인 및 카메라 자동 시작
-            int nDeviceCnt = m_CamManager->GetDeviceCount();
-            CameraAutoStart(nDeviceCnt);
-            
-            // 각 카메라의 정보 업데이트
-            for (int i = 0; i < nDeviceCnt; i++)
-            {
-                if (m_CamManager->m_Cam[i]->GetCamRunningFlag())
-                {
-                    m_CamManager->m_Cam[i]->UpdateCalcParams();
-                    m_CamManager->m_Cam[i]->UpdateDeviceOP();
-                    UpdateCameraInfo(m_CamManager->m_Cam[i], m_LbCamInfo[i]);
-                    m_LbCamInfo[i].lbConnectStatus.SetWindowTextW(m_CamManager->m_strSetModelName.at(i));
-                    InvalidateLabels(m_LbCamInfo[i]);
-                }
-            }
-            if (m_cbTempRange.GetCount() < 1)
-                PopulateComboBoxes_Range();
-
-
-            // dlg 업데이트
+            UpdateCameraSystems();
             UpdateWindow();
 
-            // Progress 진행 상태 업데이트
-            UpdateProgressValue();
 
-            m_bGUITimerActive = true;
+            if (gui_status == GUI_STATUS::GUI_STEP_RUN)
+            {
+                CloseJudgeDlg();
+            }
+
         }
-        catch (const std::exception& e) 
+        catch (const std::exception& e)
         {
-            // 예외 처리
-            CString strError;
-            strError.Format(_T("Error in camera update: %s"), e.what());
-            Common::GetInstance()->AddLog(0, strError);
+            LogError("Error in camera update: ", e.what());
         }
     }
+    else if (nIDEvent == TIMER_ID_CPU_USAGE)
+    {
+        UpdateProgressValue(); // CPU 사용률 업데이트
+    }
+}
+
+// =============================================================================
+void CMDS_Ebus_SampleDlg::UpdateCameraSystems()
+{
+    if (m_CamManager == nullptr) return;
+    int nDeviceCnt = m_CamManager->GetDeviceCount();
+    CameraAutoStart(nDeviceCnt);
+    for (int i = 0; i < nDeviceCnt; i++)
+    {
+        if (m_CamManager->m_Cam[i]->GetCamRunningFlag())
+        {
+            m_CamManager->m_Cam[i]->UpdateCalcParams();
+            m_CamManager->m_Cam[i]->UpdateDeviceOP();
+            UpdateCameraInfo(m_CamManager->m_Cam[i], m_LbCamInfo[i]);
+            InvalidateLabels(m_LbCamInfo[i]);
+        }
+    }
+    if (m_cbTempRange.GetCount() < 1)
+        PopulateComboBoxes_Range();
+}
+
+// =============================================================================
+void CMDS_Ebus_SampleDlg::LogError(const std::string& message, const char* error)
+{
+    CString strError;
+    strError.Format(_T("%s %s"), message.c_str(), error);
+    Common::GetInstance()->AddLog(0, strError);
 }
 
 // =============================================================================
@@ -879,6 +895,7 @@ HBRUSH CMDS_Ebus_SampleDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
         case IDCLOSE:
         case IDC_STATIC_CAMCOUNT:
         case IDC_STATIC:
+        case IDC_STATIC36:
             pDC->SetTextColor(LIGHTGREEN);
             pDC->SetBkMode(TRANSPARENT);
             return (HBRUSH)::GetStockObject(NULL_BRUSH); 
@@ -1107,7 +1124,7 @@ void CMDS_Ebus_SampleDlg::Btn_Interface_setting()
     /*m_BtnConnect.SetText(_T("Connect / Select"));*/
     m_BtnDisconnect.SetText(_T("Disconnect"));
     m_BtnFPS30.SetText(_T("FPS 30"));
-    m_BtnAF.SetText(_T("AF"));
+    m_BtnAF.SetText(_T("Auto Focus"));
     m_BtnDeviceFind.SetText(_T("Device Find"));
     m_BtnLoadiniFile.SetText(_T("System Param *.ini"));
     m_BtniniApply.SetText(_T("Apply"));
@@ -1227,10 +1244,12 @@ BOOL CMDS_Ebus_SampleDlg::PreTranslateMessage(MSG* pMsg)
 
     if (pMsg->message == WM_RBUTTONDOWN)
     {
+        
         CPoint point(pMsg->pt);
         ScreenToClient(&point);
 
-        for (int i = 0; i < CAMERA_COUNT; ++i) {
+        for (int i = 0; i < CAMERA_COUNT; ++i)
+        {
             CRect rect;
             DisplayCam[i]->GetWindowRect(&rect);
             ScreenToClient(&rect);
@@ -1239,17 +1258,19 @@ BOOL CMDS_Ebus_SampleDlg::PreTranslateMessage(MSG* pMsg)
             if (rect.PtInRect(point))
             {
                 int nCamIndex = i;  // 현재 선택된 카메라 인덱스
+                if (m_CamManager->m_Cam[nCamIndex] != nullptr)
+                {       
+                    // 스크린 좌표를 이미지 좌표로 변환
+                    cv::Point imagePoint = m_CamManager->m_Cam[nCamIndex]->GetImageProcessor()->mapPointToImage(point, m_CamManager->m_Cam[nCamIndex]->GetImageProcessor()->GetImageSize(), rect);
 
-                // 스크린 좌표를 이미지 좌표로 변환
-                cv::Point imagePoint = m_CamManager->m_Cam[nCamIndex]->GetImageProcessor()->mapPointToImage(point, m_CamManager->m_Cam[nCamIndex]->GetImageProcessor()->GetImageSize(), rect);
+                    // ROI 인덱스 찾기
+                    int roiIndex = m_CamManager->m_Cam[nCamIndex]->GetImageProcessor()->findROIIndexAtPoint(imagePoint);
 
-                // ROI 인덱스 찾기
-                int roiIndex = m_CamManager->m_Cam[nCamIndex]->GetImageProcessor()->findROIIndexAtPoint(imagePoint);
-
-                if (roiIndex != -1)
-                {
-                    // 팝업 메뉴 생성
-                    ShowPopupMenu(point, roiIndex);
+                    if (roiIndex != -1)
+                    {
+                        // 팝업 메뉴 생성
+                        ShowPopupMenu(point, roiIndex);
+                    }
                 }
                 return TRUE;  // 메시지 처리 완료
             }
@@ -2009,6 +2030,9 @@ void CMDS_Ebus_SampleDlg::OnBnClickedCheckBox()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
+    if (m_CamManager->m_Cam[GetSelectCamIndex()] == nullptr)
+        return;
+
     CString strLog = _T("");
     // Mono 체크박스 상태 확인 및 처리
     BOOL isMonoChecked = m_chMonoCheckBox.GetCheck();
@@ -2322,19 +2346,33 @@ void CMDS_Ebus_SampleDlg::CameraAutoStart(int deviceCount)
 
 void CMDS_Ebus_SampleDlg::UpdateProgressValue() 
 {
-    static int progressValue = 0;
+    //static PDH_HQUERY hQuery = NULL;
+    //static PDH_HCOUNTER hCounterTotal = NULL;
+    PDH_FMT_COUNTERVALUE counterValue;
+    PDH_STATUS status;
 
-    if (gui_status == GUI_STATUS::GUI_STEP_RUN)
-    {
-        CloseJudgeDlg();
-        progressValue = (progressValue + 1) % 101; // 0에서 100까지 순환
-        m_progress.SetPos(progressValue);
-    }
-    else if (gui_status == GUI_STATUS::GUI_STEP_STOP || gui_status == GUI_STATUS::GUI_STEP_DISCONNECT
-        || gui_status == GUI_STATUS::GUI_STEP_ERROR) 
-    {
-        m_progress.SetPos(0);
-        progressValue = 0;
+    //if (hQuery == NULL) {
+    //    // 쿼리 초기화
+    //    status = PdhOpenQuery(NULL, 0, &hQuery);
+    //    if (status != ERROR_SUCCESS) return;
+
+    //    // 카운터 추가
+    //    status = PdhAddCounter(hQuery, L"\\Processor(_Total)\\% Processor Time", 0, &hCounterTotal);
+    //    if (status != ERROR_SUCCESS) {
+    //        PdhCloseQuery(hQuery);
+    //        hQuery = NULL;
+    //        return;
+    //    }
+    //}
+
+    // 데이터 수집
+    PdhCollectQueryData(hQuery);
+
+    // CPU 사용률 가져오기
+    status = PdhGetFormattedCounterValue(hCounterTotal, PDH_FMT_DOUBLE, NULL, &counterValue);
+    if (status == ERROR_SUCCESS) {
+        double cpuUsage = counterValue.doubleValue;
+        m_progress.SetPos(static_cast<int>(cpuUsage));
     }
 }
 
@@ -2501,6 +2539,9 @@ void CMDS_Ebus_SampleDlg::OnBnClickedCkCam1Roi()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
+    if (m_CamManager->m_Cam[GetSelectCamIndex()] == nullptr)
+        return;
+
     if (m_ch_Cam1_ROI_CheckBox.GetCheck())
         m_CamManager->m_Cam[GetSelectCamIndex()]->GetImageProcessor()->m_ROIEnabled = true;
     else
@@ -2573,4 +2614,19 @@ LRESULT CMDS_Ebus_SampleDlg::OnAddLog(WPARAM wParam, LPARAM lParam)
         Common::GetInstance()->CreateHorizontalScroll();
     }
     return 0;
+}
+
+void CMDS_Ebus_SampleDlg::InitializePdh()
+{
+    PDH_STATUS status = PdhOpenQuery(NULL, 0, &hQuery);
+    if (status != ERROR_SUCCESS) return;
+
+    status = PdhAddCounter(hQuery, L"\\Processor(_Total)\\% Processor Time", 0, &hCounterTotal);
+    if (status != ERROR_SUCCESS) {
+        PdhCloseQuery(hQuery);
+        hQuery = NULL;
+        return;
+    }
+
+    PdhCollectQueryData(hQuery); // Initial collect
 }

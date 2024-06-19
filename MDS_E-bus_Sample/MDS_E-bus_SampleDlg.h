@@ -178,6 +178,9 @@ public:
 	CameraManager* m_CamManager = nullptr;
 
 public:
+	void LogError(const std::string& message, const char* error);
+	void UpdateCameraSystems();
+	void InitializePdh();
 	void ShowGenWindow(PvGenBrowserWnd** aWnd, PvGenParameterArray* aParams, const CString& aTitle);
 	void CloseGenWindow(PvGenBrowserWnd** aWnd);
 	void Btn_Interface_setting();
